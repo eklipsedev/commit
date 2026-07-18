@@ -1,0 +1,75 @@
+import {defineArrayMember, defineField, defineType} from 'sanity'
+import {ComposeIcon} from '../../lib/icons'
+import {brandColorField, sectionSpacingFields} from '../shared/section-fields'
+
+export const gridTextType = defineType({
+  name: 'gridText',
+  title: 'Grid text',
+  type: 'object',
+  icon: ComposeIcon,
+  groups: [
+    {name: 'content', title: 'Content', default: true},
+    {name: 'style', title: 'Style'},
+  ],
+  fields: [
+    defineField({
+      name: 'tagline',
+      title: 'Tagline',
+      type: 'string',
+      group: 'content',
+    }),
+    defineField({
+      name: 'items',
+      title: 'Items',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'gridTextItem',
+          fields: [
+            defineField({
+              name: 'title',
+              title: 'Title',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'body',
+              title: 'Body',
+              type: 'text',
+              rows: 3,
+            }),
+            defineField({
+              name: 'link',
+              title: 'Link',
+              type: 'link',
+              description: 'Powers the “Learn More” hover action',
+            }),
+          ],
+          preview: {
+            select: {title: 'title', subtitle: 'body'},
+          },
+        }),
+      ],
+      validation: (rule) => rule.min(1),
+      group: 'content',
+    }),
+    defineField({...sectionSpacingFields[0], group: 'style'}),
+    defineField({...sectionSpacingFields[1], group: 'style'}),
+    {...brandColorField('backgroundColor', 'Background color'), group: 'style'},
+    {...brandColorField('headingColor', 'Heading color'), group: 'style'},
+    {...brandColorField('bodyColor', 'Body color'), group: 'style'},
+    {...brandColorField('taglineColor', 'Tagline color'), group: 'style'},
+    {...brandColorField('accentColor', 'Accent / button color'), group: 'style'},
+  ],
+  preview: {
+    select: {tagline: 'tagline', items: 'items'},
+    prepare({tagline, items}) {
+      return {
+        title: tagline || 'Grid text',
+        subtitle: `Grid text · ${items?.length ?? 0} items`,
+        media: ComposeIcon,
+      }
+    },
+  },
+})

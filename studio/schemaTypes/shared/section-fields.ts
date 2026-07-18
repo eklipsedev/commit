@@ -1,0 +1,85 @@
+import {defineField} from 'sanity'
+import {BRAND_COLORS} from '../../lib/brand-colors'
+import {BrandColorInput} from '../../components/brand-color-input'
+
+/** Brand palette select — stores token name, not hex. */
+export function brandColorField(
+  name: string,
+  title: string,
+  options?: {description?: string; required?: boolean},
+) {
+  return defineField({
+    name,
+    title,
+    type: 'string',
+    description: options?.description,
+    options: {
+      list: BRAND_COLORS.map((color) => ({
+        title: color.title,
+        value: color.value,
+      })),
+      layout: 'dropdown',
+    },
+    components: {
+      input: BrandColorInput,
+    },
+    validation: options?.required ? (rule) => rule.required() : undefined,
+  })
+}
+
+export const sectionSpacingFields = [
+  defineField({
+    name: 'collapsePaddingTop',
+    title: 'Collapse top padding',
+    type: 'boolean',
+    initialValue: false,
+  }),
+  defineField({
+    name: 'collapsePaddingBottom',
+    title: 'Collapse bottom padding',
+    type: 'boolean',
+    initialValue: false,
+  }),
+]
+
+export const sectionColorFields = [
+  brandColorField('backgroundColor', 'Background color'),
+  brandColorField('headingColor', 'Heading color'),
+  brandColorField('bodyColor', 'Body color'),
+  brandColorField('accentColor', 'Accent color'),
+]
+
+/**
+ * Shared heading size for sections that use tagline + divider + heading.
+ * Frontend tokens: Large 72px (`lg`), Mid 48px (`h3`), Medium 32px (`md`).
+ */
+export function headingSizeField(options?: {
+  group?: string
+  initialValue?: 'lg' | 'h3' | 'md'
+  hidden?: (ctx: {parent?: Record<string, unknown>}) => boolean
+}) {
+  return defineField({
+    name: 'headingSize',
+    title: 'Heading size',
+    type: 'string',
+    options: {
+      list: [
+        {title: 'Large — 72px', value: 'lg'},
+        {title: 'Mid — 48px', value: 'h3'},
+        {title: 'Medium — 32px', value: 'md'},
+      ],
+      layout: 'radio',
+    },
+    initialValue: options?.initialValue ?? 'md',
+    description: 'Large for short display lines. Mid for mid-length headlines. Medium for denser section copy.',
+    group: options?.group,
+    hidden: options?.hidden,
+  })
+}
+
+/** Studio preview label for headingSize values. */
+export function headingSizeLabel(size?: string | null) {
+  if (size === 'lg') return 'Large'
+  if (size === 'h3') return 'Mid'
+  return 'Medium'
+}

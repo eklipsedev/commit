@@ -1,0 +1,11 @@
+Fields:
+- tagline
+- headline
+- array of people
+-- 3 columns by default, can be adjusted to show 2 or 4
+-- photos can either be centered/round or anchored to the bottom of the square card
+-- card:
+--- background color
+--- button color
+--- name
+--- role

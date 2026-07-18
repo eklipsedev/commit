@@ -1,0 +1,11 @@
+{
+  "name": "commit-monorepo",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --parallel --filter ./studio --filter ./web dev",
+    "dev:studio": "pnpm --dir studio dev",
+    "dev:web": "pnpm --dir web dev",
+    "build:studio": "pnpm --dir studio build",
+    "build:web": "pnpm --dir web build"
+  }
+}

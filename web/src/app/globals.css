@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+:root {
+  --brand-yellow: #fee064;
+  --brand-charcoal: #303030;
+  --brand-peach: #ffd8bf;
+  --brand-burnt-orange: #cf5b28;
+  --brand-sage: #dfe8d0;
+  --brand-pale-yellow: #fbffc0;
+  --brand-plum: #a04d79;
+  --brand-blue: #5a6bab;
+  --brand-light-blue: #b9cde8;
+  --brand-brown: #7b5630;
+  --brand-lavender: #f3eef6;
+  --brand-pink: #faa0e2;
+  --brand-deep-blue: #4d60a6;
+  --brand-olive: #817b42;
+  --brand-black: #000000;
+  --brand-white: #fbfafa;
+
+  --background: var(--brand-white);
+  --foreground: var(--brand-charcoal);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand-yellow: var(--brand-yellow);
+  --color-brand-charcoal: var(--brand-charcoal);
+  --color-brand-peach: var(--brand-peach);
+  --color-brand-burnt-orange: var(--brand-burnt-orange);
+  --color-brand-sage: var(--brand-sage);
+  --color-brand-pale-yellow: var(--brand-pale-yellow);
+  --color-brand-plum: var(--brand-plum);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-light-blue: var(--brand-light-blue);
+  --color-brand-brown: var(--brand-brown);
+  --color-brand-lavender: var(--brand-lavender);
+  --color-brand-pink: var(--brand-pink);
+  --color-brand-deep-blue: var(--brand-deep-blue);
+  --color-brand-olive: var(--brand-olive);
+  --color-brand-black: var(--brand-black);
+  --color-brand-white: var(--brand-white);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-display-serif);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+a,
+button,
+[role='button'],
+summary {
+  cursor: pointer;
+}
+
+:disabled,
+[aria-disabled='true'] {
+  cursor: not-allowed;
+}
+
+.font-display {
+  font-family: var(--font-display-serif), Georgia, 'Times New Roman', serif;
+}
+
+.font-mono {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee 40s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
