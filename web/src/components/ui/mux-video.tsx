@@ -44,20 +44,20 @@ export function MuxVideo({
       preload={background ? 'auto' : 'metadata'}
       className={cn(background && 'mux-background', className)}
       style={
-        background
-          ? ({
+        (background
+          ? {
               width: '100%',
               height: 'auto',
               ...(ratio ? {aspectRatio: ratio} : {}),
               '--controls': 'none',
               '--media-object-fit': 'contain',
               '--media-object-position': 'center',
-            } as React.CSSProperties)
+            }
           : {
               width: '100%',
               height: '100%',
               ...(ratio ? {aspectRatio: ratio} : {}),
-            }
+            }) as React.CSSProperties & Record<`--${string}`, string>
       }
     />
   )
