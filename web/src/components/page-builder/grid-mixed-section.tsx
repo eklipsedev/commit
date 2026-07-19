@@ -50,16 +50,25 @@ function SlotImage({
   image,
   className,
   sizes = '(max-width: 768px) 50vw, 33vw',
+  priority,
 }: {
   image?: SanityImageType
   className?: string
   sizes?: string
+  priority?: boolean
 }) {
   if (!image?.asset) return null
 
   return (
     <div className={cn('relative w-full overflow-hidden bg-neutral-100', className)}>
-      <SanityImage image={image} alt={image.alt} fill sizes={sizes} className="object-cover" />
+      <SanityImage
+        image={image}
+        alt={image.alt}
+        fill
+        sizes={sizes}
+        priority={priority}
+        className="object-cover"
+      />
     </div>
   )
 }
@@ -84,6 +93,7 @@ export function GridMixedSection({block}: {block: GridMixedBlock}) {
             <Heading
               size={headingSizeFromBlock(block)}
               style={{color: 'var(--section-heading)'}}
+              collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
             >
               {block.heading}
             </Heading>
@@ -96,11 +106,13 @@ export function GridMixedSection({block}: {block: GridMixedBlock}) {
               image={images.topLeft}
               className="aspect-[2/1]"
               sizes="(max-width: 768px) 50vw, 50vw"
+              priority
             />
             <SlotImage
               image={images.topRight}
               className="aspect-[2/1]"
               sizes="(max-width: 768px) 50vw, 50vw"
+              priority
             />
           </div>
 

@@ -1,6 +1,12 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {UsersIcon} from '../../lib/icons'
-import {brandColorField, headingSizeField, sectionSpacingFields, headingSizeLabel} from '../shared/section-fields'
+import {
+  brandColorField,
+  collapseLineBreaksOnMobileField,
+  headingSizeField,
+  sectionSpacingFields,
+  headingSizeLabel,
+} from '../shared/section-fields'
 
 export const teamType = defineType({
   name: 'team',
@@ -73,6 +79,7 @@ export const teamType = defineType({
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...headingSizeField({group: 'style'}), group: 'style'},
+    {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
     {...brandColorField('backgroundColor', 'Background color'), group: 'style'},
     {...brandColorField('headingColor', 'Heading color'), group: 'style'},
     {...brandColorField('taglineColor', 'Tagline color'), group: 'style'},

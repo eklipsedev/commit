@@ -1,6 +1,12 @@
 import {defineField, defineType} from 'sanity'
 import {BoltIcon} from '../../lib/icons'
-import {brandColorField, headingSizeField, headingSizeLabel, sectionSpacingFields} from '../shared/section-fields'
+import {
+  brandColorField,
+  collapseLineBreaksOnMobileField,
+  headingSizeField,
+  headingSizeLabel,
+  sectionSpacingFields,
+} from '../shared/section-fields'
 
 export const ctaType = defineType({
   name: 'cta',
@@ -71,6 +77,7 @@ export const ctaType = defineType({
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...headingSizeField({group: 'style', initialValue: 'lg'}), group: 'style'},
+    {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
     {...brandColorField('backgroundColor', 'Background color'), group: 'style'},
     {...brandColorField('headingColor', 'Heading color'), group: 'style'},
     {...brandColorField('taglineColor', 'Tagline color'), group: 'style'},

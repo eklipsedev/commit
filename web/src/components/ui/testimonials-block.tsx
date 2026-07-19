@@ -28,7 +28,7 @@ function TestimonialsSlider({slides}: {slides: TestimonialCardData[]}) {
         <div className="flex items-stretch">
           {slides.map((slide, i) => (
             <div key={i} className="flex min-w-0 flex-[0_0_100%] flex-col">
-              <TestimonialCard slide={slide} />
+              <TestimonialCard slide={slide} priority={i === 0} />
             </div>
           ))}
         </div>
@@ -72,7 +72,7 @@ export function TestimonialsBlock({
 
   const content =
     slides.length === 1 ? (
-      <TestimonialCard slide={slides[0]} fallbackBackground={fallbackBackground} />
+      <TestimonialCard slide={slides[0]} fallbackBackground={fallbackBackground} priority />
     ) : (
       <TestimonialsSlider slides={slides} />
     )

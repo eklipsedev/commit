@@ -1,6 +1,6 @@
 import {defineField, defineType} from 'sanity'
 import {TextIcon} from '../../lib/icons'
-import {brandColorField, sectionSpacingFields} from '../shared/section-fields'
+import {brandColorField, collapseLineBreaksOnMobileField, sectionSpacingFields} from '../shared/section-fields'
 
 export const textColumnsType = defineType({
   name: 'textColumns',
@@ -30,6 +30,7 @@ export const textColumnsType = defineType({
     }),
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
+    {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
     {...brandColorField('backgroundColor', 'Background color'), group: 'style'},
     {...brandColorField('taglineColor', 'Tagline color'), group: 'style'},
     {...brandColorField('bodyColor', 'Body color'), group: 'style'},

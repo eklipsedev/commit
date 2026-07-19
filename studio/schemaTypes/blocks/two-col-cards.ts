@@ -1,6 +1,12 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {ThLargeIcon} from '../../lib/icons'
-import {brandColorField, headingSizeField, sectionSpacingFields, headingSizeLabel} from '../shared/section-fields'
+import {
+  brandColorField,
+  collapseLineBreaksOnMobileField,
+  headingSizeField,
+  sectionSpacingFields,
+  headingSizeLabel,
+} from '../shared/section-fields'
 
 export const twoColCardsType = defineType({
   name: 'twoColCards',
@@ -79,6 +85,13 @@ export const twoColCardsType = defineType({
       ...headingSizeField({
         group: 'style',
         initialValue: 'md',
+        hidden: ({parent}) => parent?.showHeader === false,
+      }),
+      group: 'style',
+    },
+    {
+      ...collapseLineBreaksOnMobileField({
+        group: 'style',
         hidden: ({parent}) => parent?.showHeader === false,
       }),
       group: 'style',

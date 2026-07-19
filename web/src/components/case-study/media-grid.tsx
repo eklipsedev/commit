@@ -44,6 +44,7 @@ export function CaseStudyMediaGrid({
         {rows.map((row, index) => {
           const key = row._key ?? index
           const delay = index === 0 ? 0 : 40
+          const aboveFold = index === 0
 
           if (row.layout === 'video') {
             return (
@@ -55,18 +56,24 @@ export function CaseStudyMediaGrid({
 
           if (row.layout === 'twoCol') {
             return (
-              <FadeIn key={key} delay={delay} className="grid gap-5 md:grid-cols-2">
-                <MediaFrame
-                  image={row.leftImage}
-                  aspectClassName="aspect-[636/730]"
-                  sizes="(min-width: 1320px) 590px, (min-width: 768px) calc(50vw - 3rem), calc(100vw - 3rem)"
-                />
-                <MediaFrame
-                  image={row.rightImage}
-                  aspectClassName="aspect-[636/730]"
-                  sizes="(min-width: 1320px) 590px, (min-width: 768px) calc(50vw - 3rem), calc(100vw - 3rem)"
-                />
-              </FadeIn>
+              <div key={key} className="grid gap-5 md:grid-cols-2">
+                <FadeIn delay={delay}>
+                  <MediaFrame
+                    image={row.leftImage}
+                    aspectClassName="aspect-[636/730]"
+                    sizes="(min-width: 1320px) 590px, (min-width: 768px) calc(50vw - 3rem), calc(100vw - 3rem)"
+                    priority={aboveFold}
+                  />
+                </FadeIn>
+                <FadeIn delay={delay + 40}>
+                  <MediaFrame
+                    image={row.rightImage}
+                    aspectClassName="aspect-[636/730]"
+                    sizes="(min-width: 1320px) 590px, (min-width: 768px) calc(50vw - 3rem), calc(100vw - 3rem)"
+                    priority={aboveFold}
+                  />
+                </FadeIn>
+              </div>
             )
           }
 
@@ -76,7 +83,7 @@ export function CaseStudyMediaGrid({
                 image={row.image}
                 aspectClassName="aspect-[1296/730]"
                 sizes="(min-width: 1320px) 1200px, calc(100vw - 3rem)"
-                priority={index === 0}
+                priority={aboveFold}
               />
             </FadeIn>
           )

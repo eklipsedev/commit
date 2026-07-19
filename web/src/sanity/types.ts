@@ -31,6 +31,8 @@ export type SectionStyle = {
   headingSize?: string | null
   /** @deprecated Prefer `headingSize` */
   headlineSize?: string | null
+  /** When true, Enter line breaks only apply from `md` up. */
+  collapseLineBreaksOnMobile?: boolean
 }
 
 export type FooterAppearance = {
@@ -165,6 +167,7 @@ export type CaseStudyProject = ProjectCard & {
   heroVideo?: MuxVideoAsset
   eyebrow?: string
   headline?: string
+  collapseLineBreaksOnMobile?: boolean
   overviewBody?: PortableTextBlock[]
   overviewServices?: {_id: string; title?: string}[]
   mediaRows?: CaseStudyMediaRow[]

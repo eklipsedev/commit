@@ -7,7 +7,11 @@ import {
   TextIcon,
 } from '../../lib/icons'
 import {buttonHasContent} from './button'
-import {headingSizeField, headingSizeLabel} from '../shared/section-fields'
+import {
+  collapseLineBreaksOnMobileField,
+  headingSizeField,
+  headingSizeLabel,
+} from '../shared/section-fields'
 
 export const moduleTaglineType = defineType({
   name: 'moduleTagline',
@@ -44,6 +48,7 @@ export const moduleHeadlineType = defineType({
       validation: (rule) => rule.required(),
     }),
     headingSizeField({initialValue: 'md'}),
+    collapseLineBreaksOnMobileField(),
     defineField({
       name: 'fullWidth',
       title: 'Full width',
@@ -103,6 +108,7 @@ export const moduleSplitType = defineType({
       type: 'richHeadline',
     }),
     headingSizeField({initialValue: 'md'}),
+    collapseLineBreaksOnMobileField(),
     defineField({
       name: 'rightType',
       title: 'Right content',
@@ -125,11 +131,38 @@ export const moduleSplitType = defineType({
       hidden: ({parent}) => parent?.rightType !== 'body',
     }),
     defineField({
+      name: 'listSource',
+      title: 'List source',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Manual items', value: 'manual'},
+          {title: 'Services', value: 'services'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'manual',
+      description:
+        'Use shared Services documents (same as case study overview), or type items manually.',
+      hidden: ({parent}) => parent?.rightType !== 'list',
+    }),
+    defineField({
       name: 'listItems',
       title: 'List items',
       type: 'array',
       of: [defineArrayMember({type: 'string'})],
-      hidden: ({parent}) => parent?.rightType !== 'list',
+      hidden: ({parent}) =>
+        parent?.rightType !== 'list' || parent?.listSource === 'services',
+    }),
+    defineField({
+      name: 'listServices',
+      title: 'Services',
+      type: 'array',
+      of: [defineArrayMember({type: 'reference', to: [{type: 'service'}]})],
+      description:
+        'Create shared services under Services, or add new ones inline.',
+      hidden: ({parent}) =>
+        parent?.rightType !== 'list' || parent?.listSource !== 'services',
     }),
     defineField({
       name: 'listColumns',

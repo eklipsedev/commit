@@ -2,7 +2,7 @@ import {cn} from '@/lib/cn'
 import {CmsButton} from '@/components/ui/cms-button'
 import {RichHeadline} from '@/components/ui/rich-headline'
 import {Tagline} from '@/components/ui/tagline'
-import {headingSizeFromBlock} from '@/lib/heading-styles'
+import {HEADING_SIZE_CLASSES, headingSizeFromBlock} from '@/lib/heading-styles'
 import type {ButtonValue, RichHeadline as RichHeadlineType} from '@/sanity/types'
 
 type TextGridGroup = {
@@ -35,9 +35,12 @@ type CustomModule = {
   headline?: RichHeadlineType
   headingSize?: string
   fullWidth?: boolean
+  collapseLineBreaksOnMobile?: boolean
   rightType?: 'body' | 'list' | 'textGrid'
   body?: string
+  listSource?: 'manual' | 'services'
   listItems?: string[]
+  listServices?: {_id?: string; title?: string}[]
   listColumns?: number
   textGrid?: TextGrid
   attributes?: {label?: string; values?: string[]}[]
@@ -60,7 +63,7 @@ function TextGridView({grid}: {grid?: TextGrid}) {
           {group.title && (
             <p className="font-mono text-xs tracking-normal text-brand-charcoal">{group.title}</p>
           )}
-          <ul className="space-y-2 text-sm leading-relaxed md:text-base">
+          <ul className="space-y-2 font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]">
             {group.items?.map((item, j) => (
               <li key={`${item}-${j}`}>{item}</li>
             ))}
@@ -73,16 +76,23 @@ function TextGridView({grid}: {grid?: TextGrid}) {
 
 function DetailAttributesView({details}: {details?: DetailAttributes}) {
   if (!details?.attributes?.length) return null
+
+  const columns = Math.min(Math.max(details.attributes.length, 1), 4) as 1 | 2 | 3 | 4
+  const columnClass = {
+    1: 'md:grid-cols-1',
+    2: 'md:grid-cols-2',
+    3: 'md:grid-cols-3',
+    4: 'md:grid-cols-4',
+  }[columns]
+
   return (
-    <div className="space-y-6 border-t border-current/15 pt-8">
-      {details.label && (
-        <p className="font-mono text-xs tracking-normal text-brand-charcoal">{details.label}</p>
-      )}
-      <dl className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="space-y-8">
+      {details.label && <Tagline>{details.label}</Tagline>}
+      <dl className={cn('grid gap-6', columnClass)}>
         {details.attributes.map((attr) => (
           <div key={attr.label}>
             <dt className="font-mono text-xs tracking-normal text-brand-charcoal">{attr.label}</dt>
-            <dd className="mt-2 space-y-1 text-sm md:text-base">
+            <dd className="mt-2 space-y-1 font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]">
               {attr.values?.map((value, i) => (
                 <p key={`${value}-${i}`}>{value}</p>
               ))}
@@ -147,6 +157,7 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
           as="h2"
           size={headingSizeFromBlock(module)}
           fullWidth={module.fullWidth}
+          collapseLineBreaksOnMobile={module.collapseLineBreaksOnMobile}
         />
       )
     case 'moduleBody':
@@ -155,26 +166,35 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
           {module.text}
         </p>
       )
-    case 'moduleSplit':
+    case 'moduleSplit': {
+      const listItems =
+        module.listSource === 'services'
+          ? (module.listServices ?? [])
+              .map((service) => service.title)
+              .filter((title): title is string => Boolean(title))
+          : module.listItems
+
       return (
         <div className="grid gap-8 md:grid-cols-2 md:gap-16">
           <RichHeadline
             value={module.headline}
             as="h2"
             size={headingSizeFromBlock(module)}
+            collapseLineBreaksOnMobile={module.collapseLineBreaksOnMobile}
           />
           <div className="space-y-6">
             {module.rightType === 'body' && module.body && (
               <p className="text-base leading-relaxed md:text-lg">{module.body}</p>
             )}
             {module.rightType === 'list' && (
-              <StringListView items={module.listItems} columns={module.listColumns} showRules />
+              <StringListView items={listItems} columns={module.listColumns} showRules />
             )}
             {module.rightType === 'textGrid' && <TextGridView grid={module.textGrid} />}
             {module.button && <CmsButton button={module.button} />}
           </div>
         </div>
       )
+    }
     case 'textGrid':
       return <TextGridView grid={module as unknown as TextGrid} />
     case 'moduleStringList': {
@@ -207,17 +227,38 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
     }
     case 'detailAttributes':
       return <DetailAttributesView details={module as unknown as DetailAttributes} />
-    case 'moduleSteps':
+    case 'moduleSteps': {
+      const steps = module.steps ?? []
+      const columns = Math.min(Math.max(steps.length, 1), 3) as 1 | 2 | 3
+      const columnClass = {
+        1: 'md:grid-cols-1',
+        2: 'md:grid-cols-2',
+        3: 'md:grid-cols-3',
+      }[columns]
+
       return (
-        <ol className="space-y-4">
-          {module.steps?.map((step, i) => (
-            <li key={step.text ?? i} className="flex gap-4 text-base md:text-lg">
-              <span className="font-mono text-sm text-brand-charcoal">{String(i + 1).padStart(2, '0')}</span>
-              <span>{step.text}</span>
+        <ol className={cn('grid gap-10', columnClass)}>
+          {steps.map((step, i) => (
+            <li key={step.text ?? i} className="flex flex-col gap-5 text-brand-charcoal">
+              <span
+                aria-hidden
+                className="flex size-10 items-center justify-center rounded-full border border-brand-charcoal font-sans text-base font-normal leading-none"
+              >
+                {i + 1}
+              </span>
+              <p
+                className={cn(
+                  HEADING_SIZE_CLASSES.md,
+                  'text-[1.25rem] md:text-[2rem]',
+                )}
+              >
+                {step.text}
+              </p>
             </li>
           ))}
         </ol>
       )
+    }
     case 'moduleButton':
       return <CmsButton button={module.button} />
     default:

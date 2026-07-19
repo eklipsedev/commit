@@ -75,7 +75,12 @@ export default async function WorkProjectPage({params}: PageProps) {
             )}
 
             {project.headline && (
-              <Heading size="xl" as="h1" className="text-brand-charcoal">
+              <Heading
+                size="xl"
+                as="h1"
+                className="text-brand-charcoal"
+                collapseLineBreaksOnMobile={project.collapseLineBreaksOnMobile}
+              >
                 {project.headline}
               </Heading>
             )}

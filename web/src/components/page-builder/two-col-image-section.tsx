@@ -21,7 +21,13 @@ export function TwoColImageSection({block}: {block: TwoColImageBlock}) {
   const imageCol = (
     <div className="relative aspect-[4/5] overflow-hidden bg-neutral-100">
       {block.image && (
-        <SanityImage image={block.image} alt={block.image.alt} fill sizes="(max-width: 768px) 100vw, 50vw" />
+        <SanityImage
+          image={block.image}
+          alt={block.image.alt}
+          fill
+          sizes="(max-width: 768px) 100vw, 50vw"
+          priority
+        />
       )}
     </div>
   )
@@ -29,7 +35,11 @@ export function TwoColImageSection({block}: {block: TwoColImageBlock}) {
   const textCol = (
     <div className="flex flex-col justify-center space-y-6">
       {block.heading && (
-        <Heading size={headingSizeFromBlock(block)} style={{color: 'var(--section-heading)'}}>
+        <Heading
+          size={headingSizeFromBlock(block)}
+          style={{color: 'var(--section-heading)'}}
+          collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
+        >
           {block.heading}
         </Heading>
       )}

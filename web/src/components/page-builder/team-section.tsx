@@ -136,7 +136,11 @@ export function TeamSection({block}: {block: TeamBlock}) {
           <div className="space-y-6">
             {block.tagline && <Tagline>{block.tagline}</Tagline>}
             {block.headline && (
-              <Heading size={headingSizeFromBlock(block)} style={{color: 'var(--section-heading)'}}>
+              <Heading
+                size={headingSizeFromBlock(block)}
+                style={{color: 'var(--section-heading)'}}
+                collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
+              >
                 {block.headline}
               </Heading>
             )}

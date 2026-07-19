@@ -25,11 +25,11 @@ export function CaseStudyProjectNav({
     <Container>
       <nav
         aria-label="Project navigation"
-        className="flex items-start justify-between gap-8 md:gap-12"
+        className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between md:gap-12"
       >
         <Link
           href={`/work/${prev.slug}`}
-          className="group min-w-0 flex-1 space-y-2 text-brand-charcoal"
+          className="group min-w-0 space-y-2 self-start text-left text-brand-charcoal md:flex-1"
         >
           <p className="font-mono text-xs tracking-normal md:text-sm">Previous</p>
           <p
@@ -41,7 +41,7 @@ export function CaseStudyProjectNav({
 
         <Link
           href={`/work/${next.slug}`}
-          className="group min-w-0 flex-1 space-y-2 text-right text-brand-charcoal"
+          className="group min-w-0 space-y-2 self-end text-right text-brand-charcoal md:flex-1"
         >
           <p className="font-mono text-xs tracking-normal md:text-sm">Next</p>
           <p

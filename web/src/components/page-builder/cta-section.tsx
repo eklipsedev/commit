@@ -25,6 +25,7 @@ export function CtaSection({block}: {block: CtaBlock}) {
             as="h2"
             size={size}
             className="min-w-0 flex-1"
+            collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
           />
           {block.button?.label ? (
             <CmsButton button={block.button} className="shrink-0 self-start" />

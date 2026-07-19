@@ -16,7 +16,11 @@ export function HeroSection({block}: {block: HeroBlock}) {
   return (
     <Section {...block}>
       <Container className="space-y-10 md:space-y-14">
-        <RichHeadline value={block.headline} size="hero" />
+        <RichHeadline
+          value={block.headline}
+          size="hero"
+          collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
+        />
         {(block.tagline || block.body || block.button) && (
           <div className="grid gap-8 md:grid-cols-[1fr_1.2fr] md:items-start">
             <div className="space-y-6">

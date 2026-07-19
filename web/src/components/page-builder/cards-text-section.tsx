@@ -16,14 +16,6 @@ type CardsTextBlock = PageBuilderBlock & {
   offerings?: OfferingCard[]
 }
 
-function chunkPairs<T>(items: T[]): T[][] {
-  const rows: T[][] = []
-  for (let i = 0; i < items.length; i += 2) {
-    rows.push(items.slice(i, i + 2))
-  }
-  return rows
-}
-
 function OfferingCardItem({offering}: {offering: OfferingCard}) {
   const {openOffering} = useOverlay()
   const cardRef = useRef<HTMLButtonElement>(null)
@@ -56,7 +48,7 @@ function OfferingCardItem({offering}: {offering: OfferingCard}) {
       }}
       onMouseLeave={() => setHovered(false)}
       onMouseMove={updateCursor}
-      className="relative flex h-full flex-col rounded-none p-8 text-left md:p-10"
+      className="relative flex h-full w-full flex-col rounded-none p-8 text-left md:p-10"
       style={{backgroundColor: bg, color: text}}
     >
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -94,26 +86,24 @@ function OfferingCardItem({offering}: {offering: OfferingCard}) {
 }
 
 export function CardsTextSection({block}: {block: CardsTextBlock}) {
-  const rows = chunkPairs(block.offerings ?? [])
+  const offerings = block.offerings ?? []
 
   return (
     <Section {...block}>
       <Container className="space-y-10">
         {block.heading && (
-          <Heading size={headingSizeFromBlock(block)} style={{color: 'var(--section-heading)'}}>
+          <Heading
+            size={headingSizeFromBlock(block)}
+            style={{color: 'var(--section-heading)'}}
+            collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
+          >
             {block.heading}
           </Heading>
         )}
-        <div className="space-y-10">
-          {rows.map((row, rowIndex) => (
-            <FadeIn
-              key={row.map((offering) => offering._id).join('-')}
-              className="grid gap-x-14 gap-y-10 sm:grid-cols-2"
-              delay={rowIndex === 0 ? 0 : 40}
-            >
-              {row.map((offering) => (
-                <OfferingCardItem key={offering._id} offering={offering} />
-              ))}
+        <div className="grid gap-x-14 gap-y-10 sm:grid-cols-2">
+          {offerings.map((offering, index) => (
+            <FadeIn key={offering._id} delay={Math.min(index, 3) * 40} className="h-full w-full">
+              <OfferingCardItem offering={offering} />
             </FadeIn>
           ))}
         </div>

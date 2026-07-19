@@ -2,6 +2,7 @@ import {defineArrayMember, defineField, defineType} from 'sanity'
 import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
 import {ImagesIcon} from '../../lib/icons'
 import {imageAltField, imageFieldOptions} from '../shared/image-fields'
+import {collapseLineBreaksOnMobileField} from '../shared/section-fields'
 
 const caseStudyImageFields = [imageAltField()]
 
@@ -112,6 +113,10 @@ export const projectType = defineType({
       description: 'Large display headline. Press Enter for line breaks.',
       group: 'caseStudy',
     }),
+    {
+      ...collapseLineBreaksOnMobileField(),
+      group: 'caseStudy',
+    },
     defineField({
       name: 'overviewBody',
       title: 'Overview body',

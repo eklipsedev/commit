@@ -13,10 +13,18 @@ type HeadingProps = {
   style?: React.CSSProperties
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'div'
   size?: LegacyHeadingSize
+  collapseLineBreaksOnMobile?: boolean
 }
 
 /** Plain-string / multi-line CMS headings using the shared Commit scale. */
-export function Heading({children, className, style, as, size = 'md'}: HeadingProps) {
+export function Heading({
+  children,
+  className,
+  style,
+  as,
+  size = 'md',
+  collapseLineBreaksOnMobile = false,
+}: HeadingProps) {
   if (!children) return null
 
   const resolved = resolveHeadingSize(size)
@@ -27,6 +35,7 @@ export function Heading({children, className, style, as, size = 'md'}: HeadingPr
       as={Tag}
       className={cn(HEADING_SIZE_CLASSES[resolved], className)}
       style={style}
+      collapseLineBreaksOnMobile={collapseLineBreaksOnMobile}
     >
       {children}
     </MultilineText>

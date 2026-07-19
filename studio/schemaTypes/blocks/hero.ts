@@ -1,6 +1,6 @@
 import {defineField, defineType} from 'sanity'
 import {BlockContentIcon} from '../../lib/icons'
-import {brandColorField, sectionSpacingFields} from '../shared/section-fields'
+import {brandColorField, collapseLineBreaksOnMobileField, sectionSpacingFields} from '../shared/section-fields'
 
 export const heroType = defineType({
   name: 'hero',
@@ -43,6 +43,7 @@ export const heroType = defineType({
     }),
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
+    {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
     {...brandColorField('backgroundColor', 'Background color'), group: 'style'},
     {...brandColorField('headingColor', 'Heading color'), group: 'style'},
     {...brandColorField('bodyColor', 'Body color'), group: 'style'},

@@ -1,5 +1,4 @@
 import {colorHex} from '@/lib/colors'
-import {HEADING_SIZE_CLASSES} from '@/lib/heading-styles'
 import {SanityImage} from '@/components/ui/sanity-image'
 import type {SanityImage as SanityImageType} from '@/sanity/types'
 
@@ -15,9 +14,11 @@ export type TestimonialCardData = {
 export function TestimonialCard({
   slide,
   fallbackBackground = 'burnt-orange',
+  priority,
 }: {
   slide: TestimonialCardData
   fallbackBackground?: string
+  priority?: boolean
 }) {
   const bg = colorHex(slide.backgroundColor, fallbackBackground as 'burnt-orange')
   const text = colorHex(slide.textColor, 'white')
@@ -32,6 +33,7 @@ export function TestimonialCard({
             fill
             sizes="(min-width: 768px) 33vw, 100vw"
             className="object-cover"
+            priority={priority}
           />
         )}
       </div>
@@ -39,7 +41,9 @@ export function TestimonialCard({
         className="flex flex-1 flex-col justify-between gap-10 p-8 md:p-10 lg:p-12"
         style={{backgroundColor: bg, color: text}}
       >
-        <blockquote className={HEADING_SIZE_CLASSES.md}>“{slide.quote}”</blockquote>
+        <blockquote className="font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]">
+          “{slide.quote}”
+        </blockquote>
         {(slide.name || slide.role) && (
           <div className="space-y-1 text-base leading-snug">
             {slide.name && <p className="font-medium">{slide.name}</p>}

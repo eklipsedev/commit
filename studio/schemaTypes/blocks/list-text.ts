@@ -1,6 +1,12 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {BulletOutlineIcon} from '../../lib/icons'
-import {brandColorField, headingSizeField, sectionSpacingFields, headingSizeLabel} from '../shared/section-fields'
+import {
+  brandColorField,
+  collapseLineBreaksOnMobileField,
+  headingSizeField,
+  sectionSpacingFields,
+  headingSizeLabel,
+} from '../shared/section-fields'
 
 export const listTextType = defineType({
   name: 'listText',
@@ -16,6 +22,15 @@ export const listTextType = defineType({
       name: 'tagline',
       title: 'Tagline',
       type: 'string',
+      group: 'content',
+    }),
+    defineField({
+      name: 'showTaglineRule',
+      title: 'Show tagline rule',
+      type: 'boolean',
+      initialValue: true,
+      description: 'When off, the line under the tagline is hidden and its spacing is removed.',
+      hidden: ({parent}) => !parent?.tagline,
       group: 'content',
     }),
     defineField({
@@ -49,6 +64,7 @@ export const listTextType = defineType({
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...headingSizeField({group: 'style'}), group: 'style'},
+    {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
     {...brandColorField('backgroundColor', 'Background color'), group: 'style'},
     {...brandColorField('headingColor', 'Heading color'), group: 'style'},
     {...brandColorField('bodyColor', 'Body color'), group: 'style'},

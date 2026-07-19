@@ -17,15 +17,13 @@ type TwoColCardsBlock = PageBuilderBlock & {
   projects?: ProjectCard[]
 }
 
-function chunkPairs<T>(items: T[]): T[][] {
-  const rows: T[][] = []
-  for (let i = 0; i < items.length; i += 2) {
-    rows.push(items.slice(i, i + 2))
-  }
-  return rows
-}
-
-function ProjectCardItem({project}: {project: ProjectCard}) {
+function ProjectCardItem({
+  project,
+  priority,
+}: {
+  project: ProjectCard
+  priority?: boolean
+}) {
   const slug = project.slug?.current
   const href = slug ? `/work/${slug}` : '#'
 
@@ -38,6 +36,7 @@ function ProjectCardItem({project}: {project: ProjectCard}) {
             alt={project.thumbnail.alt ?? project.title}
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
+            priority={priority}
             className="transition-transform duration-500 group-hover:scale-105"
           />
         )}
@@ -58,7 +57,7 @@ function ProjectCardItem({project}: {project: ProjectCard}) {
 
 export function TwoColCardsSection({block}: {block: TwoColCardsBlock}) {
   const showHeader = block.showHeader !== false
-  const rows = chunkPairs(block.projects ?? [])
+  const projects = block.projects ?? []
 
   return (
     <Section {...block}>
@@ -71,6 +70,7 @@ export function TwoColCardsSection({block}: {block: TwoColCardsBlock}) {
                 <Heading
                   size={headingSizeFromBlock(block)}
                   style={{color: 'var(--section-heading)'}}
+                  collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
                 >
                   {block.heading}
                 </Heading>
@@ -79,16 +79,10 @@ export function TwoColCardsSection({block}: {block: TwoColCardsBlock}) {
             </div>
           </div>
         )}
-        <div className="space-y-8 md:space-y-12">
-          {rows.map((row, rowIndex) => (
-            <FadeIn
-              key={row.map((project) => project._id).join('-')}
-              className="grid gap-8 md:grid-cols-2 md:gap-x-10"
-              delay={rowIndex === 0 ? 0 : 40}
-            >
-              {row.map((project) => (
-                <ProjectCardItem key={project._id} project={project} />
-              ))}
+        <div className="grid gap-8 md:grid-cols-2 md:gap-x-10 md:gap-y-12">
+          {projects.map((project, index) => (
+            <FadeIn key={project._id} delay={Math.min(index, 3) * 40}>
+              <ProjectCardItem project={project} priority={index < 2} />
             </FadeIn>
           ))}
         </div>

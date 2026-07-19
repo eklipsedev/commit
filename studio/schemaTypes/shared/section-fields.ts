@@ -50,6 +50,26 @@ export const sectionColorFields = [
 ]
 
 /**
+ * When enabled, CMS Enter line breaks only apply from `md` up.
+ * On mobile the copy flows as a continuous paragraph.
+ */
+export function collapseLineBreaksOnMobileField(options?: {
+  group?: string
+  hidden?: (ctx: {parent?: Record<string, unknown>}) => boolean
+}) {
+  return defineField({
+    name: 'collapseLineBreaksOnMobile',
+    title: 'Collapse line breaks on mobile',
+    type: 'boolean',
+    initialValue: false,
+    description:
+      'Keep desktop line breaks from Enter, but let the text reflow without those breaks on small screens.',
+    group: options?.group,
+    hidden: options?.hidden,
+  })
+}
+
+/**
  * Shared heading size for sections that use tagline + divider + heading.
  * Frontend tokens: Large 72px (`lg`), Mid 48px (`h3`), Medium 32px (`md`).
  */

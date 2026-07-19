@@ -9,22 +9,40 @@ import {
 } from '@/lib/heading-styles'
 import type {RichHeadline} from '@/sanity/types'
 
-function createComponents(size: HeadingSize): PortableTextComponents {
+function createComponents(
+  size: HeadingSize,
+  collapseLineBreaksOnMobile: boolean,
+): PortableTextComponents {
   return {
     block: {
       // Each Studio Enter creates a new block — render as lines, not inline spans.
+      // On mobile with collapse enabled, lines flow inline with a separating space.
       normal: ({children}) => (
         <span
           className={cn(
             HEADING_SIZE_CLASSES[size],
-            'block text-[var(--section-heading,var(--foreground))]',
+            'text-[var(--section-heading,var(--foreground))]',
+            collapseLineBreaksOnMobile ? 'inline md:block' : 'block',
           )}
         >
           {children}
+          {collapseLineBreaksOnMobile ? (
+            <span className="md:hidden" aria-hidden>
+              {' '}
+            </span>
+          ) : null}
         </span>
       ),
     },
-    hardBreak: () => <br />,
+    hardBreak: () =>
+      collapseLineBreaksOnMobile ? (
+        <>
+          <span className="md:hidden"> </span>
+          <br className="hidden md:block" />
+        </>
+      ) : (
+        <br />
+      ),
     marks: {
       em: ({children}) => <em className="italic">{children}</em>,
     },
@@ -38,6 +56,7 @@ type RichHeadlineProps = {
   size?: LegacyHeadingSize
   /** When true, spans the full container width. Default is max-w-4xl. */
   fullWidth?: boolean
+  collapseLineBreaksOnMobile?: boolean
 }
 
 export function RichHeadline({
@@ -46,6 +65,7 @@ export function RichHeadline({
   as,
   size = 'md',
   fullWidth = false,
+  collapseLineBreaksOnMobile = false,
 }: RichHeadlineProps) {
   if (!value?.length) return null
 
@@ -61,7 +81,10 @@ export function RichHeadline({
         className,
       )}
     >
-      <PortableText value={value} components={createComponents(resolved)} />
+      <PortableText
+        value={value}
+        components={createComponents(resolved, collapseLineBreaksOnMobile)}
+      />
     </Tag>
   )
 }

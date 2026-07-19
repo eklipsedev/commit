@@ -172,6 +172,13 @@ const PAGE_BUILDER_PROJECTION = `pageBuilder[]{
     ...,
     button ${BUTTON_PROJECTION}
   },
+  _type == "gridText" => {
+    ...,
+    items[]{
+      ...,
+      link ${LINK_PROJECTION}
+    }
+  },
   _type == "customSection" => {
     ...,
     modules[]{
@@ -180,7 +187,11 @@ const PAGE_BUILDER_PROJECTION = `pageBuilder[]{
       _type,
       _type == "moduleSplit" => {
         ...,
-        button ${BUTTON_PROJECTION}
+        button ${BUTTON_PROJECTION},
+        listServices[]->{
+          _id,
+          title
+        }
       },
       _type == "moduleStringList" => {
         ...,
@@ -259,6 +270,7 @@ export const PROJECT_BY_SLUG_QUERY = `*[_type == "project" && slug.current == $s
   },
   eyebrow,
   headline,
+  collapseLineBreaksOnMobile,
   overviewBody,
   overviewServices[]->{
     _id,

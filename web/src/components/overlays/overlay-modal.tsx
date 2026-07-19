@@ -47,7 +47,7 @@ export function OverlayModal({
   const closeStyle = {backgroundColor: textColor, color: background}
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center md:items-center md:p-8">
+    <div className="fixed inset-0 z-50 flex items-stretch justify-center md:items-center md:p-8">
       <button
         type="button"
         aria-label="Close overlay"
@@ -62,7 +62,8 @@ export function OverlayModal({
         role="dialog"
         aria-modal="true"
         className={cn(
-          'relative z-10 flex max-h-[90vh] w-full flex-col overflow-hidden md:max-w-3xl lg:max-w-4xl',
+          'relative z-10 flex h-dvh w-full flex-col overflow-hidden',
+          'md:h-auto md:max-h-[90vh] md:max-w-3xl lg:max-w-4xl',
           'origin-center transition-[opacity,transform] ease-out',
           visible ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-3 scale-95 opacity-0',
         )}
