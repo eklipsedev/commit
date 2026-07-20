@@ -13,6 +13,7 @@ export const teamType = defineType({
   title: 'Team',
   type: 'object',
   icon: UsersIcon,
+  description: 'Team member cards with photo; click opens the person overlay.',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},

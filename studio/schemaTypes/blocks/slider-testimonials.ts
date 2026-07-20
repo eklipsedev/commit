@@ -7,6 +7,7 @@ export const sliderTestimonialsType = defineType({
   title: 'Testimonials',
   type: 'object',
   icon: CommentIcon,
+  description: 'One testimonial stands alone; two or more become a slider.',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},

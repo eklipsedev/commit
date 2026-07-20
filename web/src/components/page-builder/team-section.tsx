@@ -73,21 +73,15 @@ function PersonCardItem({
           }}
         >
           {person.photo && (
-            <div
-              className={cn(
-                'absolute inset-x-0 bottom-0 overflow-hidden',
-                photoStyle === 'anchored' ? 'h-[90%]' : 'inset-0 h-full',
-              )}
-            >
+            <div className="absolute inset-0 flex items-end justify-center overflow-hidden">
               <SanityImage
+                key={person.photo.asset?._ref ?? person._id}
                 image={person.photo}
                 alt={person.photo.alt ?? person.name}
-                fill
+                width={800}
+                height={800}
                 sizes="(max-width: 768px) 50vw, 25vw"
-                className={cn(
-                  'object-cover',
-                  photoStyle === 'anchored' ? 'object-bottom' : 'object-center',
-                )}
+                className="h-[92.5%] w-auto max-w-full object-contain object-bottom"
               />
             </div>
           )}

@@ -10,6 +10,8 @@
  * | md     | 2rem (32px)       | 120%        | 0%             | h2 / h5     |
  */
 
+import {stegaClean} from 'next-sanity'
+
 export const HEADING_SIZES = ['hero', 'xl', 'lg', 'h3', 'md'] as const
 export type HeadingSize = (typeof HEADING_SIZES)[number]
 
@@ -17,9 +19,12 @@ export type HeadingSize = (typeof HEADING_SIZES)[number]
 export type LegacyHeadingSize = HeadingSize | 'section'
 
 export function resolveHeadingSize(size?: LegacyHeadingSize | null): HeadingSize {
-  if (size === 'section') return 'md'
-  if (size === 'hero' || size === 'xl' || size === 'lg' || size === 'h3' || size === 'md') {
-    return size
+  const cleaned =
+    typeof size === 'string' ? (stegaClean(size) as LegacyHeadingSize) : size
+
+  if (cleaned === 'section') return 'md'
+  if (cleaned === 'hero' || cleaned === 'xl' || cleaned === 'lg' || cleaned === 'h3' || cleaned === 'md') {
+    return cleaned
   }
   return 'md'
 }

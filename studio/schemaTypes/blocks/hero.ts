@@ -7,6 +7,7 @@ export const heroType = defineType({
   title: 'Hero',
   type: 'object',
   icon: BlockContentIcon,
+  description: 'Page intro with large headline, optional tagline, body, and button.',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},

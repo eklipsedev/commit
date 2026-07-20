@@ -11,9 +11,10 @@ import {
 
 export const twoColImageType = defineType({
   name: 'twoColImage',
-  title: '2-col image',
+  title: 'Image + story',
   type: 'object',
   icon: InlineIcon,
+  description: 'Image beside heading, body, and optional attribution (editorial split).',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
@@ -75,8 +76,8 @@ export const twoColImageType = defineType({
     select: {title: 'heading', media: 'image', headingSize: 'headingSize'},
     prepare({title, media, headingSize}) {
       return {
-        title: title || '2-col image',
-        subtitle: `2-col image · ${headingSizeLabel(headingSize)}`,
+        title: title || 'Image + story',
+        subtitle: `Image + story · ${headingSizeLabel(headingSize)}`,
         media: media ?? InlineIcon,
       }
     },

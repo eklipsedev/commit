@@ -10,9 +10,10 @@ import {
 
 export const gridMixedType = defineType({
   name: 'gridMixed',
-  title: 'Grid mixed',
+  title: 'Image collage',
   type: 'object',
   icon: ImagesIcon,
+  description: 'Seven-slot photo collage with optional tagline, heading, and button.',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
@@ -63,8 +64,8 @@ export const gridMixedType = defineType({
     },
     prepare({heading, headingSize, media}) {
       return {
-        title: heading || 'Grid mixed',
-        subtitle: `Grid mixed · 7 slots · ${headingSizeLabel(headingSize)}`,
+        title: heading || 'Image collage',
+        subtitle: `Image collage · 7 slots · ${headingSizeLabel(headingSize)}`,
         media: media || ImagesIcon,
       }
     },

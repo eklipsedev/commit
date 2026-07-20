@@ -15,6 +15,7 @@ export const logosType = defineType({
   title: 'Logos',
   type: 'object',
   icon: ImageIcon,
+  description: 'Client/partner logo strip — marquee or wrapping grid.',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},

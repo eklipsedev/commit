@@ -5,6 +5,10 @@ import {assist} from '@sanity/assist'
 import {visionTool} from '@sanity/vision'
 import {media} from 'sanity-plugin-media'
 import {muxInput} from 'sanity-plugin-mux-input'
+import {
+  hydrateBlockPreviewUrls,
+  listenForBlockPreviewUpdates,
+} from './lib/block-preview-urls'
 import {schemaTypes} from './schemaTypes'
 import {structure} from './structure'
 import {resolve} from './presentation/resolve'
@@ -12,6 +16,9 @@ import {resolve} from './presentation/resolve'
 const previewOrigin =
   (typeof process !== 'undefined' && process.env.SANITY_STUDIO_PREVIEW_ORIGIN) ||
   'http://localhost:3000'
+
+await hydrateBlockPreviewUrls()
+listenForBlockPreviewUpdates()
 
 export default defineConfig({
   name: 'default',

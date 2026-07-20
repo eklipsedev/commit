@@ -1,4 +1,5 @@
 import {defineArrayMember, defineType} from 'sanity'
+import {getBlockPreviewUrl} from '../lib/block-preview-urls'
 
 export const pageBuilderType = defineType({
   name: 'pageBuilder',
@@ -21,7 +22,41 @@ export const pageBuilderType = defineType({
   ],
   options: {
     insertMenu: {
-      views: [{name: 'grid'}, {name: 'list'}],
+      filter: true,
+      groups: [
+        {
+          name: 'intros',
+          title: 'Intros & CTAs',
+          of: ['hero', 'textColumns', 'cta'],
+        },
+        {
+          name: 'workOffers',
+          title: 'Work & offers',
+          of: ['twoColCards', 'cardsText', 'gridMixed'],
+        },
+        {
+          name: 'listsLinks',
+          title: 'Lists & links',
+          of: ['listText', 'gridText', 'twoColImage'],
+        },
+        {
+          name: 'peopleProof',
+          title: 'People & proof',
+          of: ['team', 'sliderTestimonials', 'logos'],
+        },
+        {
+          name: 'flexible',
+          title: 'Flexible',
+          of: ['customSection'],
+        },
+      ],
+      views: [
+        {
+          name: 'grid',
+          previewImageUrl: (type) => getBlockPreviewUrl(type),
+        },
+        {name: 'list'},
+      ],
     },
   },
 })

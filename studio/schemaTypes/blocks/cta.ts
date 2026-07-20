@@ -13,6 +13,7 @@ export const ctaType = defineType({
   title: 'CTA',
   type: 'object',
   icon: BoltIcon,
+  description: 'Closing call-to-action with tagline, headline, and button (or use the site default).',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},

@@ -10,6 +10,7 @@ import {testimonialReferenceType} from './objects/testimonial-reference'
 import {projectBrandColorType} from './objects/project-brand-color'
 import {projectTestimonialType} from './objects/project-testimonial'
 import {footerAppearanceType} from './objects/footer-appearance'
+import {redirectRuleType} from './objects/redirect-rule'
 import {
   overlayLabeledListType,
   overlayTextType,
@@ -39,6 +40,8 @@ import {testimonialType} from './documents/testimonial'
 import {offeringType} from './documents/offering'
 import {serviceType} from './documents/service'
 import {defaultCtaType} from './documents/default-cta'
+import {blockPreviewsType} from './documents/block-previews'
+import {redirectsType} from './documents/redirects'
 
 import {pageBuilderType} from './page-builder'
 import {heroType} from './blocks/hero'
@@ -72,6 +75,7 @@ export const schemaTypes = [
   projectBrandColorType,
   projectTestimonialType,
   footerAppearanceType,
+  redirectRuleType,
   gridMixedImagesType,
 
   // Offer overlay modules
@@ -103,6 +107,8 @@ export const schemaTypes = [
   offeringType,
   serviceType,
   defaultCtaType,
+  blockPreviewsType,
+  redirectsType,
 
   // Page builder blocks
   pageBuilderType,

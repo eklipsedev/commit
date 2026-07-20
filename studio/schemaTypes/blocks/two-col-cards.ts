@@ -10,9 +10,10 @@ import {
 
 export const twoColCardsType = defineType({
   name: 'twoColCards',
-  title: '2-col cards',
+  title: 'Project cards',
   type: 'object',
   icon: ThLargeIcon,
+  description: 'Two-column project cards with thumbnail, title, and categories. Links to case studies.',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
@@ -112,7 +113,7 @@ export const twoColCardsType = defineType({
         projectsSource === 'all' ? 'all projects' : `${projects?.length ?? 0} hand-picked`
       return {
         title: heading || 'Project cards',
-        subtitle: `2-col cards · ${source} · ${headingSizeLabel(headingSize)}`,
+        subtitle: `Project cards · ${source} · ${headingSizeLabel(headingSize)}`,
         media: ThLargeIcon,
       }
     },

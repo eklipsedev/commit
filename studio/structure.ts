@@ -4,6 +4,7 @@ import {
   BoltIcon,
   BlockElementIcon,
   BulletOutlineIcon,
+  CogIcon,
   CommentIcon,
   DocumentIcon,
   DocumentTextIcon,
@@ -11,6 +12,7 @@ import {
   HomeIcon,
   ImageIcon,
   ImagesIcon,
+  LinkIcon,
   MenuIcon,
   PackageIcon,
   UserIcon,
@@ -30,6 +32,8 @@ const HIDDEN_FROM_LIST = [
   'offering',
   'service',
   'defaultCta',
+  'blockPreviews',
+  'redirects',
   // Managed inside the Media / Mux tools — don't list in the desk
   'media.tag',
   'mux.videoAsset',
@@ -40,6 +44,7 @@ export const structure: StructureResolver = (S, context) =>
   S.list()
     .title('Content')
     .items([
+      S.divider().title('Website pages'),
       S.listItem()
         .title('Home')
         .icon(HomeIcon)
@@ -56,7 +61,7 @@ export const structure: StructureResolver = (S, context) =>
         .title('Legal pages')
         .icon(DocumentTextIcon)
         .child(S.documentTypeList('legalPage').title('Legal pages')),
-      S.divider(),
+      S.divider().title('Content library'),
       orderableDocumentListDeskItem({
         type: 'project',
         title: 'Projects',
@@ -106,7 +111,7 @@ export const structure: StructureResolver = (S, context) =>
         .title('Testimonials')
         .icon(CommentIcon)
         .child(S.documentTypeList('testimonial').title('Testimonials')),
-      S.divider(),
+      S.divider().title('Site settings'),
       S.listItem()
         .title('Navigation')
         .icon(MenuIcon)
@@ -116,10 +121,37 @@ export const structure: StructureResolver = (S, context) =>
         .icon(BlockElementIcon)
         .child(S.document().schemaType('footer').documentId('footer').title('Footer')),
       S.listItem()
-        .title('Default CTA')
-        .icon(BoltIcon)
+        .title('Config')
+        .icon(CogIcon)
         .child(
-          S.document().schemaType('defaultCta').documentId('defaultCta').title('Default CTA'),
+          S.list()
+            .title('Config')
+            .items([
+              S.listItem()
+                .title('Default CTA')
+                .icon(BoltIcon)
+                .child(
+                  S.document()
+                    .schemaType('defaultCta')
+                    .documentId('defaultCta')
+                    .title('Default CTA'),
+                ),
+              S.listItem()
+                .title('Section previews')
+                .icon(ImagesIcon)
+                .child(
+                  S.document()
+                    .schemaType('blockPreviews')
+                    .documentId('blockPreviews')
+                    .title('Section previews'),
+                ),
+              S.listItem()
+                .title('Redirects')
+                .icon(LinkIcon)
+                .child(
+                  S.document().schemaType('redirects').documentId('redirects').title('Redirects'),
+                ),
+            ]),
         ),
       ...S.documentTypeListItems().filter(
         (item) => !HIDDEN_FROM_LIST.includes(item.getId() as string),

@@ -4,9 +4,10 @@ import {brandColorField, collapseLineBreaksOnMobileField, sectionSpacingFields} 
 
 export const textColumnsType = defineType({
   name: 'textColumns',
-  title: 'Text columns',
+  title: 'Tagline + statement',
   type: 'object',
   icon: TextIcon,
+  description: 'Tagline with rule, then a large statement block on the right half.',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
@@ -39,8 +40,8 @@ export const textColumnsType = defineType({
     select: {tagline: 'tagline', body: 'body'},
     prepare({tagline, body}) {
       return {
-        title: tagline || body?.slice(0, 48) || 'Text columns',
-        subtitle: 'Text columns',
+        title: tagline || body?.slice(0, 48) || 'Tagline + statement',
+        subtitle: 'Tagline + statement',
         media: TextIcon,
       }
     },

@@ -10,9 +10,10 @@ import {
 
 export const listTextType = defineType({
   name: 'listText',
-  title: 'List text',
+  title: 'Ruled list',
   type: 'object',
   icon: BulletOutlineIcon,
+  description: 'Multi-column benefit/outcome list with horizontal rules between items.',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
@@ -74,8 +75,8 @@ export const listTextType = defineType({
     select: {tagline: 'tagline', items: 'items', headingSize: 'headingSize'},
     prepare({tagline, items, headingSize}) {
       return {
-        title: tagline || 'List text',
-        subtitle: `List text · ${items?.length ?? 0} items · ${headingSizeLabel(headingSize)}`,
+        title: tagline || 'Ruled list',
+        subtitle: `Ruled list · ${items?.length ?? 0} items · ${headingSizeLabel(headingSize)}`,
         media: BulletOutlineIcon,
       }
     },

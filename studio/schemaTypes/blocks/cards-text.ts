@@ -10,9 +10,10 @@ import {
 
 export const cardsTextType = defineType({
   name: 'cardsText',
-  title: 'Cards text',
+  title: 'Offerings cards',
   type: 'object',
   icon: StackCompactIcon,
+  description: 'Colored offering cards that open the offer overlay on click.',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
@@ -46,8 +47,8 @@ export const cardsTextType = defineType({
     select: {heading: 'heading', offerings: 'offerings', headingSize: 'headingSize'},
     prepare({heading, offerings, headingSize}) {
       return {
-        title: heading || 'Cards text',
-        subtitle: `Cards text · ${offerings?.length ?? 0} offerings · ${headingSizeLabel(headingSize)}`,
+        title: heading || 'Offerings cards',
+        subtitle: `Offerings cards · ${offerings?.length ?? 0} offerings · ${headingSizeLabel(headingSize)}`,
         media: StackCompactIcon,
       }
     },

@@ -9,9 +9,11 @@ import {brandColorField, sectionSpacingFields} from '../shared/section-fields'
  */
 export const customSectionType = defineType({
   name: 'customSection',
-  title: 'Custom',
+  title: 'Flexible section',
   type: 'object',
   icon: BlockContentIcon,
+  description:
+    'Compose a section from modules (tagline, headline, split, lists, attributes, steps, button).',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
@@ -49,9 +51,9 @@ export const customSectionType = defineType({
     select: {modules: 'modules'},
     prepare({modules}) {
       const count = modules?.length ?? 0
-      const first = modules?.[0]?._type?.replace(/^module/, '') || 'Custom'
+      const first = modules?.[0]?._type?.replace(/^module/, '') || 'Flexible'
       return {
-        title: `Custom · ${count} module${count === 1 ? '' : 's'}`,
+        title: `Flexible section · ${count} module${count === 1 ? '' : 's'}`,
         subtitle: first,
         media: BlockContentIcon,
       }

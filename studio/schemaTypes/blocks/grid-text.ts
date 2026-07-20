@@ -4,9 +4,11 @@ import {brandColorField, sectionSpacingFields} from '../shared/section-fields'
 
 export const gridTextType = defineType({
   name: 'gridText',
-  title: 'Grid text',
+  title: 'Linked text cards',
   type: 'object',
   icon: ComposeIcon,
+  description:
+    'Title + body cards that link out (audience pages, topics). Columns follow item count (max 4).',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
@@ -66,8 +68,8 @@ export const gridTextType = defineType({
     select: {tagline: 'tagline', items: 'items'},
     prepare({tagline, items}) {
       return {
-        title: tagline || 'Grid text',
-        subtitle: `Grid text · ${items?.length ?? 0} items`,
+        title: tagline || 'Linked text cards',
+        subtitle: `Linked text cards · ${items?.length ?? 0} items`,
         media: ComposeIcon,
       }
     },
