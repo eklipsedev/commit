@@ -42,6 +42,7 @@ import {serviceType} from './documents/service'
 import {defaultCtaType} from './documents/default-cta'
 import {defaultSeoType} from './documents/default-seo'
 import {blockPreviewsType} from './documents/block-previews'
+import {flexibleSectionTemplateType} from './documents/flexible-section-template'
 import {redirectsType} from './documents/redirects'
 
 import {pageBuilderType} from './page-builder'
@@ -109,6 +110,7 @@ export const schemaTypes = [
   defaultCtaType,
   defaultSeoType,
   blockPreviewsType,
+  flexibleSectionTemplateType,
   redirectsType,
 
   // Page builder blocks

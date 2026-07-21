@@ -101,6 +101,8 @@ Person cards also expose: `cardBackgroundColor`, `cardHoverBackgroundColor`, `bu
 
 `moduleSplit`: choose `layout` 1 or 2 columns, then stack modules in `content` (1-col) or `left` / `right` (2-col). Column modules may be any Flexible module except nested `moduleSplit`.
 
+**Flexible section templates** (`flexibleSectionTemplate` documents under Config): authoring presets. Inserting a Flexible section offers Blank or From template; choosing a template **copies** modules + styles onto the page (not a live link). Edit the page copy freely without affecting the library template or other pages.
+
 ### Design system in CMS
 
 - Colors: brand token select only. Designer-facing titles (Commit Yellow, Soft Peach, etc.).

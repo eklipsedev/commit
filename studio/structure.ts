@@ -2,6 +2,7 @@ import type {StructureResolver} from 'sanity/structure'
 import {orderableDocumentListDeskItem} from '@sanity/orderable-document-list'
 import {
   BoltIcon,
+  BlockContentIcon,
   BlockElementIcon,
   BulletOutlineIcon,
   CogIcon,
@@ -35,6 +36,7 @@ const HIDDEN_FROM_LIST = [
   'defaultCta',
   'defaultSeo',
   'blockPreviews',
+  'flexibleSectionTemplate',
   'redirects',
   // Managed inside the Media / Mux tools — don't list in the desk
   'media.tag',
@@ -158,6 +160,14 @@ export const structure: StructureResolver = (S, context) =>
                     .schemaType('blockPreviews')
                     .documentId('blockPreviews')
                     .title('Section previews'),
+                ),
+              S.listItem()
+                .title('Flexible section templates')
+                .icon(BlockContentIcon)
+                .child(
+                  S.documentTypeList('flexibleSectionTemplate').title(
+                    'Flexible section templates',
+                  ),
                 ),
               S.listItem()
                 .title('Redirects')

@@ -1,11 +1,18 @@
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import {defineType} from 'sanity'
 import {BlockContentIcon} from '../../lib/icons'
-import {brandColorField, sectionSpacingFields, COLORS_FIELDSET} from '../shared/section-fields'
+import {CustomSectionInput} from '../../components/custom-section-input'
+import {
+  COLORS_FIELDSET,
+  flexibleSectionContentFields,
+} from '../shared/flexible-section-fields'
 
 /**
  * Flexible section composed of nested modules.
  * Recreates the “custom” Figma layouts by stacking taglines, headlines,
  * splits, text grids, lists, attributes, steps, and buttons.
+ *
+ * New sections can start blank or copy a Flexible section template
+ * (Config → Flexible section templates). Copies are independent.
  */
 export const customSectionType = defineType({
   name: 'customSection',
@@ -13,41 +20,16 @@ export const customSectionType = defineType({
   type: 'object',
   icon: BlockContentIcon,
   description:
-    'Compose a section from modules (tagline, headline, split row, lists, attributes, steps, button).',
+    'Compose from modules, or start from a Flexible section template (copy, then edit freely).',
+  components: {
+    input: CustomSectionInput,
+  },
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
   ],
   fieldsets: [COLORS_FIELDSET],
-  fields: [
-    defineField({
-      name: 'modules',
-      title: 'Modules',
-      type: 'array',
-      description:
-        'Compose the section from reusable modules (tagline, headline, split, text grid, etc.)',
-      of: [
-        defineArrayMember({type: 'moduleTagline'}),
-        defineArrayMember({type: 'moduleHeadline'}),
-        defineArrayMember({type: 'moduleBody'}),
-        defineArrayMember({type: 'moduleSplit'}),
-        defineArrayMember({type: 'textGrid'}),
-        defineArrayMember({type: 'moduleStringList'}),
-        defineArrayMember({type: 'detailAttributes'}),
-        defineArrayMember({type: 'moduleSteps'}),
-        defineArrayMember({type: 'moduleButton'}),
-      ],
-      validation: (rule) => rule.min(1),
-      group: 'content',
-    }),
-    defineField({...sectionSpacingFields[0], group: 'style'}),
-    defineField({...sectionSpacingFields[1], group: 'style'}),
-    {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
-    {...brandColorField('headingColor', 'Heading color'), group: 'style', fieldset: 'colors'},
-    {...brandColorField('bodyColor', 'Body color'), group: 'style', fieldset: 'colors'},
-    {...brandColorField('taglineColor', 'Tagline color'), group: 'style', fieldset: 'colors'},
-    {...brandColorField('accentColor', 'Accent color'), group: 'style', fieldset: 'colors'},
-  ],
+  fields: flexibleSectionContentFields({modulesRequired: true}),
   preview: {
     select: {modules: 'modules'},
     prepare({modules}) {

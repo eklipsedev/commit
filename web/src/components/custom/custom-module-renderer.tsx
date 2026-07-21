@@ -109,7 +109,7 @@ function resolveGroupItems(group: TextGridGroup) {
 
 function textGridItemClass(itemSize?: 'sm' | 'md') {
   return itemSize === 'md'
-    ? 'font-display text-[2rem] font-normal leading-[1.2] tracking-normal'
+    ? 'font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]'
     : 'font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal'
 }
 
@@ -197,7 +197,7 @@ function StringListView({
   if (!labels.length) return null
   const itemClass =
     itemSize === 'md'
-      ? 'font-display text-[2rem] font-normal leading-[1.2] tracking-normal'
+      ? 'font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]'
       : 'font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal'
   return (
     <div className={cn('space-y-4', className)}>
@@ -269,7 +269,7 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
     case 'moduleBody':
       return (
         <p
-          className="max-w-3xl font-display text-[2rem] font-normal leading-[1.2] tracking-normal"
+          className="max-w-3xl font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]"
           style={{color: 'var(--section-body)'}}
         >
           {module.text}
@@ -312,7 +312,9 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
           />
           <div className="space-y-6">
             {module.rightType === 'body' && module.body && (
-              <p className="text-base leading-relaxed md:text-lg">{module.body}</p>
+              <p className="font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]">
+                {module.body}
+              </p>
             )}
             {module.rightType === 'list' && (
               <StringListView items={listItems} columns={module.listColumns} showRules />
@@ -375,7 +377,7 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
               >
                 {i + 1}
               </span>
-              <p className="font-display text-[2rem] font-normal leading-[1.2] tracking-normal">
+              <p className="font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]">
                 {step.text}
               </p>
             </li>
