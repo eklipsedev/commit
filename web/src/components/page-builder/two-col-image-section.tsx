@@ -11,7 +11,6 @@ type TwoColImageBlock = PageBuilderBlock & {
   image?: SanityImageType
   imagePosition?: 'left' | 'right'
   heading?: string
-  headingSize?: string
   body?: PortableTextBlock[]
 }
 
