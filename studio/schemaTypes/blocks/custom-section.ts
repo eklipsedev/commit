@@ -13,7 +13,7 @@ export const customSectionType = defineType({
   type: 'object',
   icon: BlockContentIcon,
   description:
-    'Compose a section from modules (tagline, headline, split, lists, attributes, steps, button).',
+    'Compose a section from modules (tagline, headline, split row, lists, attributes, steps, button).',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},

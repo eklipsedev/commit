@@ -95,103 +95,99 @@ export const moduleBodyType = defineType({
   },
 })
 
+const SPLIT_COLUMN_MODULES = [
+  defineArrayMember({type: 'moduleTagline'}),
+  defineArrayMember({type: 'moduleHeadline'}),
+  defineArrayMember({type: 'moduleBody'}),
+  defineArrayMember({type: 'textGrid'}),
+  defineArrayMember({type: 'moduleStringList'}),
+  defineArrayMember({type: 'detailAttributes'}),
+  defineArrayMember({type: 'moduleSteps'}),
+  defineArrayMember({type: 'moduleButton'}),
+]
+
 export const moduleSplitType = defineType({
   name: 'moduleSplit',
   title: 'Split row',
   type: 'object',
   icon: BlockContentIcon,
-  description: 'Headline on the left, body or list on the right',
+  description:
+    'One or two columns. Add any modules to each column (except nested split rows).',
   fields: [
     defineField({
-      name: 'headline',
-      title: 'Left headline',
-      type: 'richHeadline',
-    }),
-    headingSizeField({initialValue: 'md'}),
-    collapseLineBreaksOnMobileField(),
-    defineField({
-      name: 'rightType',
-      title: 'Right content',
-      type: 'string',
-      options: {
-        list: [
-          {title: 'Body text', value: 'body'},
-          {title: 'String list', value: 'list'},
-          {title: 'Text grid', value: 'textGrid'},
-        ],
-        layout: 'radio',
-      },
-      initialValue: 'body',
-    }),
-    defineField({
-      name: 'body',
-      title: 'Body',
-      type: 'text',
-      rows: 4,
-      hidden: ({parent}) => parent?.rightType !== 'body',
-    }),
-    defineField({
-      name: 'listSource',
-      title: 'List source',
-      type: 'string',
-      options: {
-        list: [
-          {title: 'Manual items', value: 'manual'},
-          {title: 'Services', value: 'services'},
-        ],
-        layout: 'radio',
-      },
-      initialValue: 'manual',
-      description:
-        'Use shared Services documents (same as case study overview), or type items manually.',
-      hidden: ({parent}) => parent?.rightType !== 'list',
-    }),
-    defineField({
-      name: 'listItems',
-      title: 'List items',
-      type: 'array',
-      of: [defineArrayMember({type: 'string'})],
-      hidden: ({parent}) =>
-        parent?.rightType !== 'list' || parent?.listSource === 'services',
-    }),
-    defineField({
-      name: 'listServices',
-      title: 'Services',
-      type: 'array',
-      of: [defineArrayMember({type: 'reference', to: [{type: 'service'}]})],
-      description:
-        'Create shared services under Services, or add new ones inline.',
-      hidden: ({parent}) =>
-        parent?.rightType !== 'list' || parent?.listSource !== 'services',
-    }),
-    defineField({
-      name: 'listColumns',
-      title: 'List columns',
+      name: 'layout',
+      title: 'Layout',
       type: 'number',
       options: {
         list: [
-          {title: '1', value: 1},
-          {title: '2', value: 2},
+          {title: '1 column', value: 1},
+          {title: '2 columns', value: 2},
         ],
+        layout: 'radio',
       },
       initialValue: 2,
-      hidden: ({parent}) => parent?.rightType !== 'list',
+      validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'textGrid',
-      title: 'Text grid',
-      type: 'textGrid',
-      hidden: ({parent}) => parent?.rightType !== 'textGrid',
+      name: 'content',
+      title: 'Content',
+      type: 'array',
+      of: SPLIT_COLUMN_MODULES,
+      description: 'Stack modules in a single full-width column.',
+      hidden: ({parent}) => parent?.layout !== 1,
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          const parent = context.parent as {layout?: number} | undefined
+          if (parent?.layout !== 1) return true
+          return value?.length ? true : 'Add at least one module'
+        }),
     }),
     defineField({
-      name: 'button',
-      title: 'Button (optional)',
-      type: 'button',
+      name: 'left',
+      title: 'Left column',
+      type: 'array',
+      of: SPLIT_COLUMN_MODULES,
+      description: 'Optional — leave empty to keep this column blank.',
+      hidden: ({parent}) => parent?.layout !== 2,
+    }),
+    defineField({
+      name: 'right',
+      title: 'Right column',
+      type: 'array',
+      of: SPLIT_COLUMN_MODULES,
+      description: 'Optional — leave empty to keep this column blank.',
+      hidden: ({parent}) => parent?.layout !== 2,
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          const parent = context.parent as {
+            layout?: number
+            left?: unknown[]
+          } | undefined
+          if (parent?.layout !== 2) return true
+          if (parent.left?.length || value?.length) return true
+          return 'Add modules to at least one column'
+        }),
     }),
   ],
   preview: {
-    prepare() {
-      return {title: 'Split row', subtitle: 'Split', media: BlockContentIcon}
+    select: {layout: 'layout', content: 'content', left: 'left', right: 'right'},
+    prepare({layout, content, left, right}) {
+      const cols = layout === 1 ? 1 : 2
+      const count =
+        cols === 1
+          ? (content?.length ?? 0)
+          : (left?.length ?? 0) + (right?.length ?? 0)
+      const emptyHint =
+        cols === 2 && (!(left?.length) || !(right?.length)) && count > 0
+          ? !(left?.length)
+            ? ' · right only'
+            : ' · left only'
+          : ''
+      return {
+        title: 'Split row',
+        subtitle: `${cols} column${cols === 1 ? '' : 's'} · ${count} module${count === 1 ? '' : 's'}${emptyHint}`,
+        media: BlockContentIcon,
+      }
     },
   },
 })
@@ -212,8 +208,35 @@ export const moduleStringListType = defineType({
       name: 'items',
       title: 'Items',
       type: 'array',
-      of: [defineArrayMember({type: 'string'})],
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'stringListItem',
+          title: 'One-off item',
+          fields: [
+            defineField({
+              name: 'text',
+              title: 'Text',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: {
+            select: {title: 'text'},
+            prepare({title}) {
+              return {title: title || 'Untitled item'}
+            },
+          },
+        }),
+        defineArrayMember({
+          type: 'reference',
+          to: [{type: 'service'}],
+          title: 'Service',
+        }),
+      ],
       validation: (rule) => rule.min(1),
+      description:
+        'Mix one-off lines and shared Services in any order. Create services under Services in the desk.',
     }),
     defineField({
       name: 'columns',
@@ -221,11 +244,26 @@ export const moduleStringListType = defineType({
       type: 'number',
       options: {
         list: [
+          {title: '1', value: 1},
           {title: '2', value: 2},
           {title: '3', value: 3},
         ],
       },
       initialValue: 2,
+    }),
+    defineField({
+      name: 'itemSize',
+      title: 'Item text size',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Small — 20px', value: 'sm'},
+          {title: 'Medium — 32px', value: 'md'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'sm',
+      description: 'Applies to all list items.',
     }),
     defineField({
       name: 'showRules',

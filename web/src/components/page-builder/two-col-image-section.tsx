@@ -11,12 +11,13 @@ type TwoColImageBlock = PageBuilderBlock & {
   image?: SanityImageType
   imagePosition?: 'left' | 'right'
   heading?: string
+  headingSize?: string
   body?: PortableTextBlock[]
-  attribution?: string
 }
 
 export function TwoColImageSection({block}: {block: TwoColImageBlock}) {
   const imageLeft = block.imagePosition !== 'right'
+  const headingSize = headingSizeFromBlock(block, 'md')
 
   const imageCol = (
     <div className="relative aspect-[4/5] overflow-hidden bg-neutral-100">
@@ -36,7 +37,7 @@ export function TwoColImageSection({block}: {block: TwoColImageBlock}) {
     <div className="flex flex-col justify-center space-y-6">
       {block.heading && (
         <Heading
-          size={headingSizeFromBlock(block)}
+          size={headingSize}
           style={{color: 'var(--section-heading)'}}
           collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
         >
@@ -44,9 +45,6 @@ export function TwoColImageSection({block}: {block: TwoColImageBlock}) {
         </Heading>
       )}
       <BodyPortableText value={block.body} />
-      {block.attribution && (
-        <p className="font-mono text-sm text-brand-charcoal">{block.attribution}</p>
-      )}
     </div>
   )
 

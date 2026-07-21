@@ -11,7 +11,6 @@ export const pageBuilderType = defineType({
     defineArrayMember({type: 'logos'}),
     defineArrayMember({type: 'twoColCards'}),
     defineArrayMember({type: 'twoColImage'}),
-    defineArrayMember({type: 'textColumns'}),
     defineArrayMember({type: 'listText'}),
     defineArrayMember({type: 'cardsText'}),
     defineArrayMember({type: 'gridText'}),
@@ -27,7 +26,7 @@ export const pageBuilderType = defineType({
         {
           name: 'intros',
           title: 'Intros & CTAs',
-          of: ['hero', 'textColumns', 'cta'],
+          of: ['hero', 'cta'],
         },
         {
           name: 'workOffers',

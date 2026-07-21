@@ -90,7 +90,7 @@ function PersonCardItem({
 
       {/* Name / role sit outside the colored headshot */}
       <div className="mt-4 space-y-1">
-        <p className="text-lg font-medium leading-snug text-brand-charcoal md:text-xl">
+        <p className="text-[2rem] font-medium leading-[1.2] text-brand-charcoal">
           {person.name}
         </p>
         {person.role && (

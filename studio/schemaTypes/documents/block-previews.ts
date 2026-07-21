@@ -7,7 +7,6 @@ import {ImagesIcon} from '../../lib/icons'
  */
 export const BLOCK_PREVIEW_FIELDS = [
   {name: 'hero', title: 'Hero'},
-  {name: 'textColumns', title: 'Tagline + statement'},
   {name: 'cta', title: 'CTA'},
   {name: 'twoColCards', title: 'Project cards'},
   {name: 'cardsText', title: 'Offerings cards'},

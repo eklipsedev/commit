@@ -58,12 +58,12 @@ export function Footer({data}: FooterProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={newsletter?.placeholder ?? 'Email Address'}
-                className="min-w-0 flex-1 border-0 border-b border-brand-charcoal bg-transparent pb-2 font-mono text-[1rem] leading-[1.2] text-brand-charcoal placeholder:text-brand-charcoal/70 focus:outline-none"
+                className="h-10 min-w-0 flex-1 border-0 border-b border-brand-charcoal bg-transparent font-mono text-[1rem] leading-none text-brand-charcoal placeholder:text-brand-charcoal/70 focus:outline-none"
               />
               <button
                 type="submit"
                 className={cn(
-                  'inline-flex shrink-0 items-center justify-center rounded-full border px-6 py-2.5 text-sm font-medium transition-colors',
+                  'inline-flex h-10 shrink-0 items-center justify-center rounded-full border px-6 text-sm font-medium transition-colors',
                   isPrimary ? 'border-transparent' : 'border-brand-charcoal',
                 )}
                 style={{backgroundColor: buttonBg, color: buttonText}}
@@ -127,7 +127,7 @@ export function Footer({data}: FooterProps) {
           />
         </div>
 
-        <div className="mt-8 flex flex-col gap-4 border-t border-brand-charcoal pt-6 font-mono text-[1rem] leading-[1.2] text-brand-charcoal sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 flex flex-col gap-4 border-t border-brand-charcoal pt-6 font-mono text-sm leading-[1.2] text-brand-charcoal md:text-[1rem] sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {year} {data?.copyrightText ?? 'Commit, All Rights Reserved'}
           </p>

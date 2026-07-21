@@ -50,7 +50,6 @@ import {ctaType} from './blocks/cta'
 import {logosType} from './blocks/logos'
 import {twoColCardsType} from './blocks/two-col-cards'
 import {twoColImageType} from './blocks/two-col-image'
-import {textColumnsType} from './blocks/text-columns'
 import {listTextType} from './blocks/list-text'
 import {cardsTextType} from './blocks/cards-text'
 import {gridTextType} from './blocks/grid-text'
@@ -119,7 +118,6 @@ export const schemaTypes = [
   logosType,
   twoColCardsType,
   twoColImageType,
-  textColumnsType,
   listTextType,
   cardsTextType,
   gridTextType,

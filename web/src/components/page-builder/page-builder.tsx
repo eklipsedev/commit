@@ -10,7 +10,6 @@ import {ListTextSection} from '@/components/page-builder/list-text-section'
 import {LogosSection} from '@/components/page-builder/logos-section'
 import {SliderTestimonialsSection} from '@/components/page-builder/slider-testimonials-section'
 import {TeamSection} from '@/components/page-builder/team-section'
-import {TextColumnsSection} from '@/components/page-builder/text-columns-section'
 import {TwoColCardsSection} from '@/components/page-builder/two-col-cards-section'
 import {TwoColImageSection} from '@/components/page-builder/two-col-image-section'
 import type {PageBuilderBlock} from '@/sanity/types'
@@ -32,8 +31,6 @@ export function PageBuilder({blocks}: {blocks?: PageBuilderBlock[]}) {
             return <TwoColCardsSection key={block._key} block={block} />
           case 'twoColImage':
             return <TwoColImageSection key={block._key} block={block} />
-          case 'textColumns':
-            return <TextColumnsSection key={block._key} block={block} />
           case 'listText':
             return <ListTextSection key={block._key} block={block} />
           case 'cardsText':

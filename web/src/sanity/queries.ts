@@ -38,6 +38,43 @@ const CTA_CONTENT_PROJECTION = `{
   button ${BUTTON_PROJECTION}
 }`
 
+const MIXED_LIST_ITEMS_PROJECTION = `items[]{
+  _type == "reference" => @->{
+    _id,
+    title
+  },
+  defined(_type) && _type != "reference" => {
+    _key,
+    _type,
+    text
+  },
+  !defined(_type) => @
+}`
+
+const TEXT_GRID_PROJECTION = `{
+  ...,
+  groups[]{
+    ...,
+    ${MIXED_LIST_ITEMS_PROJECTION}
+  }
+}`
+
+const CUSTOM_MODULE_ITEM_PROJECTION = `{
+  ...,
+  _key,
+  _type,
+  _type == "textGrid" => ${TEXT_GRID_PROJECTION},
+  _type == "moduleStringList" => {
+    ...,
+    ${MIXED_LIST_ITEMS_PROJECTION},
+    button ${BUTTON_PROJECTION}
+  },
+  _type == "moduleButton" => {
+    ...,
+    button ${BUTTON_PROJECTION}
+  }
+}`
+
 const PAGE_BUILDER_PROJECTION = `pageBuilder[]{
   ...,
   _key,
@@ -187,14 +224,21 @@ const PAGE_BUILDER_PROJECTION = `pageBuilder[]{
       _type,
       _type == "moduleSplit" => {
         ...,
+        content[]${CUSTOM_MODULE_ITEM_PROJECTION},
+        left[]${CUSTOM_MODULE_ITEM_PROJECTION},
+        right[]${CUSTOM_MODULE_ITEM_PROJECTION},
+        // Legacy fixed left-headline / right-content fields
         button ${BUTTON_PROJECTION},
         listServices[]->{
           _id,
           title
-        }
+        },
+        textGrid${TEXT_GRID_PROJECTION}
       },
+      _type == "textGrid" => ${TEXT_GRID_PROJECTION},
       _type == "moduleStringList" => {
         ...,
+        ${MIXED_LIST_ITEMS_PROJECTION},
         button ${BUTTON_PROJECTION}
       },
       _type == "moduleButton" => {

@@ -87,7 +87,6 @@ Person cards also expose: `cardBackgroundColor`, `cardHoverBackgroundColor`, `bu
 | `logos` | `fullWidth` marquee \| `limited` wrap |
 | `twoColCards` | Project refs; optional header |
 | `twoColImage` | Image + PT + attribution |
-| `textColumns` | Tagline + asymmetric body |
 | `listText` | Tagline, optional headline, ruled/list items |
 | `cardsText` | Offering refs → open overlay |
 | `gridText` | Audience/text columns with links |
@@ -99,6 +98,8 @@ Person cards also expose: `cardBackgroundColor`, `cardHoverBackgroundColor`, `bu
 ### Custom section modules
 
 `customSection.modules[]`: moduleTagline, moduleHeadline, moduleBody, moduleSplit, textGrid, moduleStringList, detailAttributes, moduleSteps, moduleButton
+
+`moduleSplit`: choose `layout` 1 or 2 columns, then stack modules in `content` (1-col) or `left` / `right` (2-col). Column modules may be any Flexible module except nested `moduleSplit`.
 
 ### Design system in CMS
 

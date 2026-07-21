@@ -97,7 +97,9 @@ export function IntroLoader() {
       setPhase('morph')
 
       const fadeTimer = window.setTimeout(() => {
-        // Reveal nav logo under the landing wordmark before fading the overlay
+        // Drop the CSS cover at the same moment the overlay fades, so yellow +
+        // wordmark disappear together (otherwise ::before outlives the fade).
+        document.documentElement.classList.remove('intro-pending')
         setIntroActive(false)
         setPhase('fade')
         const doneTimer = window.setTimeout(finish, FADE_MS)
