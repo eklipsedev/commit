@@ -1,6 +1,6 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {ImageIcon} from '../../lib/icons'
-import {brandColorField, sectionSpacingFields} from '../shared/section-fields'
+import {brandColorField, sectionSpacingFields, COLORS_FIELDSET} from '../shared/section-fields'
 
 function refKey(id: string) {
   return id.replace(/^drafts\./, '').replace(/[^a-zA-Z0-9]/g, '').slice(-12) || 'logo'
@@ -20,6 +20,7 @@ export const logosType = defineType({
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
   ],
+  fieldsets: [COLORS_FIELDSET],
   fields: [
     defineField({
       name: 'variant',
@@ -66,7 +67,7 @@ export const logosType = defineType({
     }),
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
-    {...brandColorField('backgroundColor', 'Background color'), group: 'style'},
+    {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
   ],
   preview: {
     select: {variant: 'variant', logos: 'logos'},

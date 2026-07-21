@@ -209,6 +209,13 @@ export const DEFAULT_CTA_QUERY = `*[_id == "defaultCta"][0]{
   cta ${CTA_CONTENT_PROJECTION}
 }`
 
+export const DEFAULT_SEO_QUERY = `*[_id == "defaultSeo"][0]{
+  siteName,
+  title,
+  description,
+  image
+}`
+
 export const NAVIGATION_QUERY = `*[_id == "navigation"][0]{
   logo,
   items[]{
@@ -377,6 +384,7 @@ export const CONTACT_PAGE_QUERY = `*[_id == "contactPage"][0]{
 
 export const LEGAL_PAGE_BY_SLUG_QUERY = `*[_type == "legalPage" && slug.current == $slug][0]{
   heading,
+  collapseLineBreaksOnMobile,
   slug,
   description,
   body,

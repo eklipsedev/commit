@@ -1,17 +1,23 @@
 import {defineField, defineType} from 'sanity'
 import {BlockContentIcon} from '../../lib/icons'
-import {brandColorField, collapseLineBreaksOnMobileField, sectionSpacingFields} from '../shared/section-fields'
+import {
+  brandColorField,
+  collapseLineBreaksOnMobileField,
+  sectionSpacingFields,
+  COLORS_FIELDSET,
+} from '../shared/section-fields'
 
 export const heroType = defineType({
   name: 'hero',
   title: 'Hero',
   type: 'object',
   icon: BlockContentIcon,
-  description: 'Page intro with large headline, optional tagline, body, and button.',
+  description: 'Page intro with large headline and optional tagline.',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
   ],
+  fieldsets: [COLORS_FIELDSET],
   fields: [
     defineField({
       name: 'tagline',
@@ -28,27 +34,13 @@ export const heroType = defineType({
       validation: (rule) => rule.required(),
       group: 'content',
     }),
-    defineField({
-      name: 'body',
-      title: 'Body',
-      type: 'text',
-      rows: 3,
-      group: 'content',
-    }),
-    defineField({
-      name: 'button',
-      title: 'Button',
-      type: 'button',
-      description: 'Optional — most heroes have no button',
-      group: 'content',
-    }),
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
-    {...brandColorField('backgroundColor', 'Background color'), group: 'style'},
-    {...brandColorField('headingColor', 'Heading color'), group: 'style'},
-    {...brandColorField('bodyColor', 'Body color'), group: 'style'},
-    {...brandColorField('taglineColor', 'Tagline color'), group: 'style'},
+    {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
+    {...brandColorField('headingColor', 'Heading color'), group: 'style', fieldset: 'colors'},
+    {...brandColorField('bodyColor', 'Body color'), group: 'style', fieldset: 'colors'},
+    {...brandColorField('taglineColor', 'Tagline color'), group: 'style', fieldset: 'colors'},
   ],
   preview: {
     select: {tagline: 'tagline'},

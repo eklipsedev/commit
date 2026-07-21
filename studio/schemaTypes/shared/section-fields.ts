@@ -2,11 +2,26 @@ import {defineField} from 'sanity'
 import {BRAND_COLORS} from '../../lib/brand-colors'
 import {BrandColorInput} from '../../components/brand-color-input'
 
+/** Collapsible fieldset for tucking brand color overrides away (like Link on buttons). */
+export const COLORS_FIELDSET = {
+  name: 'colors',
+  title: 'Colors',
+  options: {
+    collapsible: true,
+    collapsed: true,
+  },
+} as const
+
 /** Brand palette select — stores token name, not hex. */
 export function brandColorField(
   name: string,
   title: string,
-  options?: {description?: string; required?: boolean},
+  options?: {
+    description?: string
+    required?: boolean
+    group?: string
+    fieldset?: string
+  },
 ) {
   return defineField({
     name,
@@ -24,6 +39,8 @@ export function brandColorField(
       input: BrandColorInput,
     },
     validation: options?.required ? (rule) => rule.required() : undefined,
+    group: options?.group,
+    fieldset: options?.fieldset,
   })
 }
 

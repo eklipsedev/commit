@@ -3,7 +3,7 @@ import {DocumentIcon} from '../../lib/icons'
 
 export const pageType = defineType({
   name: 'page',
-  title: 'Page',
+  title: 'Landing page',
   type: 'document',
   icon: DocumentIcon,
   groups: [

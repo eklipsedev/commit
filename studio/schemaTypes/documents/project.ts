@@ -1,6 +1,7 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
 import {ImagesIcon} from '../../lib/icons'
+import {WorkSlugInput} from '../../components/prefixed-slug-input'
 import {imageAltField, imageFieldOptions} from '../shared/image-fields'
 import {collapseLineBreaksOnMobileField} from '../shared/section-fields'
 
@@ -36,7 +37,9 @@ export const projectType = defineType({
       title: 'Slug',
       type: 'slug',
       options: {source: 'title', maxLength: 96},
+      components: {input: WorkSlugInput},
       validation: (rule) => rule.required(),
+      description: 'URL path after /work/',
       group: 'card',
     }),
     defineField({

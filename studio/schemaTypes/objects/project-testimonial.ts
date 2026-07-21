@@ -1,6 +1,7 @@
 import {defineField, defineType} from 'sanity'
 import {CommentIcon} from '../../lib/icons'
 import {ProjectBrandColorInput} from '../../components/project-brand-color-input'
+import {COLORS_FIELDSET} from '../shared/section-fields'
 
 function projectBrandColorField(name: string, title: string, description?: string) {
   return defineField({
@@ -8,6 +9,7 @@ function projectBrandColorField(name: string, title: string, description?: strin
     title,
     type: 'string',
     description,
+    fieldset: 'colors',
     components: {
       input: ProjectBrandColorInput,
     },
@@ -23,6 +25,7 @@ export const projectTestimonialType = defineType({
   title: 'Testimonial',
   type: 'object',
   icon: CommentIcon,
+  fieldsets: [COLORS_FIELDSET],
   fields: [
     defineField({
       name: 'testimonial',

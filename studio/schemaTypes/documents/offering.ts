@@ -1,6 +1,10 @@
+import {createElement} from 'react'
 import {defineArrayMember, defineField, defineType} from 'sanity'
+import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
+import {OfferingColorMedia} from '../../components/offering-color-media'
 import {PackageIcon} from '../../lib/icons'
-import {brandColorField} from '../shared/section-fields'
+import {DEFAULT_OFFERING_DETAILS} from '../shared/offering-defaults'
+import {brandColorField, COLORS_FIELDSET} from '../shared/section-fields'
 
 /**
  * Offerings open in a shared overlay pattern (see design/components/offer-overlay).
@@ -11,11 +15,14 @@ export const offeringType = defineType({
   title: 'Offering',
   type: 'document',
   icon: PackageIcon,
+  orderings: [orderRankOrdering],
   groups: [
     {name: 'card', title: 'Card', default: true},
     {name: 'overlay', title: 'Overlay'},
   ],
+  fieldsets: [COLORS_FIELDSET],
   fields: [
+    orderRankField({type: 'offering', newItemPosition: 'before'}),
     defineField({
       name: 'title',
       title: 'Offer type',
@@ -56,22 +63,25 @@ export const offeringType = defineType({
     }),
     {
       ...brandColorField('cardBackgroundColor', 'Card background', {
+        fieldset: 'colors',
         description: 'Also used as the offer overlay background',
       }),
       group: 'card',
     },
     {
       ...brandColorField('cardHeadingColor', 'Card heading / text', {
+        fieldset: 'colors',
         description: 'Also used as the offer overlay text color',
       }),
       group: 'card',
     },
-    {...brandColorField('cardBodyColor', 'Card body'), group: 'card'},
+    {...brandColorField('cardBodyColor', 'Card body'), group: 'card', fieldset: 'colors'},
     {
       ...brandColorField('buttonBackgroundColor', 'Button background color'),
       group: 'card',
+      fieldset: 'colors',
     },
-    {...brandColorField('buttonTextColor', 'Button text color'), group: 'card'},
+    {...brandColorField('buttonTextColor', 'Button text color'), group: 'card', fieldset: 'colors'},
 
     defineField({
       name: 'snippet',
@@ -95,9 +105,24 @@ export const offeringType = defineType({
       title: 'Attributes',
       type: 'detailAttributes',
       group: 'overlay',
+      description:
+        'Starts with the standard four labels — edit, add, or remove as needed for this offering.',
+      initialValue: DEFAULT_OFFERING_DETAILS,
     }),
   ],
   preview: {
-    select: {title: 'title', subtitle: 'timeline'},
+    select: {
+      title: 'title',
+      subtitle: 'timeline',
+      background: 'cardBackgroundColor',
+      foreground: 'cardHeadingColor',
+    },
+    prepare({title, subtitle, background, foreground}) {
+      return {
+        title: title || 'Offering',
+        subtitle,
+        media: createElement(OfferingColorMedia, {background, foreground}),
+      }
+    },
   },
 })

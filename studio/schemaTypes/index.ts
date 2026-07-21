@@ -40,6 +40,7 @@ import {testimonialType} from './documents/testimonial'
 import {offeringType} from './documents/offering'
 import {serviceType} from './documents/service'
 import {defaultCtaType} from './documents/default-cta'
+import {defaultSeoType} from './documents/default-seo'
 import {blockPreviewsType} from './documents/block-previews'
 import {redirectsType} from './documents/redirects'
 
@@ -107,6 +108,7 @@ export const schemaTypes = [
   offeringType,
   serviceType,
   defaultCtaType,
+  defaultSeoType,
   blockPreviewsType,
   redirectsType,
 

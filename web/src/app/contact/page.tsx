@@ -1,13 +1,31 @@
 import {notFound} from 'next/navigation'
+import type {Metadata} from 'next'
 import Link from 'next/link'
 import {Container} from '@/components/ui/container'
 import {RichHeadline} from '@/components/ui/rich-headline'
 import {Tagline} from '@/components/ui/tagline'
 import {SetFooterAppearance} from '@/components/layout/set-footer-appearance'
 import {resolveLinkHref} from '@/lib/links'
+import {resolveSeoMetadata, richTextToPlain, type DefaultSeo, type PageSeo} from '@/lib/seo'
 import {sanityFetch} from '@/sanity/live'
-import {CONTACT_PAGE_QUERY} from '@/sanity/queries'
+import {CONTACT_PAGE_QUERY, DEFAULT_SEO_QUERY} from '@/sanity/queries'
 import type {FooterAppearance, RichHeadline as RichHeadlineType} from '@/sanity/types'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const [{data}, {data: defaults}] = await Promise.all([
+    sanityFetch({query: CONTACT_PAGE_QUERY, stega: false}),
+    sanityFetch({query: DEFAULT_SEO_QUERY, stega: false}),
+  ])
+
+  const page = data as {seo?: PageSeo; heading?: RichHeadlineType} | null
+
+  return resolveSeoMetadata({
+    pageSeo: page?.seo,
+    defaults: defaults as DefaultSeo | null,
+    fallbackTitle: richTextToPlain(page?.heading) || 'Contact',
+    path: '/contact',
+  })
+}
 
 export default async function ContactPage() {
   const {data} = await sanityFetch({query: CONTACT_PAGE_QUERY})
@@ -23,6 +41,7 @@ export default async function ContactPage() {
       link?: import('@/lib/links').LinkValue
     }[]
     footerAppearance?: FooterAppearance
+    seo?: PageSeo
   }
 
   return (

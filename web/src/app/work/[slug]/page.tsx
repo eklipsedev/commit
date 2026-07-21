@@ -1,4 +1,5 @@
 import {notFound} from 'next/navigation'
+import type {Metadata} from 'next'
 import {CaseStudyHero} from '@/components/case-study/hero'
 import {CaseStudyMediaGrid} from '@/components/case-study/media-grid'
 import {CaseStudyOverview} from '@/components/case-study/overview'
@@ -9,12 +10,42 @@ import {CtaSection} from '@/components/page-builder/cta-section'
 import {Container} from '@/components/ui/container'
 import {Heading} from '@/components/ui/heading'
 import {resolveProjectCta, type CtaContent} from '@/lib/resolve-cta'
+import {resolveSeoMetadata, type DefaultSeo, type PageSeo} from '@/lib/seo'
 import {sanityFetch} from '@/sanity/live'
-import {PROJECT_BY_SLUG_QUERY} from '@/sanity/queries'
-import type {CaseStudyProject, PageBuilderBlock} from '@/sanity/types'
+import {DEFAULT_SEO_QUERY, PROJECT_BY_SLUG_QUERY} from '@/sanity/queries'
+import type {CaseStudyProject, PageBuilderBlock, SanityImage} from '@/sanity/types'
 
 type PageProps = {
   params: Promise<{slug: string}>
+}
+
+export async function generateMetadata({params}: PageProps): Promise<Metadata> {
+  const {slug} = await params
+  const [{data}, {data: defaults}] = await Promise.all([
+    sanityFetch({query: PROJECT_BY_SLUG_QUERY, params: {slug}, stega: false}),
+    sanityFetch({query: DEFAULT_SEO_QUERY, stega: false}),
+  ])
+
+  const project = data as {
+    seo?: PageSeo
+    title?: string
+    summary?: string
+    thumbnail?: SanityImage
+  } | null
+  if (!project) return {}
+
+  const pageSeo: PageSeo = {
+    ...project.seo,
+    image: project.seo?.image || project.thumbnail || null,
+  }
+
+  return resolveSeoMetadata({
+    pageSeo,
+    defaults: defaults as DefaultSeo | null,
+    fallbackTitle: project.title,
+    fallbackDescription: project.summary,
+    path: `/work/${slug}`,
+  })
 }
 
 export default async function WorkProjectPage({params}: PageProps) {
@@ -29,12 +60,12 @@ export default async function WorkProjectPage({params}: PageProps) {
   const project = data as CaseStudyProject & {
     ctaMode?: 'default' | 'custom' | 'hidden'
     defaultCta?: CtaContent
+    seo?: PageSeo
   }
   const categoryLine = project.categories?.filter(Boolean).join(' / ')
   const hasOverview = Boolean(
     project.overviewBody?.length || project.overviewServices?.length,
   )
-
 
   const resolvedCta = resolveProjectCta(project.ctaMode, project.cta, project.defaultCta)
   const ctaBlock = resolvedCta

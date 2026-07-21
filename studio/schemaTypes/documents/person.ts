@@ -1,7 +1,7 @@
 import {defineField, defineType} from 'sanity'
 import {UserIcon} from '../../lib/icons'
 import {imageAltField, imageFieldOptions} from '../shared/image-fields'
-import {brandColorField} from '../shared/section-fields'
+import {brandColorField, COLORS_FIELDSET} from '../shared/section-fields'
 
 /**
  * Person — either a Commit employee (team + about overlay) or a
@@ -16,6 +16,7 @@ export const personType = defineType({
     {name: 'card', title: 'Card', default: true},
     {name: 'overlay', title: 'Overlay'},
   ],
+  fieldsets: [COLORS_FIELDSET],
   fields: [
     defineField({
       name: 'kind',
@@ -65,10 +66,12 @@ export const personType = defineType({
     {
       ...brandColorField('cardBackgroundColor', 'Card background'),
       group: 'card',
+      fieldset: 'colors',
       hidden: ({document}) => document?.kind === 'testimonial',
     },
     {
       ...brandColorField('cardHoverBackgroundColor', 'Card hover / modal background', {
+        fieldset: 'colors',
         description:
           'Shown in the corners on card hover, and used as the about modal background.',
       }),
@@ -78,11 +81,13 @@ export const personType = defineType({
     {
       ...brandColorField('buttonBackgroundColor', 'Button background color'),
       group: 'card',
+      fieldset: 'colors',
       hidden: ({document}) => document?.kind === 'testimonial',
     },
     {
       ...brandColorField('buttonTextColor', 'Button text color'),
       group: 'card',
+      fieldset: 'colors',
       hidden: ({document}) => document?.kind === 'testimonial',
     },
 
@@ -96,6 +101,7 @@ export const personType = defineType({
     }),
     {
       ...brandColorField('textColor', 'Modal text color', {
+        fieldset: 'colors',
         description: 'Text color inside the about modal',
       }),
       group: 'overlay',

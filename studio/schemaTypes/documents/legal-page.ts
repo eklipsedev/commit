@@ -1,5 +1,7 @@
 import {defineField, defineType} from 'sanity'
 import {DocumentTextIcon} from '../../lib/icons'
+import {LegalSlugInput} from '../../components/prefixed-slug-input'
+import {collapseLineBreaksOnMobileField} from '../shared/section-fields'
 
 export const legalPageType = defineType({
   name: 'legalPage',
@@ -15,16 +17,19 @@ export const legalPageType = defineType({
     defineField({
       name: 'heading',
       title: 'Page heading',
-      type: 'string',
+      type: 'richHeadline',
       validation: (rule) => rule.required(),
       group: 'content',
     }),
+    collapseLineBreaksOnMobileField({group: 'content'}),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      options: {source: 'heading', maxLength: 96},
+      options: {maxLength: 96},
+      components: {input: LegalSlugInput},
       validation: (rule) => rule.required(),
+      description: 'URL path after /legal/',
       group: 'content',
     }),
     defineField({
@@ -56,6 +61,12 @@ export const legalPageType = defineType({
     }),
   ],
   preview: {
-    select: {title: 'heading', subtitle: 'slug.current'},
+    select: {slug: 'slug.current'},
+    prepare({slug}) {
+      return {
+        title: slug ? slug.replace(/-/g, ' ') : 'Legal page',
+        subtitle: slug ? `/legal/${slug}` : undefined,
+      }
+    },
   },
 })

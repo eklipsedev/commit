@@ -1,6 +1,11 @@
 import {defineField, defineType} from 'sanity'
 import {TextIcon} from '../../lib/icons'
-import {brandColorField, collapseLineBreaksOnMobileField, sectionSpacingFields} from '../shared/section-fields'
+import {
+  brandColorField,
+  collapseLineBreaksOnMobileField,
+  sectionSpacingFields,
+  COLORS_FIELDSET,
+} from '../shared/section-fields'
 
 export const textColumnsType = defineType({
   name: 'textColumns',
@@ -12,6 +17,7 @@ export const textColumnsType = defineType({
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
   ],
+  fieldsets: [COLORS_FIELDSET],
   fields: [
     defineField({
       name: 'tagline',
@@ -32,9 +38,9 @@ export const textColumnsType = defineType({
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
-    {...brandColorField('backgroundColor', 'Background color'), group: 'style'},
-    {...brandColorField('taglineColor', 'Tagline color'), group: 'style'},
-    {...brandColorField('bodyColor', 'Body color'), group: 'style'},
+    {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
+    {...brandColorField('taglineColor', 'Tagline color'), group: 'style', fieldset: 'colors'},
+    {...brandColorField('bodyColor', 'Body color'), group: 'style', fieldset: 'colors'},
   ],
   preview: {
     select: {tagline: 'tagline', body: 'body'},

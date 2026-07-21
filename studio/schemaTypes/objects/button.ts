@@ -1,6 +1,6 @@
 import {defineField, defineType} from 'sanity'
 import {ChevronRightIcon} from '../../lib/icons'
-import {brandColorField} from '../shared/section-fields'
+import {brandColorField, COLORS_FIELDSET} from '../shared/section-fields'
 
 type LinkValue = {
   label?: string
@@ -49,6 +49,7 @@ export const buttonType = defineType({
   type: 'object',
   icon: ChevronRightIcon,
   description: 'Leave blank if this section should have no button',
+  fieldsets: [COLORS_FIELDSET],
   fields: [
     defineField({
       name: 'label',
@@ -76,12 +77,18 @@ export const buttonType = defineType({
     }),
     brandColorField('backgroundColor', 'Background color', {
       description: 'Default fill (primary) or hover fill (secondary)',
+      fieldset: 'colors',
     }),
     brandColorField('textColor', 'Text color', {
       description: 'Label color in the default state',
+      fieldset: 'colors',
     }),
-    brandColorField('hoverBackgroundColor', 'Hover background color'),
-    brandColorField('hoverTextColor', 'Hover text color'),
+    brandColorField('hoverBackgroundColor', 'Hover background color', {
+      fieldset: 'colors',
+    }),
+    brandColorField('hoverTextColor', 'Hover text color', {
+      fieldset: 'colors',
+    }),
   ],
   validation: (rule) =>
     rule.custom((button) => {

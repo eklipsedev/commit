@@ -1,6 +1,6 @@
 import {defineField, defineType} from 'sanity'
 import {CommentIcon} from '../../lib/icons'
-import {brandColorField} from '../shared/section-fields'
+import {brandColorField, COLORS_FIELDSET} from '../shared/section-fields'
 
 /**
  * Reuses a testimonial document with optional color overrides for this placement.
@@ -10,6 +10,7 @@ export const testimonialReferenceType = defineType({
   title: 'Existing testimonial',
   type: 'object',
   icon: CommentIcon,
+  fieldsets: [COLORS_FIELDSET],
   fields: [
     defineField({
       name: 'testimonial',
@@ -19,9 +20,11 @@ export const testimonialReferenceType = defineType({
       validation: (rule) => rule.required(),
     }),
     brandColorField('backgroundColor', 'Background color override', {
+      fieldset: 'colors',
       description: 'Leave empty to use the testimonial’s own background color',
     }),
     brandColorField('textColor', 'Text color override', {
+      fieldset: 'colors',
       description: 'Leave empty to use the testimonial’s own text color',
     }),
   ],

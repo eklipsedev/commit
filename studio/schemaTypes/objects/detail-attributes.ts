@@ -2,8 +2,10 @@ import {defineArrayMember, defineField, defineType} from 'sanity'
 import {BulletOutlineIcon} from '../../lib/icons'
 
 /**
- * Editable labeled attributes (Flat Fee, Timeline, Potential Team, etc.).
+ * Editable labeled attributes (Flat Fee, Timeline, Potential Team, Time Commitment, etc.).
  * Values support one or many lines (e.g. team roles).
+ * Offerings seed a standard set via `DEFAULT_OFFERING_DETAILS` — this object stays
+ * flexible so custom sections can use different labels.
  */
 export const detailAttributesType = defineType({
   name: 'detailAttributes',

@@ -6,6 +6,7 @@ import {
   headingSizeField,
   sectionSpacingFields,
   headingSizeLabel,
+  COLORS_FIELDSET,
 } from '../shared/section-fields'
 
 export const cardsTextType = defineType({
@@ -18,6 +19,7 @@ export const cardsTextType = defineType({
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
   ],
+  fieldsets: [COLORS_FIELDSET],
   fields: [
     defineField({
       name: 'heading',
@@ -40,8 +42,8 @@ export const cardsTextType = defineType({
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...headingSizeField({group: 'style'}), group: 'style'},
     {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
-    {...brandColorField('backgroundColor', 'Section background'), group: 'style'},
-    {...brandColorField('headingColor', 'Section heading color'), group: 'style'},
+    {...brandColorField('backgroundColor', 'Section background'), group: 'style', fieldset: 'colors'},
+    {...brandColorField('headingColor', 'Section heading color'), group: 'style', fieldset: 'colors'},
   ],
   preview: {
     select: {heading: 'heading', offerings: 'offerings', headingSize: 'headingSize'},

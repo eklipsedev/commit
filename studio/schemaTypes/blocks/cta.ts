@@ -1,11 +1,13 @@
 import {defineField, defineType} from 'sanity'
 import {BoltIcon} from '../../lib/icons'
+import {CtaBlockPreview, CtaObjectInput} from '../../components/site-default-cta-preview'
 import {
   brandColorField,
   collapseLineBreaksOnMobileField,
   headingSizeField,
   headingSizeLabel,
   sectionSpacingFields,
+  COLORS_FIELDSET,
 } from '../shared/section-fields'
 
 export const ctaType = defineType({
@@ -13,33 +15,23 @@ export const ctaType = defineType({
   title: 'CTA',
   type: 'object',
   icon: BoltIcon,
-  description: 'Closing call-to-action with tagline, headline, and button (or use the site default).',
+  description:
+    'Closing call-to-action. Leave fields blank to inherit from Config → Default CTA; fill only what you want to override.',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
   ],
+  fieldsets: [COLORS_FIELDSET],
+  components: {
+    input: CtaObjectInput,
+    preview: CtaBlockPreview,
+  },
   fields: [
-    defineField({
-      name: 'useSiteDefault',
-      title: 'Use site default CTA',
-      type: 'boolean',
-      description:
-        'Pulls tagline, headline, and button from Settings → Default CTA. Style options below still apply.',
-      initialValue: false,
-      group: 'content',
-      // Singleton already *is* the default; projects pick custom via ctaMode.
-      hidden: ({document}) =>
-        document?._type === 'defaultCta' || document?._type === 'project',
-    }),
     defineField({
       name: 'tagline',
       title: 'Tagline',
       type: 'string',
       group: 'content',
-      hidden: ({parent, document}) =>
-        document?._type !== 'defaultCta' &&
-        document?._type !== 'project' &&
-        Boolean(parent?.useSiteDefault),
     }),
     defineField({
       name: 'headline',
@@ -47,55 +39,48 @@ export const ctaType = defineType({
       type: 'richHeadline',
       validation: (rule) =>
         rule.custom((value, context) => {
-          const parent = context.parent as {useSiteDefault?: boolean} | undefined
-          const document = context.document
-          if (
-            document?._type !== 'defaultCta' &&
-            document?._type !== 'project' &&
-            parent?.useSiteDefault
-          ) {
-            return true
+          // Site default document must define a headline.
+          if (context.document?._type === 'defaultCta') {
+            const blocks = value as unknown[] | undefined
+            return blocks?.length ? true : 'Required'
           }
-          const blocks = value as unknown[] | undefined
-          return blocks?.length ? true : 'Required'
+          // Projects: required when the custom CTA panel is shown.
+          if (context.document?._type === 'project') {
+            const blocks = value as unknown[] | undefined
+            return blocks?.length ? true : 'Required'
+          }
+          // Page builder: blank inherits site default.
+          return true
         }),
       group: 'content',
-      hidden: ({parent, document}) =>
-        document?._type !== 'defaultCta' &&
-        document?._type !== 'project' &&
-        Boolean(parent?.useSiteDefault),
     }),
     defineField({
       name: 'button',
       title: 'Button',
       type: 'button',
       group: 'content',
-      hidden: ({parent, document}) =>
-        document?._type !== 'defaultCta' &&
-        document?._type !== 'project' &&
-        Boolean(parent?.useSiteDefault),
     }),
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...headingSizeField({group: 'style', initialValue: 'lg'}), group: 'style'},
     {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
-    {...brandColorField('backgroundColor', 'Background color'), group: 'style'},
-    {...brandColorField('headingColor', 'Heading color'), group: 'style'},
-    {...brandColorField('taglineColor', 'Tagline color'), group: 'style'},
+    {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
+    {...brandColorField('headingColor', 'Heading color'), group: 'style', fieldset: 'colors'},
+    {...brandColorField('taglineColor', 'Tagline color'), group: 'style', fieldset: 'colors'},
   ],
   preview: {
     select: {
       tagline: 'tagline',
-      useSiteDefault: 'useSiteDefault',
       headingSize: 'headingSize',
       headlineSize: 'headlineSize',
     },
-    prepare({tagline, useSiteDefault, headingSize, headlineSize}) {
+    prepare({tagline, headingSize, headlineSize}) {
       const size = headingSize ?? headlineSize
       return {
-        title: useSiteDefault ? 'Site default CTA' : tagline || 'CTA',
+        title: tagline || 'CTA',
         subtitle: `CTA · ${headingSizeLabel(size)}`,
         media: BoltIcon,
+        tagline,
       }
     },
   },

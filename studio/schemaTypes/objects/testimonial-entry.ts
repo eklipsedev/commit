@@ -1,6 +1,6 @@
 import {defineField, defineType} from 'sanity'
 import {CommentIcon} from '../../lib/icons'
-import {brandColorField} from '../shared/section-fields'
+import {brandColorField, COLORS_FIELDSET} from '../shared/section-fields'
 
 /** Inline / one-off testimonial — person supplies name, role, photo. */
 export const testimonialEntryType = defineType({
@@ -8,6 +8,7 @@ export const testimonialEntryType = defineType({
   title: 'One-off testimonial',
   type: 'object',
   icon: CommentIcon,
+  fieldsets: [COLORS_FIELDSET],
   fields: [
     defineField({
       name: 'quote',
@@ -27,8 +28,8 @@ export const testimonialEntryType = defineType({
       description: 'Photo, name, and role come from this person',
       validation: (rule) => rule.required(),
     }),
-    brandColorField('backgroundColor', 'Background color'),
-    brandColorField('textColor', 'Text color'),
+    brandColorField('backgroundColor', 'Background color', {fieldset: 'colors'}),
+    brandColorField('textColor', 'Text color', {fieldset: 'colors'}),
   ],
   preview: {
     select: {

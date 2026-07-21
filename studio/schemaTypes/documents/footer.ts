@@ -1,7 +1,7 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {BlockElementIcon} from '../../lib/icons'
 import {imageAltField, imageFieldOptions} from '../shared/image-fields'
-import {brandColorField} from '../shared/section-fields'
+import {brandColorField, COLORS_FIELDSET} from '../shared/section-fields'
 
 export const footerType = defineType({
   name: 'footer',
@@ -39,6 +39,7 @@ export const footerType = defineType({
       name: 'newsletter',
       title: 'Newsletter',
       type: 'object',
+      fieldsets: [COLORS_FIELDSET],
       fields: [
         defineField({
           name: 'title',
@@ -72,9 +73,11 @@ export const footerType = defineType({
           initialValue: 'secondary',
         }),
         brandColorField('buttonBackgroundColor', 'Button background color', {
+          fieldset: 'colors',
           description: 'Default subscribe button fill — pages can override hover colors',
         }),
         brandColorField('buttonTextColor', 'Button text color', {
+          fieldset: 'colors',
           description: 'Default subscribe button text — pages can override hover colors',
         }),
       ],

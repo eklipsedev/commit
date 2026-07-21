@@ -1,6 +1,6 @@
 import {defineField, defineType} from 'sanity'
 import {CommentIcon} from '../../lib/icons'
-import {brandColorField} from '../shared/section-fields'
+import {brandColorField, COLORS_FIELDSET} from '../shared/section-fields'
 
 /**
  * Reusable testimonial — quote + colors; person supplies name, role, photo.
@@ -10,6 +10,7 @@ export const testimonialType = defineType({
   title: 'Testimonial',
   type: 'document',
   icon: CommentIcon,
+  fieldsets: [COLORS_FIELDSET],
   fields: [
     defineField({
       name: 'quote',
@@ -29,8 +30,8 @@ export const testimonialType = defineType({
       description: 'Photo, name, and role come from this person',
       validation: (rule) => rule.required(),
     }),
-    brandColorField('backgroundColor', 'Background color'),
-    brandColorField('textColor', 'Text color'),
+    brandColorField('backgroundColor', 'Background color', {fieldset: 'colors'}),
+    brandColorField('textColor', 'Text color', {fieldset: 'colors'}),
   ],
   preview: {
     select: {

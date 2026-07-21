@@ -6,6 +6,7 @@ import {
   headingSizeField,
   sectionSpacingFields,
   headingSizeLabel,
+  COLORS_FIELDSET,
 } from '../shared/section-fields'
 
 export const teamType = defineType({
@@ -18,6 +19,7 @@ export const teamType = defineType({
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
   ],
+  fieldsets: [COLORS_FIELDSET],
   fields: [
     defineField({
       name: 'tagline',
@@ -81,9 +83,9 @@ export const teamType = defineType({
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...headingSizeField({group: 'style'}), group: 'style'},
     {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
-    {...brandColorField('backgroundColor', 'Background color'), group: 'style'},
-    {...brandColorField('headingColor', 'Heading color'), group: 'style'},
-    {...brandColorField('taglineColor', 'Tagline color'), group: 'style'},
+    {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
+    {...brandColorField('headingColor', 'Heading color'), group: 'style', fieldset: 'colors'},
+    {...brandColorField('taglineColor', 'Tagline color'), group: 'style', fieldset: 'colors'},
   ],
   preview: {
     select: {headline: 'headline', people: 'people', headingSize: 'headingSize'},

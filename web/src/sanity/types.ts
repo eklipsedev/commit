@@ -40,6 +40,20 @@ export type FooterAppearance = {
   buttonHoverTextColor?: string | null
 }
 
+export type PageSeo = {
+  title?: string | null
+  description?: string | null
+  image?: SanityImage | null
+  noIndex?: boolean | null
+}
+
+export type DefaultSeo = {
+  siteName?: string | null
+  title?: string | null
+  description?: string | null
+  image?: SanityImage | null
+}
+
 export type NavItem = {
   _key?: string
   label?: string

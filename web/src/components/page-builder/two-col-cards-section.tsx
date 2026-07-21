@@ -28,7 +28,7 @@ function ProjectCardItem({
   const href = slug ? `/work/${slug}` : '#'
 
   return (
-    <Link href={href} className="group block space-y-4">
+    <Link href={href} className="group block">
       <div className="relative aspect-[636/358] overflow-hidden bg-neutral-100">
         {project.thumbnail && (
           <SanityImage
@@ -41,12 +41,17 @@ function ProjectCardItem({
           />
         )}
       </div>
-      <div className="flex items-start justify-between gap-4 text-sm md:text-base">
-        <p className="font-medium" style={{color: 'var(--section-heading)'}}>
+      <div className="relative flex items-start justify-between gap-4 overflow-hidden px-4 py-3 text-sm md:px-5 md:py-3.5 md:text-base">
+        {/* Yellow fill — same easing as Tagline Rule, slightly faster */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 origin-left scale-x-0 bg-brand-yellow transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-x-100"
+        />
+        <p className="relative z-10 font-medium" style={{color: 'var(--section-heading)'}}>
           {project.title}
         </p>
         {project.categories?.length ? (
-          <p className="text-right font-mono text-xs tracking-normal text-brand-charcoal md:text-sm">
+          <p className="relative z-10 text-right font-mono text-xs tracking-normal text-brand-charcoal opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 group-hover:delay-500 md:text-sm">
             {project.categories.join(' / ')}
           </p>
         ) : null}

@@ -15,6 +15,7 @@ import {
   LinkIcon,
   MenuIcon,
   PackageIcon,
+  SearchIcon,
   UserIcon,
 } from './lib/icons'
 
@@ -32,6 +33,7 @@ const HIDDEN_FROM_LIST = [
   'offering',
   'service',
   'defaultCta',
+  'defaultSeo',
   'blockPreviews',
   'redirects',
   // Managed inside the Media / Mux tools — don't list in the desk
@@ -54,9 +56,9 @@ export const structure: StructureResolver = (S, context) =>
         .icon(EnvelopeIcon)
         .child(S.document().schemaType('contactPage').documentId('contactPage').title('Contact')),
       S.listItem()
-        .title('Pages')
+        .title('Landing pages')
         .icon(DocumentIcon)
-        .child(S.documentTypeList('page').title('Pages')),
+        .child(S.documentTypeList('page').title('Landing pages')),
       S.listItem()
         .title('Legal pages')
         .icon(DocumentTextIcon)
@@ -73,10 +75,13 @@ export const structure: StructureResolver = (S, context) =>
         .title('Logos')
         .icon(ImageIcon)
         .child(S.documentTypeList('logo').title('Logos')),
-      S.listItem()
-        .title('Offerings')
-        .icon(PackageIcon)
-        .child(S.documentTypeList('offering').title('Offerings')),
+      orderableDocumentListDeskItem({
+        type: 'offering',
+        title: 'Offerings',
+        icon: PackageIcon,
+        S,
+        context,
+      }),
       S.listItem()
         .title('Services')
         .icon(BulletOutlineIcon)
@@ -135,6 +140,15 @@ export const structure: StructureResolver = (S, context) =>
                     .schemaType('defaultCta')
                     .documentId('defaultCta')
                     .title('Default CTA'),
+                ),
+              S.listItem()
+                .title('Default SEO')
+                .icon(SearchIcon)
+                .child(
+                  S.document()
+                    .schemaType('defaultSeo')
+                    .documentId('defaultSeo')
+                    .title('Default SEO'),
                 ),
               S.listItem()
                 .title('Section previews')

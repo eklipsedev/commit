@@ -1,6 +1,6 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {CommentIcon} from '../../lib/icons'
-import {brandColorField, sectionSpacingFields} from '../shared/section-fields'
+import {brandColorField, sectionSpacingFields, COLORS_FIELDSET} from '../shared/section-fields'
 
 export const sliderTestimonialsType = defineType({
   name: 'sliderTestimonials',
@@ -12,6 +12,7 @@ export const sliderTestimonialsType = defineType({
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
   ],
+  fieldsets: [COLORS_FIELDSET],
   fields: [
     defineField({
       name: 'testimonials',
@@ -34,7 +35,7 @@ export const sliderTestimonialsType = defineType({
     }),
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
-    {...brandColorField('backgroundColor', 'Section background'), group: 'style'},
+    {...brandColorField('backgroundColor', 'Section background'), group: 'style', fieldset: 'colors'},
   ],
   preview: {
     select: {testimonials: 'testimonials'},
