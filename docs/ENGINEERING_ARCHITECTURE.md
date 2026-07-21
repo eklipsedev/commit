@@ -104,7 +104,7 @@ Person cards also expose: `cardBackgroundColor`, `cardHoverBackgroundColor`, `bu
 
 - Colors: brand token select only. Designer-facing titles (Commit Yellow, Soft Peach, etc.).
 - Spacing: per-section collapse top/bottom padding.
-- Fonts: Lust Text + Geist Mono — frontend only.
+- Fonts: Lust Text (display) + Bloyd (sans) + Geist Mono — frontend only.
 - Buttons: background + text (+ hover) configurable sitewide via `button` object.
 
 ## Frontend (later)

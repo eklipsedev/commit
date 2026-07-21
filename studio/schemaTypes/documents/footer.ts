@@ -74,11 +74,19 @@ export const footerType = defineType({
         }),
         brandColorField('buttonBackgroundColor', 'Button background color', {
           fieldset: 'colors',
-          description: 'Default subscribe button fill — pages can override hover colors',
+          description: 'Default subscribe button fill',
         }),
         brandColorField('buttonTextColor', 'Button text color', {
           fieldset: 'colors',
-          description: 'Default subscribe button text — pages can override hover colors',
+          description: 'Default subscribe button text',
+        }),
+        brandColorField('buttonHoverBackgroundColor', 'Button hover background', {
+          fieldset: 'colors',
+          description: 'Default hover fill — pages can still override this',
+        }),
+        brandColorField('buttonHoverTextColor', 'Button hover text', {
+          fieldset: 'colors',
+          description: 'Default hover text — pages can still override this',
         }),
       ],
     }),

@@ -97,7 +97,7 @@ export function LogosSection({block}: {block: LogosBlock}) {
         <MarqueeEdgeFade side="left" color={fadeColor} />
         <MarqueeEdgeFade side="right" color={fadeColor} />
         <div className="flex">
-          <div className="marquee-track flex min-w-max items-center gap-12 md:gap-20">
+          <div className="marquee-track flex min-w-max items-center gap-6 md:gap-20">
             {duplicated.map((logo, i) => (
               <LogoItemView key={`${logo._id ?? logo.name}-${i}`} logo={logo} />
             ))}

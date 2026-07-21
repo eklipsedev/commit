@@ -129,45 +129,53 @@ export function Navbar({data, variant = 'light'}: NavbarProps) {
               aria-haspopup="true"
               onClick={() => setOpen((v) => !v)}
               className={cn(
-                'font-mono text-sm tracking-normal',
+                'relative z-20 font-mono text-sm tracking-normal',
                 variant === 'dark' ? 'text-white' : 'text-brand-charcoal',
               )}
             >
               Menu
             </button>
             {open && (
-              <div
-                className={cn(
-                  'absolute right-0 top-full mt-2 min-w-[12rem] rounded-md border py-2 shadow-lg',
-                  variant === 'dark'
-                    ? 'border-white/10 bg-black text-white'
-                    : 'border-neutral-200 bg-brand-white text-brand-charcoal',
-                )}
-              >
-                {navItems.map((item) => {
-                  const href = resolveLinkHref(item.link)
-                  const label = item.label || resolveLinkLabel(item.link)
-                  if (!href) return null
-                  return (
-                    <Link
-                      key={item._key ?? label}
-                      href={href}
-                      className="block px-4 py-2 font-mono text-sm underline-offset-4 hover:underline"
-                    >
-                      {label}
-                    </Link>
-                  )
-                })}
-                {data?.button?.label && (
-                  <div className="mt-2 border-t border-brand-charcoal px-4 pt-2">
-                    <DotButton
-                      button={data.button}
-                      tone={variant === 'dark' ? 'dark' : 'light'}
-                      className="w-full justify-center"
-                    />
-                  </div>
-                )}
-              </div>
+              <>
+                <button
+                  type="button"
+                  aria-label="Close menu"
+                  className="fixed inset-0 z-10 cursor-default bg-brand-charcoal/20"
+                  onClick={() => setOpen(false)}
+                />
+                <div
+                  className={cn(
+                    'absolute right-0 top-full z-20 mt-2 min-w-[12rem] rounded-md border py-2 shadow-lg',
+                    variant === 'dark'
+                      ? 'border-white/10 bg-black text-white'
+                      : 'border-neutral-200 bg-brand-white text-brand-charcoal',
+                  )}
+                >
+                  {navItems.map((item) => {
+                    const href = resolveLinkHref(item.link)
+                    const label = item.label || resolveLinkLabel(item.link)
+                    if (!href) return null
+                    return (
+                      <Link
+                        key={item._key ?? label}
+                        href={href}
+                        className="block px-4 py-2 font-mono text-sm underline-offset-4 hover:underline"
+                      >
+                        {label}
+                      </Link>
+                    )
+                  })}
+                  {data?.button?.label && (
+                    <div className="mt-3 border-t border-brand-charcoal px-4 py-4">
+                      <DotButton
+                        button={data.button}
+                        tone={variant === 'dark' ? 'dark' : 'light'}
+                        className="w-full justify-center"
+                      />
+                    </div>
+                  )}
+                </div>
+              </>
             )}
           </div>
         </nav>

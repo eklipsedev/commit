@@ -2,12 +2,14 @@
 
 import {useLayoutEffect, useRef, useState} from 'react'
 import {CommitWordmark} from '@/components/brand/commit-wordmark'
+import {
+  INTRO_ALWAYS_SHOW_FOR_TESTING,
+  INTRO_STORAGE_KEY,
+} from '@/components/layout/intro-bootstrap'
 import {useIntroLogo} from '@/components/layout/intro-logo-context'
 import {cn} from '@/lib/cn'
 
-const STORAGE_KEY = 'commit-intro-seen'
-/** TEMP: show on every refresh for testing — re-enable session gate before launch */
-const ALWAYS_SHOW_FOR_TESTING = true
+const ALWAYS_SHOW_FOR_TESTING = INTRO_ALWAYS_SHOW_FOR_TESTING
 const HOLD_MS = 2000
 const MORPH_MS = 900
 const FADE_MS = 500
@@ -21,10 +23,13 @@ function prefersReducedMotion() {
 /**
  * First-visit session intro: yellow full-screen with COMMIT. wordmark,
  * then morphs into the navbar logo slot and fades away.
+ *
+ * Starts in `hold` (not null) so SSR + first paint already cover the page —
+ * otherwise content flashes before useLayoutEffect can show the loader.
  */
 export function IntroLoader() {
   const {logoRef, setIntroActive} = useIntroLogo()
-  const [phase, setPhase] = useState<Phase | null>(null)
+  const [phase, setPhase] = useState<Phase>('hold')
   const [transform, setTransform] = useState('none')
   const wordmarkRef = useRef<HTMLDivElement>(null)
   const timers = useRef<number[]>([])
@@ -33,28 +38,34 @@ export function IntroLoader() {
     let seen = false
     if (!ALWAYS_SHOW_FOR_TESTING) {
       try {
-        seen = sessionStorage.getItem(STORAGE_KEY) === '1'
+        seen = sessionStorage.getItem(INTRO_STORAGE_KEY) === '1'
       } catch {
         seen = false
       }
     }
 
     if (seen) {
+      document.documentElement.classList.remove('intro-pending')
+      document.documentElement.classList.add('intro-seen')
       setPhase('done')
       return
     }
 
+    document.documentElement.classList.add('intro-pending')
+    document.documentElement.classList.remove('intro-seen')
     setIntroActive(true)
     document.documentElement.style.overflow = 'hidden'
 
     const finish = () => {
       if (!ALWAYS_SHOW_FOR_TESTING) {
         try {
-          sessionStorage.setItem(STORAGE_KEY, '1')
+          sessionStorage.setItem(INTRO_STORAGE_KEY, '1')
         } catch {
           /* ignore */
         }
       }
+      document.documentElement.classList.remove('intro-pending')
+      document.documentElement.classList.add('intro-seen')
       document.documentElement.style.overflow = ''
       setIntroActive(false)
       setPhase('done')
@@ -102,7 +113,7 @@ export function IntroLoader() {
     }
   }, [logoRef, setIntroActive])
 
-  if (!phase || phase === 'done') return null
+  if (phase === 'done') return null
 
   const fading = phase === 'fade'
 

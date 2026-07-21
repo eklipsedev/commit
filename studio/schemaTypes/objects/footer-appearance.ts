@@ -16,11 +16,11 @@ export const footerAppearanceType = defineType({
   fields: [
     brandColorField('buttonHoverBackgroundColor', 'Subscribe hover background', {
       fieldset: 'colors',
-      description: 'Overrides the global footer subscribe hover background on this page',
+      description: 'Overrides Footer → Newsletter hover background on this page',
     }),
     brandColorField('buttonHoverTextColor', 'Subscribe hover text', {
       fieldset: 'colors',
-      description: 'Overrides the global footer subscribe hover text on this page',
+      description: 'Overrides Footer → Newsletter hover text on this page',
     }),
   ],
 })

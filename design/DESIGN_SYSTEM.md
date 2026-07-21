@@ -62,6 +62,8 @@ Each section should have the ability to have collapsable top and bottom padding/
 
 ## fonts
 
-The primary font is lust text from adobe fonts
+- **Lust Text** (Adobe Fonts) — primary display / headlines
+- **Bloyd** (Blaze Type) — body and UI sans (replaces Geist Sans)
+- **Geist Mono** — secondary: taglines, nav links, attribute labels
 
-The secondary font is Geist Mono, using for things like taglines in sections and navigation links
+Until licensed webfonts are wired, the site uses **Lora** as a Lust Text stand-in and **Geist Sans** as a Bloyd stand-in.

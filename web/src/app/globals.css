@@ -72,6 +72,20 @@ summary {
   font-family: var(--font-geist-mono), ui-monospace, monospace;
 }
 
+/* Covers the page before React hydrates the intro loader (set by INTRO_BOOTSTRAP_SCRIPT). */
+html.intro-pending {
+  overflow: hidden;
+}
+
+html.intro-pending::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 49;
+  background: var(--brand-pale-yellow);
+  pointer-events: none;
+}
+
 @keyframes marquee {
   from {
     transform: translateX(0);

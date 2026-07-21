@@ -25,8 +25,14 @@ export function Footer({data}: FooterProps) {
     ? colorHex(newsletter.buttonBackgroundColor)
     : 'transparent'
   const buttonText = colorHex(newsletter?.buttonTextColor, 'charcoal')
-  const hoverBg = colorHex(appearance?.buttonHoverBackgroundColor, 'charcoal')
-  const hoverText = colorHex(appearance?.buttonHoverTextColor, 'white')
+  const hoverBg = colorHex(
+    appearance?.buttonHoverBackgroundColor || newsletter?.buttonHoverBackgroundColor,
+    'charcoal',
+  )
+  const hoverText = colorHex(
+    appearance?.buttonHoverTextColor || newsletter?.buttonHoverTextColor,
+    'white',
+  )
   const isPrimary = newsletter?.buttonVariant === 'primary'
 
   return (

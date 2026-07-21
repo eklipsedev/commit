@@ -5,6 +5,7 @@ import {VisualEditing} from 'next-sanity/visual-editing'
 import {DisableDraftMode} from '@/components/disable-draft-mode'
 import {Footer} from '@/components/layout/footer'
 import {IntroLoader} from '@/components/layout/intro-loader'
+import {INTRO_BOOTSTRAP_SCRIPT} from '@/components/layout/intro-bootstrap'
 import {IntroLogoProvider} from '@/components/layout/intro-logo-context'
 import {FooterAppearanceProvider} from '@/components/layout/set-footer-appearance'
 import {Navbar} from '@/components/layout/navbar'
@@ -47,6 +48,9 @@ export default async function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${displaySerif.variable} h-full antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{__html: INTRO_BOOTSTRAP_SCRIPT}} />
+      </head>
       <body className="flex min-h-full flex-col bg-brand-white font-sans text-brand-charcoal">
         <FooterAppearanceProvider>
           <NavThemeProvider initialTheme="light">

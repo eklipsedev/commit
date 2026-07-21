@@ -83,6 +83,8 @@ export type FooterData = {
     buttonVariant?: 'primary' | 'secondary'
     buttonBackgroundColor?: string
     buttonTextColor?: string
+    buttonHoverBackgroundColor?: string
+    buttonHoverTextColor?: string
   }
 }
 
