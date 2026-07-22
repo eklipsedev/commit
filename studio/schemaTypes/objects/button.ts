@@ -63,8 +63,9 @@ export const buttonType = defineType({
       type: 'link',
     }),
     brandColorField('textColor', 'Resting text / border', {
-      description: 'Label and outline color at rest. Inherits section text when unset.',
+      description: 'Label and outline color at rest. Defaults to Charcoal.',
       fieldset: 'colors',
+      initialValue: 'charcoal',
     }),
     brandColorField('hoverBackgroundColor', 'Hover fill', {
       description: 'Background (and border) on hover.',

@@ -8,6 +8,7 @@ import {
   headingSizeField,
   sectionSpacingFields,
   headingSizeLabel,
+  showTaglineRuleField,
   COLORS_FIELDSET,
 } from '../shared/section-fields'
 
@@ -29,6 +30,7 @@ export const gridMixedType = defineType({
       type: 'string',
       group: 'content',
     }),
+    {...showTaglineRuleField({group: 'content'}), group: 'content'},
     defineField({
       name: 'heading',
       title: 'Heading',

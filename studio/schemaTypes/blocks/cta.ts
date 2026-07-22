@@ -9,6 +9,7 @@ import {
   headingSizeField,
   headingSizeLabel,
   sectionSpacingFields,
+  showTaglineRuleField,
   COLORS_FIELDSET,
 } from '../shared/section-fields'
 
@@ -35,6 +36,7 @@ export const ctaType = defineType({
       type: 'string',
       group: 'content',
     }),
+    {...showTaglineRuleField({group: 'content'}), group: 'content'},
     defineField({
       name: 'headline',
       title: 'Headline',

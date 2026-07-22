@@ -23,11 +23,14 @@ export function CustomSection({block}: {block: CustomSectionBlock}) {
         {modules.map((module, index) => {
           const prev = modules[index - 1]
           const tightToPrev = prev?._type === 'moduleTagline'
+          const afterSpacer = prev?._type === 'moduleSpacer'
           return (
             <div
               key={module._key ?? `${module._type}-${index}`}
               className={cn(
-                index > 0 && (tightToPrev ? 'mt-7 md:mt-8' : 'mt-10 md:mt-14'),
+                index > 0 &&
+                  !afterSpacer &&
+                  (tightToPrev ? 'mt-7 md:mt-8' : 'mt-10 md:mt-14'),
               )}
             >
               <CustomModuleRenderer module={module} />

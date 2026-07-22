@@ -25,6 +25,7 @@ import {
   moduleStringListType,
   moduleStepsType,
   moduleButtonType,
+  moduleSpacerType,
 } from './objects/custom-modules'
 
 import {navigationType} from './documents/navigation'
@@ -93,6 +94,7 @@ export const schemaTypes = [
   moduleStringListType,
   moduleStepsType,
   moduleButtonType,
+  moduleSpacerType,
 
   // Documents
   navigationType,

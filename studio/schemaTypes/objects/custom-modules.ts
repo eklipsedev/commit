@@ -4,6 +4,7 @@ import {
   BoltIcon,
   BulletOutlineIcon,
   NumberIcon,
+  StackCompactIcon,
   TextIcon,
 } from '../../lib/icons'
 import {buttonHasContent} from './button'
@@ -13,6 +14,7 @@ import {
   headingFontLabel,
   headingSizeField,
   headingSizeLabel,
+  showTaglineRuleField,
 } from '../shared/section-fields'
 
 export const moduleTaglineType = defineType({
@@ -26,13 +28,15 @@ export const moduleTaglineType = defineType({
       title: 'Tagline',
       type: 'string',
       validation: (rule) => rule.required(),
-      description: 'Mono label above a divider',
+      description: 'Mono label; optional rule underneath',
     }),
+    showTaglineRuleField({textKey: 'text'}),
   ],
   preview: {
-    select: {title: 'text'},
-    prepare({title}) {
-      return {title: title || 'Tagline', subtitle: 'Tagline', media: TextIcon}
+    select: {title: 'text', showTaglineRule: 'showTaglineRule'},
+    prepare({title, showTaglineRule}) {
+      const ruleOff = showTaglineRule === false ? ' · No rule' : ''
+      return {title: title || 'Tagline', subtitle: `Tagline${ruleOff}`, media: TextIcon}
     },
   },
 })
@@ -85,13 +89,34 @@ export const moduleBodyType = defineType({
       rows: 4,
       validation: (rule) => rule.required(),
     }),
+    defineField({
+      name: 'textSize',
+      title: 'Text size',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Large — 48px (32px mobile)', value: 'lg'},
+          {title: 'Medium — 32px (24px mobile)', value: 'md'},
+          {title: 'Small — 24px', value: 'sm'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'md',
+    }),
   ],
   preview: {
-    select: {title: 'text'},
-    prepare({title}) {
+    select: {title: 'text', textSize: 'textSize', headingSize: 'headingSize'},
+    prepare({title, textSize, headingSize}) {
+      const size = textSize || headingSize
+      const sizeLabel =
+        size === 'lg' || size === 'h3'
+          ? 'Large'
+          : size === 'sm'
+            ? 'Small'
+            : 'Medium'
       return {
         title: title?.slice(0, 60) || 'Body',
-        subtitle: 'Body',
+        subtitle: `Body · ${sizeLabel}`,
         media: TextIcon,
       }
     },
@@ -102,11 +127,11 @@ const SPLIT_COLUMN_MODULES = [
   defineArrayMember({type: 'moduleTagline'}),
   defineArrayMember({type: 'moduleHeadline'}),
   defineArrayMember({type: 'moduleBody'}),
-  defineArrayMember({type: 'textGrid'}),
   defineArrayMember({type: 'moduleStringList'}),
   defineArrayMember({type: 'detailAttributes'}),
   defineArrayMember({type: 'moduleSteps'}),
   defineArrayMember({type: 'moduleButton'}),
+  defineArrayMember({type: 'moduleSpacer'}),
 ]
 
 export const moduleSplitType = defineType({
@@ -265,7 +290,7 @@ export const moduleStringListType = defineType({
         ],
         layout: 'radio',
       },
-      initialValue: 'sm',
+      initialValue: 'md',
       description: 'Applies to all list items. Medium uses 24px on mobile.',
     }),
     defineField({
@@ -373,6 +398,42 @@ export const moduleButtonType = defineType({
     select: {title: 'button.label'},
     prepare({title}) {
       return {title: title || 'Button', subtitle: 'Button', media: BoltIcon}
+    },
+  },
+})
+
+export const moduleSpacerType = defineType({
+  name: 'moduleSpacer',
+  title: 'Spacer',
+  type: 'object',
+  icon: StackCompactIcon,
+  description: 'Adds extra vertical space between modules.',
+  fields: [
+    defineField({
+      name: 'size',
+      title: 'Size',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Small', value: 'sm'},
+          {title: 'Medium', value: 'md'},
+          {title: 'Large', value: 'lg'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'md',
+      validation: (rule) => rule.required(),
+    }),
+  ],
+  preview: {
+    select: {size: 'size'},
+    prepare({size}) {
+      const label = size === 'sm' ? 'Small' : size === 'lg' ? 'Large' : 'Medium'
+      return {
+        title: 'Spacer',
+        subtitle: label,
+        media: StackCompactIcon,
+      }
     },
   },
 })

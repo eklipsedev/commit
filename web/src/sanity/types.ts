@@ -35,6 +35,8 @@ export type SectionStyle = {
   headlineSize?: string | null
   /** When true, Enter line breaks only apply from `md` up. */
   collapseLineBreaksOnMobile?: boolean
+  /** When false, hide the rule under a section tagline. Default true. */
+  showTaglineRule?: boolean | null
 }
 
 export type FooterAppearance = {
@@ -155,8 +157,9 @@ export type CaseStudyMediaRow = {
 
 export type DetailAttributes = {
   label?: string
-  /** Medium = 1.25rem, Large = 2rem (responsive on large). */
-  valueSize?: 'md' | 'lg'
+  showTaglineRule?: boolean
+  /** Small = 20px, Medium = 32→24. Legacy `lg` treated as Medium. */
+  valueSize?: 'sm' | 'md' | 'lg'
   attributes?: {label?: string; values?: string[]}[]
 }
 

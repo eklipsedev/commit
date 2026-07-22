@@ -8,6 +8,7 @@ import {
   headingSizeField,
   sectionSpacingFields,
   headingSizeLabel,
+  showTaglineRuleField,
   COLORS_FIELDSET,
 } from '../shared/section-fields'
 
@@ -38,6 +39,11 @@ export const twoColCardsType = defineType({
       hidden: ({parent}) => parent?.showHeader === false,
       group: 'content',
     }),
+    {
+      ...showTaglineRuleField({group: 'content'}),
+      group: 'content',
+      hidden: ({parent}) => parent?.showHeader === false || !parent?.tagline,
+    },
     defineField({
       name: 'heading',
       title: 'Heading',

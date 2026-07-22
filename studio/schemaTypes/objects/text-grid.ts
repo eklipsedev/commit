@@ -1,7 +1,7 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {ComposeIcon} from '../../lib/icons'
 
-/** Labeled columns of string lists — used in custom sections / split rows. */
+/** @deprecated Legacy module — no longer insertable in Flexible sections. Kept for existing content. */
 export const textGridType = defineType({
   name: 'textGrid',
   title: 'Text grid',
@@ -32,7 +32,7 @@ export const textGridType = defineType({
         ],
         layout: 'radio',
       },
-      initialValue: 'sm',
+      initialValue: 'md',
       description: 'Applies to all group items in this grid. Medium uses 24px on mobile.',
     }),
     defineField({

@@ -34,6 +34,7 @@ export default async function ContactPage() {
   const page = data as {
     heading?: RichHeadlineType
     tagline?: string
+    showTaglineRule?: boolean
     attributes?: {
       _key?: string
       label?: string
@@ -57,7 +58,9 @@ export default async function ContactPage() {
             />
 
             <div className="space-y-8 self-start">
-              {page.tagline && <Tagline>{page.tagline}</Tagline>}
+              {page.tagline && (
+                <Tagline showRule={page.showTaglineRule !== false}>{page.tagline}</Tagline>
+              )}
 
               {page.attributes?.length ? (
                 <ul className="space-y-3 text-base leading-snug text-brand-charcoal md:space-y-4 md:text-lg">

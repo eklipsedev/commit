@@ -22,7 +22,11 @@ export function HeroSection({block}: {block: HeroBlock}) {
               collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
             />
           }
-          tagline={block.tagline ? <Tagline>{block.tagline}</Tagline> : undefined}
+          tagline={
+            block.tagline ? (
+              <Tagline showRule={block.showTaglineRule !== false}>{block.tagline}</Tagline>
+            ) : undefined
+          }
         />
       </Container>
     </Section>

@@ -109,7 +109,7 @@ function OverlayRowView({row}: {row: OverlayRow}) {
 
 function DetailAttributesBlock({details}: {details?: DetailAttributes}) {
   if (!details?.attributes?.length) return null
-  const valueClass = details.valueSize === 'md' ? TEXT_SIZE_CLASSES.sm : TEXT_SIZE_CLASSES.md
+  const valueClass = details.valueSize === 'sm' ? TEXT_SIZE_CLASSES.sm : TEXT_SIZE_CLASSES.md
   return (
     <div className="space-y-6 border-t border-current pt-8">
       {details.label && (
@@ -172,10 +172,15 @@ export function OfferingOverlayBody({
         {offering.modules.map((module, index) => {
           const prev = offering.modules![index - 1]
           const tightToPrev = prev?._type === 'moduleTagline'
+          const afterSpacer = prev?._type === 'moduleSpacer'
           return (
             <div
               key={module._key ?? `${module._type}-${index}`}
-              className={cn(index > 0 && (tightToPrev ? 'mt-7 md:mt-8' : 'mt-10 md:mt-14'))}
+              className={cn(
+                index > 0 &&
+                  !afterSpacer &&
+                  (tightToPrev ? 'mt-7 md:mt-8' : 'mt-10 md:mt-14'),
+              )}
             >
               <CustomModuleRenderer module={module} />
             </div>

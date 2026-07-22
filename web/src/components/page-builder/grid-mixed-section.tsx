@@ -88,7 +88,9 @@ export function GridMixedSection({block}: {block: GridMixedBlock}) {
     <Section {...block}>
       <Container className="space-y-10">
         <div className="space-y-8">
-          {block.tagline && <Tagline>{block.tagline}</Tagline>}
+          {block.tagline && (
+            <Tagline showRule={block.showTaglineRule !== false}>{block.tagline}</Tagline>
+          )}
           {block.heading && (
             <Heading
               size={headingSizeFromBlock(block)}

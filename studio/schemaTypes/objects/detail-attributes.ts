@@ -21,18 +21,26 @@ export const detailAttributesType = defineType({
       initialValue: 'The details.',
     }),
     defineField({
+      name: 'showTaglineRule',
+      title: 'Show label rule',
+      type: 'boolean',
+      initialValue: true,
+      description: 'When off, the line under the section label is hidden.',
+      hidden: ({parent}) => !parent?.label,
+    }),
+    defineField({
       name: 'valueSize',
       title: 'Value text size',
       type: 'string',
       options: {
         list: [
-          {title: 'Medium — 20px', value: 'md'},
-          {title: 'Large — 32px (24px mobile)', value: 'lg'},
+          {title: 'Small — 20px', value: 'sm'},
+          {title: 'Medium — 32px (24px mobile)', value: 'md'},
         ],
         layout: 'radio',
       },
-      initialValue: 'lg',
-      description: 'Applies to attribute values (not the mono labels). Large uses 24px on mobile.',
+      initialValue: 'md',
+      description: 'Applies to attribute values (not the mono labels). Medium uses 24px on mobile.',
     }),
     defineField({
       name: 'attributes',
@@ -76,10 +84,17 @@ export const detailAttributesType = defineType({
   preview: {
     select: {label: 'label', attributes: 'attributes', valueSize: 'valueSize'},
     prepare({label, attributes, valueSize}) {
-      const sizeLabel = valueSize === 'md' ? 'Medium (20px)' : 'Large (24→32px)'
+      const sizeLabel =
+        valueSize === 'sm'
+          ? 'Small (20px)'
+          : valueSize === 'md' || valueSize === 'lg'
+            ? 'Medium (32px)'
+            : null
       return {
         title: label || 'Detail attributes',
-        subtitle: `${attributes?.length ?? 0} attributes · ${sizeLabel}`,
+        subtitle: [attributes?.length != null ? `${attributes.length} attributes` : null, sizeLabel]
+          .filter(Boolean)
+          .join(' · '),
         media: BulletOutlineIcon,
       }
     },

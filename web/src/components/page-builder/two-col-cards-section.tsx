@@ -108,7 +108,9 @@ export function TwoColCardsSection({block}: {block: TwoColCardsBlock}) {
       <Container className="space-y-10 md:space-y-14">
         {showHeader && (
           <div className="space-y-8">
-            {block.tagline && <Tagline>{block.tagline}</Tagline>}
+            {block.tagline && (
+              <Tagline showRule={block.showTaglineRule !== false}>{block.tagline}</Tagline>
+            )}
             <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-start md:gap-12">
               {block.heading && (
                 <Heading

@@ -1,6 +1,6 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {ComposeIcon} from '../../lib/icons'
-import {brandColorField, sectionSpacingFields, COLORS_FIELDSET} from '../shared/section-fields'
+import {brandColorField, sectionSpacingFields, showTaglineRuleField, COLORS_FIELDSET} from '../shared/section-fields'
 
 export const gridTextType = defineType({
   name: 'gridText',
@@ -21,6 +21,7 @@ export const gridTextType = defineType({
       type: 'string',
       group: 'content',
     }),
+    {...showTaglineRuleField({group: 'content'}), group: 'content'},
     defineField({
       name: 'items',
       title: 'Items',

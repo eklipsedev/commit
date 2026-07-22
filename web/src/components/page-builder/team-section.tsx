@@ -128,7 +128,9 @@ export function TeamSection({block}: {block: TeamBlock}) {
       <Container className="space-y-10">
         {(block.tagline || block.headline) && (
           <div className="space-y-6">
-            {block.tagline && <Tagline>{block.tagline}</Tagline>}
+            {block.tagline && (
+              <Tagline showRule={block.showTaglineRule !== false}>{block.tagline}</Tagline>
+            )}
             {block.headline && (
               <Heading
                 size={headingSizeFromBlock(block)}

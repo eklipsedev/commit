@@ -4,7 +4,7 @@
  */
 export const DEFAULT_OFFERING_DETAILS = {
   label: 'The details.',
-  valueSize: 'lg' as const,
+  valueSize: 'sm' as const,
   attributes: [
     {_type: 'detailAttribute' as const, _key: 'attr-flat-fee', label: 'Flat Fee', values: ['']},
     {_type: 'detailAttribute' as const, _key: 'attr-timeline', label: 'Timeline', values: ['']},

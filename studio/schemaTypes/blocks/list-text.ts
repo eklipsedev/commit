@@ -8,6 +8,7 @@ import {
   headingSizeField,
   sectionSpacingFields,
   headingSizeLabel,
+  showTaglineRuleField,
   COLORS_FIELDSET,
 } from '../shared/section-fields'
 
@@ -29,15 +30,7 @@ export const listTextType = defineType({
       type: 'string',
       group: 'content',
     }),
-    defineField({
-      name: 'showTaglineRule',
-      title: 'Show tagline rule',
-      type: 'boolean',
-      initialValue: true,
-      description: 'When off, the line under the tagline is hidden and its spacing is removed.',
-      hidden: ({parent}) => !parent?.tagline,
-      group: 'content',
-    }),
+    {...showTaglineRuleField({group: 'content'}), group: 'content'},
     defineField({
       name: 'headline',
       title: 'Headline',

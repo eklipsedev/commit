@@ -121,7 +121,9 @@ export function GridTextSection({block}: {block: GridTextBlock}) {
   return (
     <Section {...block}>
       <Container className="space-y-10">
-        {block.tagline && <Tagline>{block.tagline}</Tagline>}
+        {block.tagline && (
+          <Tagline showRule={block.showTaglineRule !== false}>{block.tagline}</Tagline>
+        )}
         <div className={cn('grid gap-8', COLUMN_CLASSES[columns])}>
           {items.map((item) => (
             <GridTextCard

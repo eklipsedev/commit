@@ -4,6 +4,7 @@ import {
   brandColorField,
   collapseLineBreaksOnMobileField,
   sectionSpacingFields,
+  showTaglineRuleField,
   COLORS_FIELDSET,
 } from '../shared/section-fields'
 
@@ -26,6 +27,7 @@ export const heroType = defineType({
       description: 'Mono label above the divider (e.g. “We help you commit.”)',
       group: 'content',
     }),
+    {...showTaglineRuleField({group: 'content'}), group: 'content'},
     defineField({
       name: 'headline',
       title: 'Headline',

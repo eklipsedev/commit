@@ -21,6 +21,7 @@ export function brandColorField(
     required?: boolean
     group?: string
     fieldset?: string
+    initialValue?: string
   },
 ) {
   return defineField({
@@ -41,6 +42,7 @@ export function brandColorField(
     validation: options?.required ? (rule) => rule.required() : undefined,
     group: options?.group,
     fieldset: options?.fieldset,
+    initialValue: options?.initialValue,
   })
 }
 
@@ -83,6 +85,26 @@ export function collapseLineBreaksOnMobileField(options?: {
       'Keep desktop line breaks from Enter, but let the text reflow without those breaks on small screens.',
     group: options?.group,
     hidden: options?.hidden,
+  })
+}
+
+/**
+ * Toggle the horizontal rule under a tagline. On by default.
+ * `textKey` is the parent field that holds the tagline string (`tagline` or `text`).
+ */
+export function showTaglineRuleField(options?: {
+  group?: string
+  textKey?: string
+}) {
+  const textKey = options?.textKey ?? 'tagline'
+  return defineField({
+    name: 'showTaglineRule',
+    title: 'Show tagline rule',
+    type: 'boolean',
+    initialValue: true,
+    description: 'When off, the line under the tagline is hidden.',
+    hidden: ({parent}) => !parent?.[textKey],
+    group: options?.group,
   })
 }
 

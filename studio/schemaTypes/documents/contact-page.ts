@@ -1,5 +1,6 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {EnvelopeIcon} from '../../lib/icons'
+import {showTaglineRuleField} from '../shared/section-fields'
 
 export const contactPageType = defineType({
   name: 'contactPage',
@@ -27,6 +28,7 @@ export const contactPageType = defineType({
       description: 'e.g. “Reach out to get started”',
       group: 'content',
     }),
+    {...showTaglineRuleField({group: 'content'}), group: 'content'},
     defineField({
       name: 'attributes',
       title: 'Contact attributes',

@@ -25,7 +25,7 @@ export function CmsButton({button, className, onClick}: CmsButtonProps) {
     className,
   )
 
-  const restText = button.textColor ? colorHex(button.textColor) : undefined
+  const restText = colorHex(button.textColor, 'charcoal')
   const hoverBg = colorHex(
     button.hoverBackgroundColor ?? button.backgroundColor,
     'charcoal',
@@ -37,8 +37,8 @@ export function CmsButton({button, className, onClick}: CmsButtonProps) {
 
   const style: React.CSSProperties = {
     backgroundColor: 'transparent',
-    color: restText ?? 'inherit',
-    borderColor: restText ?? 'currentColor',
+    color: restText,
+    borderColor: restText,
   }
 
   const onMouseEnter: React.MouseEventHandler<HTMLElement> = (e) => {
@@ -49,8 +49,8 @@ export function CmsButton({button, className, onClick}: CmsButtonProps) {
 
   const onMouseLeave: React.MouseEventHandler<HTMLElement> = (e) => {
     e.currentTarget.style.backgroundColor = 'transparent'
-    e.currentTarget.style.color = restText ?? 'inherit'
-    e.currentTarget.style.borderColor = restText ?? 'currentColor'
+    e.currentTarget.style.color = restText
+    e.currentTarget.style.borderColor = restText
   }
 
   if (href && !onClick) {

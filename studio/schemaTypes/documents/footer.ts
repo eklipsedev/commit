@@ -61,7 +61,8 @@ export const footerType = defineType({
         }),
         brandColorField('buttonTextColor', 'Resting text / border', {
           fieldset: 'colors',
-          description: 'Subscribe button label and outline at rest',
+          description: 'Subscribe button label and outline at rest. Defaults to Charcoal.',
+          initialValue: 'charcoal',
         }),
         brandColorField('buttonHoverBackgroundColor', 'Hover fill', {
           fieldset: 'colors',

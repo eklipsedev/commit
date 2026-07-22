@@ -8,7 +8,7 @@ import type {PageBuilderBlock, RichHeadline as RichHeadlineType} from '@/sanity/
 
 type ListTextBlock = PageBuilderBlock & {
   tagline?: string
-  showTaglineRule?: boolean
+  showTaglineRule?: boolean | null
   headline?: RichHeadlineType
   items?: string[]
   columns?: number

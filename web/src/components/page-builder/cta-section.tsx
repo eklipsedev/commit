@@ -18,7 +18,7 @@ export function CtaSection({block}: {block: CtaBlock}) {
   return (
     <Section {...block}>
       <Container className="space-y-8">
-        {block.tagline && <Tagline>{block.tagline}</Tagline>}
+        {block.tagline && <Tagline showRule={block.showTaglineRule !== false}>{block.tagline}</Tagline>}
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between md:gap-12">
           <RichHeadline
             value={block.headline}

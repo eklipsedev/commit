@@ -27,7 +27,8 @@ type TextGrid = {
 
 type DetailAttributes = {
   label?: string
-  valueSize?: 'md' | 'lg'
+  showTaglineRule?: boolean
+  valueSize?: 'sm' | 'md' | 'lg'
   attributes?: {label?: string; values?: string[]}[]
 }
 
@@ -46,7 +47,9 @@ type CustomModule = {
   items?: StringListItem[]
   groups?: TextGridGroup[]
   label?: string
+  showTaglineRule?: boolean
   showRules?: boolean
+  size?: 'sm' | 'md' | 'lg'
   steps?: {text?: string}[]
   headline?: RichHeadlineType
   headingSize?: string
@@ -65,9 +68,12 @@ type CustomModule = {
   listItems?: string[]
   listServices?: {_id?: string; title?: string}[]
   listColumns?: number
+  /** @deprecated Prefer string list / other modules — still rendered for legacy content */
   textGrid?: TextGrid
   itemSize?: 'sm' | 'md'
+  textSize?: 'sm' | 'md' | 'lg'
   attributes?: {label?: string; values?: string[]}[]
+  valueSize?: 'sm' | 'md' | 'lg'
 }
 
 function resolveListItemLabel(item: StringListItem | null | undefined): string | null {
@@ -110,12 +116,12 @@ function resolveGroupItems(group: TextGridGroup) {
 }
 
 function textGridItemClass(itemSize?: 'sm' | 'md') {
-  return itemSize === 'md' ? TEXT_SIZE_CLASSES.md : TEXT_SIZE_CLASSES.sm
+  return itemSize === 'sm' ? TEXT_SIZE_CLASSES.sm : TEXT_SIZE_CLASSES.md
 }
 
-function detailAttributeValueClass(valueSize?: 'md' | 'lg') {
-  // Attributes: Medium = Small scale (20px), Large = Medium scale (24→32)
-  return valueSize === 'md' ? TEXT_SIZE_CLASSES.sm : TEXT_SIZE_CLASSES.md
+function detailAttributeValueClass(valueSize?: 'sm' | 'md' | 'lg') {
+  // Medium (default) = 32→24. Small = 20. Legacy `lg` maps to Medium.
+  return valueSize === 'sm' ? TEXT_SIZE_CLASSES.sm : TEXT_SIZE_CLASSES.md
 }
 
 function TextGridView({grid}: {grid?: TextGrid}) {
@@ -167,7 +173,9 @@ function DetailAttributesView({details}: {details?: DetailAttributes}) {
 
   return (
     <div className="space-y-8">
-      {details.label && <Tagline>{details.label}</Tagline>}
+      {details.label && (
+        <Tagline showRule={details.showTaglineRule !== false}>{details.label}</Tagline>
+      )}
       <dl className={cn('grid gap-6', columnClass)}>
         {details.attributes.map((attr) => (
           <div key={attr.label}>
@@ -188,7 +196,7 @@ function StringListView({
   label,
   items,
   columns = 2,
-  itemSize = 'sm',
+  itemSize = 'md',
   showRules,
   className,
 }: {
@@ -201,7 +209,7 @@ function StringListView({
 }) {
   const labels = resolveStringListItems(items)
   if (!labels.length) return null
-  const itemClass = itemSize === 'md' ? TEXT_SIZE_CLASSES.md : TEXT_SIZE_CLASSES.sm
+  const itemClass = itemSize === 'sm' ? TEXT_SIZE_CLASSES.sm : TEXT_SIZE_CLASSES.md
   return (
     <div className={cn('space-y-4', className)}>
       {label && <p className="font-mono text-xs uppercase tracking-wide">{label}</p>}
@@ -230,10 +238,15 @@ function SplitColumn({modules}: {modules?: CustomModule[]}) {
       {modules.map((mod, index) => {
         const prev = modules[index - 1]
         const tightToPrev = prev?._type === 'moduleTagline'
+        const afterSpacer = prev?._type === 'moduleSpacer'
         return (
           <div
             key={mod._key ?? `${mod._type}-${index}`}
-            className={cn(index > 0 && (tightToPrev ? 'mt-7 md:mt-8' : 'mt-6 md:mt-8'))}
+            className={cn(
+              index > 0 &&
+                !afterSpacer &&
+                (tightToPrev ? 'mt-7 md:mt-8' : 'mt-6 md:mt-8'),
+            )}
           >
             <CustomModuleRenderer module={mod} />
           </div>
@@ -255,10 +268,25 @@ function hasLegacySplitContent(module: CustomModule) {
   )
 }
 
+function bodyTextClass(module: CustomModule) {
+  // Prefer textSize; map legacy headingSize (h3/lg → Large, else Medium).
+  const legacy = module.headingSize
+  const size =
+    module.textSize ??
+    (legacy === 'lg' || legacy === 'h3' ? 'lg' : legacy === 'sm' ? 'sm' : 'md')
+  if (size === 'lg') return TEXT_SIZE_CLASSES.lg
+  if (size === 'sm') {
+    return 'font-sans text-[1.5rem] font-normal leading-[1.2] tracking-normal'
+  }
+  return TEXT_SIZE_CLASSES.md
+}
+
 export function CustomModuleRenderer({module}: {module: CustomModule}) {
   switch (module._type) {
     case 'moduleTagline':
-      return <Tagline>{module.text}</Tagline>
+      return (
+        <Tagline showRule={module.showTaglineRule !== false}>{module.text}</Tagline>
+      )
     case 'moduleHeadline':
       return (
         <RichHeadline
@@ -272,7 +300,10 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
       )
     case 'moduleBody':
       return (
-        <p className={cn('max-w-3xl', TEXT_SIZE_CLASSES.md)} style={{color: 'var(--section-body)'}}>
+        <p
+          className={cn('max-w-3xl', bodyTextClass(module))}
+          style={{color: 'var(--section-body)'}}
+        >
           {module.text}
         </p>
       )
@@ -385,6 +416,19 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
     }
     case 'moduleButton':
       return <CmsButton button={module.button} />
+    case 'moduleSpacer': {
+      const size = module.size === 'sm' ? 'sm' : module.size === 'lg' ? 'lg' : 'md'
+      return (
+        <div
+          aria-hidden
+          className={cn(
+            size === 'sm' && 'h-6 md:h-8',
+            size === 'md' && 'h-12 md:h-16',
+            size === 'lg' && 'h-20 md:h-28',
+          )}
+        />
+      )
+    }
     default:
       return null
   }

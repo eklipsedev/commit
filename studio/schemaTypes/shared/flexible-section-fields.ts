@@ -7,11 +7,11 @@ export const FLEXIBLE_SECTION_MODULES = [
   defineArrayMember({type: 'moduleHeadline'}),
   defineArrayMember({type: 'moduleBody'}),
   defineArrayMember({type: 'moduleSplit'}),
-  defineArrayMember({type: 'textGrid'}),
   defineArrayMember({type: 'moduleStringList'}),
   defineArrayMember({type: 'detailAttributes'}),
   defineArrayMember({type: 'moduleSteps'}),
   defineArrayMember({type: 'moduleButton'}),
+  defineArrayMember({type: 'moduleSpacer'}),
 ]
 
 /** Content + style fields shared by `customSection` and `flexibleSectionTemplate`. */
@@ -23,8 +23,7 @@ export function flexibleSectionContentFields(options?: {modulesRequired?: boolea
       name: 'modules',
       title: 'Modules',
       type: 'array',
-      description:
-        'Compose the section from reusable modules (tagline, headline, split, text grid, etc.)',
+      description: 'Compose the section from reusable modules (tagline, headline, split, lists, etc.)',
       of: FLEXIBLE_SECTION_MODULES,
       validation: modulesRequired ? (rule) => rule.min(1) : undefined,
       group: 'content',

@@ -26,6 +26,7 @@ const BUTTON_PROJECTION = `{
 
 const CTA_CONTENT_PROJECTION = `{
   tagline,
+  showTaglineRule,
   headline,
   headingSize,
   headingFont,
@@ -447,6 +448,7 @@ export const OFFERING_BY_SLUG_QUERY = `*[_type == "offering" && slug.current == 
 export const CONTACT_PAGE_QUERY = `*[_id == "contactPage"][0]{
   heading,
   tagline,
+  showTaglineRule,
   attributes[]{
     _key,
     label,
