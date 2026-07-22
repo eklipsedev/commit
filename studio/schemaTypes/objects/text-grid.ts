@@ -28,12 +28,12 @@ export const textGridType = defineType({
       options: {
         list: [
           {title: 'Small — 20px', value: 'sm'},
-          {title: 'Medium — 32px', value: 'md'},
+          {title: 'Medium — 32px (24px mobile)', value: 'md'},
         ],
         layout: 'radio',
       },
       initialValue: 'sm',
-      description: 'Applies to all group items in this grid.',
+      description: 'Applies to all group items in this grid. Medium uses 24px on mobile.',
     }),
     defineField({
       name: 'groups',

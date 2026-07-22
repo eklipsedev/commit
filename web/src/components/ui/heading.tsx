@@ -1,8 +1,9 @@
 import {cn} from '@/lib/cn'
 import {
   HEADING_DEFAULT_TAG,
-  HEADING_SIZE_CLASSES,
+  headingClassName,
   resolveHeadingSize,
+  type HeadingFont,
   type LegacyHeadingSize,
 } from '@/lib/heading-styles'
 import {MultilineText} from '@/components/ui/multiline-text'
@@ -13,6 +14,7 @@ type HeadingProps = {
   style?: React.CSSProperties
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'div'
   size?: LegacyHeadingSize
+  font?: HeadingFont | string | null
   collapseLineBreaksOnMobile?: boolean
 }
 
@@ -23,6 +25,7 @@ export function Heading({
   style,
   as,
   size = 'md',
+  font,
   collapseLineBreaksOnMobile = false,
 }: HeadingProps) {
   if (!children) return null
@@ -33,7 +36,7 @@ export function Heading({
   return (
     <MultilineText
       as={Tag}
-      className={cn(HEADING_SIZE_CLASSES[resolved], className)}
+      className={cn(headingClassName(resolved, font), className)}
       style={style}
       collapseLineBreaksOnMobile={collapseLineBreaksOnMobile}
     >

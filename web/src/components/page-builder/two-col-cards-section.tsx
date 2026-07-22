@@ -10,7 +10,7 @@ import {SanityImage} from '@/components/ui/sanity-image'
 import {Section} from '@/components/ui/section'
 import {Tagline} from '@/components/ui/tagline'
 import {cn} from '@/lib/cn'
-import {headingSizeFromBlock} from '@/lib/heading-styles'
+import {headingFontFromBlock, headingSizeFromBlock} from '@/lib/heading-styles'
 import {useInView} from '@/lib/use-in-view'
 import type {PageBuilderBlock, ProjectCard} from '@/sanity/types'
 
@@ -113,6 +113,7 @@ export function TwoColCardsSection({block}: {block: TwoColCardsBlock}) {
               {block.heading && (
                 <Heading
                   size={headingSizeFromBlock(block)}
+                  font={headingFontFromBlock(block)}
                   style={{color: 'var(--section-heading)'}}
                   collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
                 >

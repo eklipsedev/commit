@@ -2,6 +2,7 @@
 
 import {useEffect, useRef, useState, type CSSProperties, type ReactNode} from 'react'
 import {colorHex} from '@/lib/colors'
+import {TEXT_SIZE_CLASSES} from '@/lib/heading-styles'
 import {SanityImage} from '@/components/ui/sanity-image'
 import type {SanityImage as SanityImageType} from '@/sanity/types'
 
@@ -107,7 +108,7 @@ function StaggerCopy({
         duration={timing.duration}
         offset={timing.offset}
       >
-        <blockquote className="font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]">
+        <blockquote className={TEXT_SIZE_CLASSES.md}>
           “{quote}”
         </blockquote>
       </StaggerItem>

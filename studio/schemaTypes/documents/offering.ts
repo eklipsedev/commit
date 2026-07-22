@@ -1,14 +1,15 @@
 import {createElement} from 'react'
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import {defineField, defineType} from 'sanity'
 import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
 import {OfferingColorMedia} from '../../components/offering-color-media'
 import {PackageIcon} from '../../lib/icons'
-import {DEFAULT_OFFERING_DETAILS} from '../shared/offering-defaults'
+import {DEFAULT_OFFERING_MODULES} from '../shared/offering-defaults'
+import {FLEXIBLE_SECTION_MODULES} from '../shared/flexible-section-fields'
 import {brandColorField, COLORS_FIELDSET} from '../shared/section-fields'
 
 /**
  * Offerings open in a shared overlay pattern (see design/components/offer-overlay).
- * Overlay body uses rows: full-span or two-column stacks of labeled lists / text / captions.
+ * Overlay body uses the same modules as Flexible sections (split rows, lists, attributes, etc.).
  */
 export const offeringType = defineType({
   name: 'offering',
@@ -92,22 +93,14 @@ export const offeringType = defineType({
       group: 'overlay',
     }),
     defineField({
-      name: 'body',
-      title: 'Overlay body',
+      name: 'modules',
+      title: 'Overlay content',
       type: 'array',
       description:
-        'Rows of content. Use two columns for side-by-side stacks, or full width to span both. Lists are fragmented line items.',
-      of: [defineArrayMember({type: 'overlayRow'})],
+        'Same modules as Flexible sections — split rows, string lists, attributes, steps, etc.',
+      of: FLEXIBLE_SECTION_MODULES,
+      initialValue: DEFAULT_OFFERING_MODULES,
       group: 'overlay',
-    }),
-    defineField({
-      name: 'details',
-      title: 'Attributes',
-      type: 'detailAttributes',
-      group: 'overlay',
-      description:
-        'Starts with the standard four labels — edit, add, or remove as needed for this offering.',
-      initialValue: DEFAULT_OFFERING_DETAILS,
     }),
   ],
   preview: {

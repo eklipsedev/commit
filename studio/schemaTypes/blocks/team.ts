@@ -3,6 +3,8 @@ import {UsersIcon} from '../../lib/icons'
 import {
   brandColorField,
   collapseLineBreaksOnMobileField,
+  headingFontField,
+  headingFontLabel,
   headingSizeField,
   sectionSpacingFields,
   headingSizeLabel,
@@ -82,17 +84,18 @@ export const teamType = defineType({
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...headingSizeField({group: 'style'}), group: 'style'},
+    {...headingFontField({group: 'style'}), group: 'style'},
     {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
     {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('headingColor', 'Heading color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('taglineColor', 'Tagline color'), group: 'style', fieldset: 'colors'},
   ],
   preview: {
-    select: {headline: 'headline', people: 'people', headingSize: 'headingSize'},
-    prepare({headline, people, headingSize}) {
+    select: {headline: 'headline', people: 'people', headingSize: 'headingSize', headingFont: 'headingFont'},
+    prepare({headline, people, headingSize, headingFont}) {
       return {
         title: headline || 'Team',
-        subtitle: `Team · ${people?.length ?? 0} people · ${headingSizeLabel(headingSize)}`,
+        subtitle: `Team · ${people?.length ?? 0} people · ${headingSizeLabel(headingSize)} · ${headingFontLabel(headingFont)}`,
         media: UsersIcon,
       }
     },

@@ -3,7 +3,7 @@ import {Container} from '@/components/ui/container'
 import {RichHeadline} from '@/components/ui/rich-headline'
 import {Section} from '@/components/ui/section'
 import {Tagline} from '@/components/ui/tagline'
-import {HEADING_SIZE_CLASSES, headingSizeFromBlock} from '@/lib/heading-styles'
+import {TEXT_SIZE_CLASSES, headingFontFromBlock, headingSizeFromBlock} from '@/lib/heading-styles'
 import type {PageBuilderBlock, RichHeadline as RichHeadlineType} from '@/sanity/types'
 
 type ListTextBlock = PageBuilderBlock & {
@@ -35,8 +35,8 @@ function ListColumn({items}: {items: string[]}) {
         <li
           key={`${item}-${i}`}
           className={cn(
-            HEADING_SIZE_CLASSES.md,
-            'border-t border-brand-charcoal py-4 text-[1.25rem] md:text-[2rem]',
+            TEXT_SIZE_CLASSES.md,
+            'border-t border-brand-charcoal py-4',
             i === items.length - 1 && 'border-b border-brand-charcoal',
           )}
         >
@@ -71,6 +71,7 @@ export function ListTextSection({block}: {block: ListTextBlock}) {
                 value={block.headline}
                 as="h2"
                 size={headingSizeFromBlock(block)}
+                font={headingFontFromBlock(block)}
                 collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
               />
             )}

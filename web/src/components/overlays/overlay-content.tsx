@@ -1,14 +1,15 @@
+import {CustomModuleRenderer} from '@/components/custom/custom-module-renderer'
 import {Heading} from '@/components/ui/heading'
 import {cn} from '@/lib/cn'
 import {colorHex} from '@/lib/colors'
-import {HEADING_SIZE_CLASSES} from '@/lib/heading-styles'
+import {headingClassName, TEXT_SIZE_CLASSES} from '@/lib/heading-styles'
 import type {DetailAttributes, OverlayModule, OverlayRow} from '@/sanity/types'
 import type {PortableTextBlock} from '@portabletext/types'
 import {PortableText, type PortableTextComponents} from '@portabletext/react'
 import Link from 'next/link'
 
-/** Single-string overlay content — Figma H3 / md scale (Bloyd, 2rem, 120%). */
-const overlayStringClass = HEADING_SIZE_CLASSES.md
+/** Default overlay string content — Medium scale (24px → 32px). */
+const overlayStringClass = TEXT_SIZE_CLASSES.md
 
 function OverlayLabeledList({module}: {module: Extract<OverlayModule, {_type: 'overlayLabeledList'}>}) {
   return (
@@ -108,6 +109,7 @@ function OverlayRowView({row}: {row: OverlayRow}) {
 
 function DetailAttributesBlock({details}: {details?: DetailAttributes}) {
   if (!details?.attributes?.length) return null
+  const valueClass = details.valueSize === 'md' ? TEXT_SIZE_CLASSES.sm : TEXT_SIZE_CLASSES.md
   return (
     <div className="space-y-6 border-t border-current pt-8">
       {details.label && (
@@ -119,7 +121,7 @@ function DetailAttributesBlock({details}: {details?: DetailAttributes}) {
             <dt className="font-mono text-xs tracking-normal md:text-sm">{attr.label}</dt>
             <dd className="mt-2 space-y-1">
               {attr.values?.map((value, i) => (
-                <p key={`${value}-${i}`} className={overlayStringClass}>
+                <p key={`${value}-${i}`} className={valueClass}>
                   {value}
                 </p>
               ))}
@@ -159,10 +161,31 @@ export function OfferingOverlayBody({
   offering,
 }: {
   offering: {
+    modules?: {_key?: string; _type?: string; [key: string]: unknown}[]
     body?: OverlayRow[]
     details?: DetailAttributes
   }
 }) {
+  if (offering.modules?.length) {
+    return (
+      <div className="flex flex-col">
+        {offering.modules.map((module, index) => {
+          const prev = offering.modules![index - 1]
+          const tightToPrev = prev?._type === 'moduleTagline'
+          return (
+            <div
+              key={module._key ?? `${module._type}-${index}`}
+              className={cn(index > 0 && (tightToPrev ? 'mt-7 md:mt-8' : 'mt-10 md:mt-14'))}
+            >
+              <CustomModuleRenderer module={module} />
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
+  // Legacy: overlay rows + trailing attributes
   return (
     <div className="space-y-10">
       {offering.body?.map((row) => (
@@ -176,23 +199,23 @@ export function OfferingOverlayBody({
 const personBioComponents: PortableTextComponents = {
   block: {
     normal: ({children}) => (
-      <p className={cn(HEADING_SIZE_CLASSES.md, 'mb-6 last:mb-0')}>{children}</p>
+      <p className={cn(headingClassName('md', 'sans'), 'mb-6 last:mb-0')}>{children}</p>
     ),
     h2: ({children}) => (
-      <h2 className={cn(HEADING_SIZE_CLASSES.md, 'mb-6 last:mb-0')}>{children}</h2>
+      <h2 className={cn(headingClassName('md', 'sans'), 'mb-6 last:mb-0')}>{children}</h2>
     ),
     h3: ({children}) => (
-      <h3 className={cn(HEADING_SIZE_CLASSES.md, 'mb-6 last:mb-0')}>{children}</h3>
+      <h3 className={cn(headingClassName('md', 'sans'), 'mb-6 last:mb-0')}>{children}</h3>
     ),
   },
   list: {
     bullet: ({children}) => (
-      <ul className={cn(HEADING_SIZE_CLASSES.md, 'mb-6 list-disc space-y-2 pl-6 last:mb-0')}>
+      <ul className={cn(headingClassName('md', 'sans'), 'mb-6 list-disc space-y-2 pl-6 last:mb-0')}>
         {children}
       </ul>
     ),
     number: ({children}) => (
-      <ol className={cn(HEADING_SIZE_CLASSES.md, 'mb-6 list-decimal space-y-2 pl-6 last:mb-0')}>
+      <ol className={cn(headingClassName('md', 'sans'), 'mb-6 list-decimal space-y-2 pl-6 last:mb-0')}>
         {children}
       </ol>
     ),

@@ -9,6 +9,8 @@ import {
 import {buttonHasContent} from './button'
 import {
   collapseLineBreaksOnMobileField,
+  headingFontField,
+  headingFontLabel,
   headingSizeField,
   headingSizeLabel,
 } from '../shared/section-fields'
@@ -48,6 +50,7 @@ export const moduleHeadlineType = defineType({
       validation: (rule) => rule.required(),
     }),
     headingSizeField({initialValue: 'md'}),
+    headingFontField(),
     collapseLineBreaksOnMobileField(),
     defineField({
       name: 'fullWidth',
@@ -58,11 +61,11 @@ export const moduleHeadlineType = defineType({
     }),
   ],
   preview: {
-    select: {headingSize: 'headingSize', fullWidth: 'fullWidth'},
-    prepare({headingSize, fullWidth}) {
+    select: {headingSize: 'headingSize', headingFont: 'headingFont', fullWidth: 'fullWidth'},
+    prepare({headingSize, headingFont, fullWidth}) {
       return {
         title: 'Headline',
-        subtitle: `${headingSizeLabel(headingSize)}${fullWidth ? ' · Full width' : ''}`,
+        subtitle: `${headingSizeLabel(headingSize)} · ${headingFontLabel(headingFont)}${fullWidth ? ' · Full width' : ''}`,
         media: BlockContentIcon,
       }
     },
@@ -258,12 +261,12 @@ export const moduleStringListType = defineType({
       options: {
         list: [
           {title: 'Small — 20px', value: 'sm'},
-          {title: 'Medium — 32px', value: 'md'},
+          {title: 'Medium — 32px (24px mobile)', value: 'md'},
         ],
         layout: 'radio',
       },
       initialValue: 'sm',
-      description: 'Applies to all list items.',
+      description: 'Applies to all list items. Medium uses 24px on mobile.',
     }),
     defineField({
       name: 'showRules',

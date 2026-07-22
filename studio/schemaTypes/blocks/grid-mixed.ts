@@ -3,6 +3,8 @@ import {ImagesIcon} from '../../lib/icons'
 import {
   brandColorField,
   collapseLineBreaksOnMobileField,
+  headingFontField,
+  headingFontLabel,
   headingSizeField,
   sectionSpacingFields,
   headingSizeLabel,
@@ -53,6 +55,7 @@ export const gridMixedType = defineType({
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...headingSizeField({group: 'style'}), group: 'style'},
+    {...headingFontField({group: 'style'}), group: 'style'},
     {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
     {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('headingColor', 'Heading color'), group: 'style', fieldset: 'colors'},
@@ -62,12 +65,13 @@ export const gridMixedType = defineType({
     select: {
       heading: 'heading',
       headingSize: 'headingSize',
+      headingFont: 'headingFont',
       media: 'images.topLeft',
     },
-    prepare({heading, headingSize, media}) {
+    prepare({heading, headingSize, headingFont, media}) {
       return {
         title: heading || 'Image collage',
-        subtitle: `Image collage · 7 slots · ${headingSizeLabel(headingSize)}`,
+        subtitle: `Image collage · 7 slots · ${headingSizeLabel(headingSize)} · ${headingFontLabel(headingFont)}`,
         media: media || ImagesIcon,
       }
     },

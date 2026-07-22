@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import {Container} from '@/components/ui/container'
-import {HEADING_SIZE_CLASSES} from '@/lib/heading-styles'
+import {headingClassName} from '@/lib/heading-styles'
 
 type Sibling = {_id: string; title?: string; slug?: string}
 
@@ -33,7 +33,7 @@ export function CaseStudyProjectNav({
         >
           <p className="font-mono text-xs tracking-normal md:text-sm">Previous</p>
           <p
-            className={`${HEADING_SIZE_CLASSES.h3} break-words underline-offset-4 group-hover:underline`}
+            className={`${headingClassName('h3', 'sans')} break-words underline-offset-4 group-hover:underline`}
           >
             {prev.title}
           </p>
@@ -45,7 +45,7 @@ export function CaseStudyProjectNav({
         >
           <p className="font-mono text-xs tracking-normal md:text-sm">Next</p>
           <p
-            className={`${HEADING_SIZE_CLASSES.h3} break-words underline-offset-4 group-hover:underline`}
+            className={`${headingClassName('h3', 'sans')} break-words underline-offset-4 group-hover:underline`}
           >
             {next.title}
           </p>

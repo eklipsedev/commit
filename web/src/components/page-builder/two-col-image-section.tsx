@@ -3,7 +3,7 @@ import {Container} from '@/components/ui/container'
 import {Heading} from '@/components/ui/heading'
 import {SanityImage} from '@/components/ui/sanity-image'
 import {Section} from '@/components/ui/section'
-import {headingSizeFromBlock} from '@/lib/heading-styles'
+import {headingFontFromBlock, headingSizeFromBlock} from '@/lib/heading-styles'
 import type {PageBuilderBlock, SanityImage as SanityImageType} from '@/sanity/types'
 import type {PortableTextBlock} from '@portabletext/types'
 
@@ -17,6 +17,7 @@ type TwoColImageBlock = PageBuilderBlock & {
 export function TwoColImageSection({block}: {block: TwoColImageBlock}) {
   const imageLeft = block.imagePosition !== 'right'
   const headingSize = headingSizeFromBlock(block, 'md')
+  const headingFont = headingFontFromBlock(block, headingSize)
 
   const imageCol = (
     <div className="relative aspect-[4/5] overflow-hidden bg-neutral-100">
@@ -37,6 +38,7 @@ export function TwoColImageSection({block}: {block: TwoColImageBlock}) {
       {block.heading && (
         <Heading
           size={headingSize}
+          font={headingFont}
           style={{color: 'var(--section-heading)'}}
           collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
         >

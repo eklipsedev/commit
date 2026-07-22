@@ -70,6 +70,12 @@ export function OverlayModal({
         style={{
           backgroundColor: background,
           color: textColor,
+          // So Flexible modules / Tagline / RichHeadline match overlay text
+          ['--foreground' as string]: textColor,
+          ['--section-heading' as string]: textColor,
+          ['--section-body' as string]: textColor,
+          ['--section-tagline' as string]: textColor,
+          ['--section-accent' as string]: textColor,
           transitionDuration: `${OVERLAY_TRANSITION_MS}ms`,
         }}
       >
@@ -83,7 +89,7 @@ export function OverlayModal({
           >
             <OverlayCloseIcon className="size-3" />
           </button>
-          <div className="pr-10">{header}</div>
+          <div>{header}</div>
         </div>
 
         {children ? (

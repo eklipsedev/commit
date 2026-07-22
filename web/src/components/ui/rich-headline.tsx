@@ -2,8 +2,10 @@ import {PortableText, type PortableTextComponents} from '@portabletext/react'
 import {cn} from '@/lib/cn'
 import {
   HEADING_DEFAULT_TAG,
-  HEADING_SIZE_CLASSES,
+  headingClassName,
+  resolveHeadingFont,
   resolveHeadingSize,
+  type HeadingFont,
   type HeadingSize,
   type LegacyHeadingSize,
 } from '@/lib/heading-styles'
@@ -11,6 +13,7 @@ import type {RichHeadline} from '@/sanity/types'
 
 function createComponents(
   size: HeadingSize,
+  font: HeadingFont,
   collapseLineBreaksOnMobile: boolean,
 ): PortableTextComponents {
   return {
@@ -20,7 +23,7 @@ function createComponents(
       normal: ({children}) => (
         <span
           className={cn(
-            HEADING_SIZE_CLASSES[size],
+            headingClassName(size, font),
             'text-[var(--section-heading,var(--foreground))]',
             collapseLineBreaksOnMobile ? 'inline md:block' : 'block',
           )}
@@ -54,6 +57,8 @@ type RichHeadlineProps = {
   className?: string
   as?: 'h1' | 'h2' | 'h3' | 'div'
   size?: LegacyHeadingSize
+  /** Sans (Bloyd) or Display (LustText). Hero/xl default to display. */
+  font?: HeadingFont | string | null
   /** When true, spans the full container width. Default is max-w-4xl. */
   fullWidth?: boolean
   collapseLineBreaksOnMobile?: boolean
@@ -64,12 +69,14 @@ export function RichHeadline({
   className,
   as,
   size = 'md',
+  font,
   fullWidth = false,
   collapseLineBreaksOnMobile = false,
 }: RichHeadlineProps) {
   if (!value?.length) return null
 
   const resolved = resolveHeadingSize(size)
+  const resolvedFont = resolveHeadingFont(font, resolved)
   const Tag = as ?? HEADING_DEFAULT_TAG[resolved]
   const spanFull = fullWidth || resolved === 'hero'
 
@@ -83,7 +90,7 @@ export function RichHeadline({
     >
       <PortableText
         value={value}
-        components={createComponents(resolved, collapseLineBreaksOnMobile)}
+        components={createComponents(resolved, resolvedFont, collapseLineBreaksOnMobile)}
       />
     </Tag>
   )

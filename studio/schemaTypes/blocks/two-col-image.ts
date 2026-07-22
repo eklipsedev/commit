@@ -4,6 +4,8 @@ import {imageAltField, imageFieldOptions} from '../shared/image-fields'
 import {
   brandColorField,
   collapseLineBreaksOnMobileField,
+  headingFontField,
+  headingFontLabel,
   headingSizeField,
   sectionSpacingFields,
   headingSizeLabel,
@@ -54,6 +56,7 @@ export const twoColImageType = defineType({
       group: 'content',
     }),
     {...headingSizeField({group: 'content', initialValue: 'md'}), title: 'Text size', group: 'content'},
+    {...headingFontField({group: 'content'}), title: 'Heading font', group: 'content'},
     defineField({
       name: 'body',
       title: 'Body',
@@ -68,11 +71,11 @@ export const twoColImageType = defineType({
     {...brandColorField('bodyColor', 'Body color'), group: 'style', fieldset: 'colors'},
   ],
   preview: {
-    select: {title: 'heading', media: 'image', headingSize: 'headingSize'},
-    prepare({title, media, headingSize}) {
+    select: {title: 'heading', media: 'image', headingSize: 'headingSize', headingFont: 'headingFont'},
+    prepare({title, media, headingSize, headingFont}) {
       return {
         title: title || 'Image + story',
-        subtitle: `Image + story · ${headingSizeLabel(headingSize)}`,
+        subtitle: `Image + story · ${headingSizeLabel(headingSize)} · ${headingFontLabel(headingFont)}`,
         media: media ?? InlineIcon,
       }
     },

@@ -8,7 +8,7 @@ import {Container} from '@/components/ui/container'
 import {FadeIn} from '@/components/ui/fade-in'
 import {Heading} from '@/components/ui/heading'
 import {Section} from '@/components/ui/section'
-import {headingSizeFromBlock} from '@/lib/heading-styles'
+import {headingFontFromBlock, headingSizeFromBlock, TEXT_SIZE_CLASSES} from '@/lib/heading-styles'
 import type {OfferingCard, PageBuilderBlock} from '@/sanity/types'
 
 type CardsTextBlock = PageBuilderBlock & {
@@ -52,7 +52,7 @@ function OfferingCardItem({offering}: {offering: OfferingCard}) {
       style={{backgroundColor: bg, color: text}}
     >
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-        <h3 className="font-display text-[3rem] font-normal leading-[1.2] tracking-normal">
+        <h3 className={cn(TEXT_SIZE_CLASSES.lg)}>
           {offering.title}
         </h3>
         {offering.timeline && (
@@ -94,13 +94,14 @@ export function CardsTextSection({block}: {block: CardsTextBlock}) {
         {block.heading && (
           <Heading
             size={headingSizeFromBlock(block)}
+            font={headingFontFromBlock(block)}
             style={{color: 'var(--section-heading)'}}
             collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
           >
             {block.heading}
           </Heading>
         )}
-        <div className="grid gap-x-14 gap-y-10 sm:grid-cols-2">
+        <div className="grid gap-x-14 gap-y-4 sm:grid-cols-2 sm:gap-y-10">
           {offerings.map((offering, index) => (
             <FadeIn key={offering._id} delay={Math.min(index, 3) * 40} className="h-full w-full">
               <OfferingCardItem offering={offering} />

@@ -3,6 +3,8 @@ import {StackCompactIcon} from '../../lib/icons'
 import {
   brandColorField,
   collapseLineBreaksOnMobileField,
+  headingFontField,
+  headingFontLabel,
   headingSizeField,
   sectionSpacingFields,
   headingSizeLabel,
@@ -41,16 +43,17 @@ export const cardsTextType = defineType({
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...headingSizeField({group: 'style'}), group: 'style'},
+    {...headingFontField({group: 'style'}), group: 'style'},
     {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
     {...brandColorField('backgroundColor', 'Section background'), group: 'style', fieldset: 'colors'},
     {...brandColorField('headingColor', 'Section heading color'), group: 'style', fieldset: 'colors'},
   ],
   preview: {
-    select: {heading: 'heading', offerings: 'offerings', headingSize: 'headingSize'},
-    prepare({heading, offerings, headingSize}) {
+    select: {heading: 'heading', offerings: 'offerings', headingSize: 'headingSize', headingFont: 'headingFont'},
+    prepare({heading, offerings, headingSize, headingFont}) {
       return {
         title: heading || 'Offerings cards',
-        subtitle: `Offerings cards · ${offerings?.length ?? 0} offerings · ${headingSizeLabel(headingSize)}`,
+        subtitle: `Offerings cards · ${offerings?.length ?? 0} offerings · ${headingSizeLabel(headingSize)} · ${headingFontLabel(headingFont)}`,
         media: StackCompactIcon,
       }
     },

@@ -9,7 +9,7 @@ import {Heading} from '@/components/ui/heading'
 import {SanityImage} from '@/components/ui/sanity-image'
 import {Section} from '@/components/ui/section'
 import {Tagline} from '@/components/ui/tagline'
-import {headingSizeFromBlock} from '@/lib/heading-styles'
+import {headingFontFromBlock, headingSizeFromBlock} from '@/lib/heading-styles'
 import type {PageBuilderBlock, PersonCard} from '@/sanity/types'
 
 type TeamBlock = PageBuilderBlock & {
@@ -132,6 +132,7 @@ export function TeamSection({block}: {block: TeamBlock}) {
             {block.headline && (
               <Heading
                 size={headingSizeFromBlock(block)}
+                font={headingFontFromBlock(block)}
                 style={{color: 'var(--section-heading)'}}
                 collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
               >

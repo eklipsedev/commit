@@ -3,6 +3,8 @@ import {BulletOutlineIcon} from '../../lib/icons'
 import {
   brandColorField,
   collapseLineBreaksOnMobileField,
+  headingFontField,
+  headingFontLabel,
   headingSizeField,
   sectionSpacingFields,
   headingSizeLabel,
@@ -67,6 +69,7 @@ export const listTextType = defineType({
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...headingSizeField({group: 'style'}), group: 'style'},
+    {...headingFontField({group: 'style'}), group: 'style'},
     {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
     {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('headingColor', 'Heading color'), group: 'style', fieldset: 'colors'},
@@ -74,11 +77,11 @@ export const listTextType = defineType({
     {...brandColorField('taglineColor', 'Tagline color'), group: 'style', fieldset: 'colors'},
   ],
   preview: {
-    select: {tagline: 'tagline', items: 'items', headingSize: 'headingSize'},
-    prepare({tagline, items, headingSize}) {
+    select: {tagline: 'tagline', items: 'items', headingSize: 'headingSize', headingFont: 'headingFont'},
+    prepare({tagline, items, headingSize, headingFont}) {
       return {
         title: tagline || 'Ruled list',
-        subtitle: `Ruled list · ${items?.length ?? 0} items · ${headingSizeLabel(headingSize)}`,
+        subtitle: `Ruled list · ${items?.length ?? 0} items · ${headingSizeLabel(headingSize)} · ${headingFontLabel(headingFont)}`,
         media: BulletOutlineIcon,
       }
     },

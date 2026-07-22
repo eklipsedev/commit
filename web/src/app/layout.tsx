@@ -1,5 +1,5 @@
-import {Geist, Geist_Mono} from 'next/font/google'
-import {Lora} from 'next/font/google'
+import {Geist_Mono, Lora} from 'next/font/google'
+import localFont from 'next/font/local'
 import {draftMode} from 'next/headers'
 import {VisualEditing} from 'next-sanity/visual-editing'
 import {DisableDraftMode} from '@/components/disable-draft-mode'
@@ -16,9 +16,21 @@ import {FOOTER_QUERY, NAVIGATION_QUERY} from '@/sanity/queries'
 import type {FooterData, NavigationData} from '@/sanity/types'
 import './globals.css'
 
-const geistSans = Geist({
-  subsets: ['latin'],
-  variable: '--font-geist-sans',
+const bloyd = localFont({
+  src: [
+    {
+      path: '../fonts/bloyd/bloyd-regular.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../fonts/bloyd/bloyd-bold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-bloyd',
+  display: 'swap',
 })
 
 const geistMono = Geist_Mono({
@@ -45,7 +57,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${displaySerif.variable} intro-pending h-full antialiased`}
+      className={`${bloyd.variable} ${geistMono.variable} ${displaySerif.variable} intro-pending h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-brand-white font-sans text-brand-charcoal">
         <FooterAppearanceProvider>

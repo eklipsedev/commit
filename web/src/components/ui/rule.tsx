@@ -38,7 +38,7 @@ export function Rule({
     <hr
       ref={ref}
       aria-hidden
-      className={cn('block border-0 border-t border-brand-charcoal', className)}
+      className={cn('block border-0 border-t border-current', className)}
       style={{
         width: visible ? '100%' : '0%',
         maxWidth: '100%',

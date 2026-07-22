@@ -10,7 +10,8 @@
     "deploy-graphql": "sanity graphql deploy",
     "dev": "sanity dev",
     "start": "sanity start",
-    "migrate:testimonial-people": "node scripts/migrate-testimonial-people.mjs"
+    "migrate:testimonial-people": "node scripts/migrate-testimonial-people.mjs",
+    "migrate:offering-modules": "node --env-file=.env.local scripts/migrate-offering-modules.mjs"
   },
   "keywords": [
     "sanity"

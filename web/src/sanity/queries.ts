@@ -17,7 +17,6 @@ const LINK_PROJECTION = `{
 
 const BUTTON_PROJECTION = `{
   label,
-  variant,
   backgroundColor,
   textColor,
   hoverBackgroundColor,
@@ -29,6 +28,7 @@ const CTA_CONTENT_PROJECTION = `{
   tagline,
   headline,
   headingSize,
+  headingFont,
   headlineSize,
   backgroundColor,
   headingColor,
@@ -63,6 +63,34 @@ const CUSTOM_MODULE_ITEM_PROJECTION = `{
   ...,
   _key,
   _type,
+  _type == "textGrid" => ${TEXT_GRID_PROJECTION},
+  _type == "moduleStringList" => {
+    ...,
+    ${MIXED_LIST_ITEMS_PROJECTION},
+    button ${BUTTON_PROJECTION}
+  },
+  _type == "moduleButton" => {
+    ...,
+    button ${BUTTON_PROJECTION}
+  }
+}`
+
+const OFFERING_MODULES_PROJECTION = `modules[]{
+  ...,
+  _key,
+  _type,
+  _type == "moduleSplit" => {
+    ...,
+    content[]${CUSTOM_MODULE_ITEM_PROJECTION},
+    left[]${CUSTOM_MODULE_ITEM_PROJECTION},
+    right[]${CUSTOM_MODULE_ITEM_PROJECTION},
+    button ${BUTTON_PROJECTION},
+    listServices[]->{
+      _id,
+      title
+    },
+    textGrid${TEXT_GRID_PROJECTION}
+  },
   _type == "textGrid" => ${TEXT_GRID_PROJECTION},
   _type == "moduleStringList" => {
     ...,
@@ -116,6 +144,8 @@ const PAGE_BUILDER_PROJECTION = `pageBuilder[]{
       buttonBackgroundColor,
       buttonTextColor,
       snippet,
+      ${OFFERING_MODULES_PROJECTION},
+      // Legacy overlay rows / attributes (pre–Flexible modules)
       body[]{
         ...,
         _key,
@@ -403,6 +433,7 @@ export const OFFERING_BY_SLUG_QUERY = `*[_type == "offering" && slug.current == 
   snippet,
   cardBackgroundColor,
   cardHeadingColor,
+  ${OFFERING_MODULES_PROJECTION},
   body[]{
     ...,
     _key,

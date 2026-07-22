@@ -21,6 +21,20 @@ export const detailAttributesType = defineType({
       initialValue: 'The details.',
     }),
     defineField({
+      name: 'valueSize',
+      title: 'Value text size',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Medium — 20px', value: 'md'},
+          {title: 'Large — 32px (24px mobile)', value: 'lg'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'lg',
+      description: 'Applies to attribute values (not the mono labels). Large uses 24px on mobile.',
+    }),
+    defineField({
       name: 'attributes',
       title: 'Attributes',
       type: 'array',
@@ -60,11 +74,12 @@ export const detailAttributesType = defineType({
     }),
   ],
   preview: {
-    select: {label: 'label', attributes: 'attributes'},
-    prepare({label, attributes}) {
+    select: {label: 'label', attributes: 'attributes', valueSize: 'valueSize'},
+    prepare({label, attributes, valueSize}) {
+      const sizeLabel = valueSize === 'md' ? 'Medium (20px)' : 'Large (24→32px)'
       return {
         title: label || 'Detail attributes',
-        subtitle: `${attributes?.length ?? 0} attributes`,
+        subtitle: `${attributes?.length ?? 0} attributes · ${sizeLabel}`,
         media: BulletOutlineIcon,
       }
     },

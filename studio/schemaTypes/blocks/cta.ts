@@ -4,6 +4,8 @@ import {CtaBlockPreview, CtaObjectInput} from '../../components/site-default-cta
 import {
   brandColorField,
   collapseLineBreaksOnMobileField,
+  headingFontField,
+  headingFontLabel,
   headingSizeField,
   headingSizeLabel,
   sectionSpacingFields,
@@ -63,6 +65,7 @@ export const ctaType = defineType({
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...headingSizeField({group: 'style', initialValue: 'lg'}), group: 'style'},
+    {...headingFontField({group: 'style'}), group: 'style'},
     {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
     {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('headingColor', 'Heading color'), group: 'style', fieldset: 'colors'},
@@ -72,13 +75,14 @@ export const ctaType = defineType({
     select: {
       tagline: 'tagline',
       headingSize: 'headingSize',
+      headingFont: 'headingFont',
       headlineSize: 'headlineSize',
     },
-    prepare({tagline, headingSize, headlineSize}) {
+    prepare({tagline, headingSize, headingFont, headlineSize}) {
       const size = headingSize ?? headlineSize
       return {
         title: tagline || 'CTA',
-        subtitle: `CTA · ${headingSizeLabel(size)}`,
+        subtitle: `CTA · ${headingSizeLabel(size)} · ${headingFontLabel(headingFont)}`,
         media: BoltIcon,
         tagline,
       }

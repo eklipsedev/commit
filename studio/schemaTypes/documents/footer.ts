@@ -59,34 +59,25 @@ export const footerType = defineType({
           type: 'string',
           initialValue: 'Subscribe',
         }),
-        defineField({
-          name: 'buttonVariant',
-          title: 'Button variant',
-          type: 'string',
-          options: {
-            list: [
-              {title: 'Primary (filled)', value: 'primary'},
-              {title: 'Secondary (outlined)', value: 'secondary'},
-            ],
-            layout: 'radio',
-          },
-          initialValue: 'secondary',
-        }),
-        brandColorField('buttonBackgroundColor', 'Button background color', {
+        brandColorField('buttonTextColor', 'Resting text / border', {
           fieldset: 'colors',
-          description: 'Default subscribe button fill',
+          description: 'Subscribe button label and outline at rest',
         }),
-        brandColorField('buttonTextColor', 'Button text color', {
-          fieldset: 'colors',
-          description: 'Default subscribe button text',
-        }),
-        brandColorField('buttonHoverBackgroundColor', 'Button hover background', {
+        brandColorField('buttonHoverBackgroundColor', 'Hover fill', {
           fieldset: 'colors',
           description: 'Default hover fill — pages can still override this',
         }),
-        brandColorField('buttonHoverTextColor', 'Button hover text', {
+        brandColorField('buttonHoverTextColor', 'Hover text', {
           fieldset: 'colors',
           description: 'Default hover text — pages can still override this',
+        }),
+        // Legacy alias for hover fill (older “default fill” field)
+        defineField({
+          name: 'buttonBackgroundColor',
+          title: 'Hover fill (legacy)',
+          type: 'string',
+          hidden: true,
+          fieldset: 'colors',
         }),
       ],
     }),

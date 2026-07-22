@@ -48,7 +48,8 @@ export const buttonType = defineType({
   title: 'Button',
   type: 'object',
   icon: ChevronRightIcon,
-  description: 'Leave blank if this section should have no button',
+  description:
+    'Outlined at rest, filled on hover. Leave blank if this section should have no button.',
   fieldsets: [COLORS_FIELDSET],
   fields: [
     defineField({
@@ -57,36 +58,29 @@ export const buttonType = defineType({
       type: 'string',
     }),
     defineField({
-      name: 'variant',
-      title: 'Variant',
-      type: 'string',
-      options: {
-        list: [
-          {title: 'Primary (filled)', value: 'primary'},
-          {title: 'Secondary (outlined)', value: 'secondary'},
-          {title: 'Dot (pill with sliding dot)', value: 'dot'},
-        ],
-        layout: 'radio',
-      },
-      initialValue: 'primary',
-    }),
-    defineField({
       name: 'link',
       title: 'Link',
       type: 'link',
     }),
-    brandColorField('backgroundColor', 'Background color', {
-      description: 'Default fill (primary) or hover fill (secondary)',
+    brandColorField('textColor', 'Resting text / border', {
+      description: 'Label and outline color at rest. Inherits section text when unset.',
       fieldset: 'colors',
     }),
-    brandColorField('textColor', 'Text color', {
-      description: 'Label color in the default state',
+    brandColorField('hoverBackgroundColor', 'Hover fill', {
+      description: 'Background (and border) on hover.',
       fieldset: 'colors',
     }),
-    brandColorField('hoverBackgroundColor', 'Hover background color', {
+    brandColorField('hoverTextColor', 'Hover text', {
+      description: 'Label color on hover. Defaults to resting text / charcoal when unset.',
       fieldset: 'colors',
     }),
-    brandColorField('hoverTextColor', 'Hover text color', {
+    // Legacy alias — older docs used this as primary fill or secondary hover fill.
+    // Hidden in Studio; frontend still reads it when hoverBackgroundColor is empty.
+    defineField({
+      name: 'backgroundColor',
+      title: 'Hover fill (legacy)',
+      type: 'string',
+      hidden: true,
       fieldset: 'colors',
     }),
   ],
@@ -101,11 +95,11 @@ export const buttonType = defineType({
       return true
     }),
   preview: {
-    select: {title: 'label', subtitle: 'variant'},
-    prepare({title, subtitle}) {
+    select: {title: 'label'},
+    prepare({title}) {
       return {
         title: title || 'Button',
-        subtitle: title ? subtitle : 'Not set',
+        subtitle: title ? 'Outline → fill' : 'Not set',
       }
     },
   },

@@ -1,6 +1,6 @@
 'use client'
 
-import Image, {type ImageLoader} from 'next/image'
+import Image from 'next/image'
 import {imageLoader} from 'next-sanity/image'
 import {cn} from '@/lib/cn'
 import {urlFor} from '@/sanity/image'
@@ -18,44 +18,23 @@ type SanityImageProps = {
   priority?: boolean
   quality?: number
   /**
-   * Force GIF handling (resize via Sanity, keep `fm=gif`).
+   * Force original-asset handling (no CDN resize/format).
    * When omitted, GIF assets are detected from the asset ref.
    */
   preserveFormat?: boolean
 }
 
 function isGifAsset(image: SanityImageType) {
-  const ref = image.asset?._ref
-  return typeof ref === 'string' && ref.endsWith('-gif')
+  const ref = image.asset?._ref ?? image.asset?._id
+  return typeof ref === 'string' && /-gif$/i.test(ref)
 }
 
 /**
- * Resize animated GIFs on Sanity's CDN without `auto=format`, which can
- * flatten animation to a single WebP frame.
- */
-const gifImageLoader: ImageLoader = ({src, width, quality}) => {
-  const url = new URL(src)
-  url.searchParams.set('fm', 'gif')
-  if (!url.searchParams.has('fit')) {
-    url.searchParams.set('fit', url.searchParams.has('h') ? 'min' : 'max')
-  }
-  if (url.searchParams.has('h') && url.searchParams.has('w')) {
-    const originalHeight = Number.parseInt(url.searchParams.get('h')!, 10)
-    const originalWidth = Number.parseInt(url.searchParams.get('w')!, 10)
-    url.searchParams.set(
-      'h',
-      Math.round((originalHeight / originalWidth) * width).toString(),
-    )
-  }
-  url.searchParams.set('w', width.toString())
-  if (quality) url.searchParams.set('q', quality.toString())
-  url.searchParams.delete('auto')
-  return url.href
-}
-
-/**
- * Renders a Sanity image via next/image, using Sanity's CDN loader so
- * `sizes` / srcset map to `?w=` transforms instead of full-resolution assets.
+ * Renders a Sanity image via next/image.
+ *
+ * Animated GIFs skip Sanity CDN transforms (`w`, `fm`, `q`, `auto=format`) —
+ * resizing GIFs on the CDN often corrupts frames. The original asset is served
+ * and layout sizing is handled in CSS.
  */
 export function SanityImage({
   image,
@@ -73,9 +52,9 @@ export function SanityImage({
   if (!image?.asset) return null
 
   const isGif = preserveFormat ?? isGifAsset(image)
+  // Base URL with no width/format params — required for GIF originals.
   const src = urlFor(image).url()
   const imageAlt = alt ?? image.alt ?? ''
-  const loader = isGif ? gifImageLoader : imageLoader
 
   if (fill) {
     return (
@@ -85,10 +64,11 @@ export function SanityImage({
         fill
         className={cn('object-cover', className)}
         style={style}
-        sizes={sizes}
+        sizes={isGif ? undefined : sizes}
         priority={priority}
         quality={quality}
-        loader={loader}
+        loader={isGif ? undefined : imageLoader}
+        unoptimized={isGif}
       />
     )
   }
@@ -101,10 +81,11 @@ export function SanityImage({
       height={height ?? 800}
       className={className}
       style={style}
-      sizes={sizes}
+      sizes={isGif ? undefined : sizes}
       priority={priority}
       quality={quality}
-      loader={loader}
+      loader={isGif ? undefined : imageLoader}
+      unoptimized={isGif}
     />
   )
 }

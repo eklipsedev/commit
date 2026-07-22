@@ -12,8 +12,8 @@ export type RichHeadline = PortableTextBlock[]
 
 export type ButtonValue = {
   label?: string
-  variant?: 'primary' | 'secondary' | 'dot'
   link?: import('@/lib/links').LinkValue
+  /** @deprecated Legacy hover fill alias — prefer `hoverBackgroundColor` */
   backgroundColor?: BrandColorToken | string
   textColor?: BrandColorToken | string
   hoverBackgroundColor?: BrandColorToken | string
@@ -29,6 +29,8 @@ export type SectionStyle = {
   taglineColor?: string | null
   accentColor?: string | null
   headingSize?: string | null
+  /** Sans (Bloyd) or Display (LustText). */
+  headingFont?: string | null
   /** @deprecated Prefer `headingSize` */
   headlineSize?: string | null
   /** When true, Enter line breaks only apply from `md` up. */
@@ -80,7 +82,7 @@ export type FooterData = {
     title?: string
     placeholder?: string
     buttonText?: string
-    buttonVariant?: 'primary' | 'secondary'
+    /** @deprecated Legacy hover fill alias — prefer `buttonHoverBackgroundColor` */
     buttonBackgroundColor?: string
     buttonTextColor?: string
     buttonHoverBackgroundColor?: string
@@ -115,7 +117,11 @@ export type OfferingCard = {
   buttonBackgroundColor?: string
   buttonTextColor?: string
   snippet?: string
+  /** Flexible section modules (current overlay body). */
+  modules?: {_key?: string; _type?: string; [key: string]: unknown}[]
+  /** @deprecated Prefer `modules` */
   body?: OverlayRow[]
+  /** @deprecated Prefer a `detailAttributes` module in `modules` */
   details?: DetailAttributes
 }
 
@@ -149,6 +155,8 @@ export type CaseStudyMediaRow = {
 
 export type DetailAttributes = {
   label?: string
+  /** Medium = 1.25rem, Large = 2rem (responsive on large). */
+  valueSize?: 'md' | 'lg'
   attributes?: {label?: string; values?: string[]}[]
 }
 

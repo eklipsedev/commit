@@ -103,6 +103,8 @@ Person cards also expose: `cardBackgroundColor`, `cardHoverBackgroundColor`, `bu
 
 **Flexible section templates** (`flexibleSectionTemplate` documents under Config): authoring presets. Inserting a Flexible section offers Blank or From template; choosing a template **copies** modules + styles onto the page (not a live link). Edit the page copy freely without affecting the library template or other pages.
 
+**Offering overlays** reuse the same module stack as Flexible sections (`modules[]` on `offering`), plus a fixed title + `snippet` header. Legacy `body` / `details` still render until migrated.
+
 ### Design system in CMS
 
 - Colors: brand token select only. Designer-facing titles (Commit Yellow, Soft Peach, etc.).

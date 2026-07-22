@@ -88,7 +88,7 @@ export function collapseLineBreaksOnMobileField(options?: {
 
 /**
  * Shared heading size for sections that use tagline + divider + heading.
- * Frontend tokens: Large 72px (`lg`), Mid 48px (`h3`), Medium 32px (`md`).
+ * Frontend tokens: Large 72px (`lg`), Mid 48→32 (`h3`), Medium 32→24 (`md`).
  */
 export function headingSizeField(options?: {
   group?: string
@@ -102,8 +102,8 @@ export function headingSizeField(options?: {
     options: {
       list: [
         {title: 'Large — 72px', value: 'lg'},
-        {title: 'Mid — 48px', value: 'h3'},
-        {title: 'Medium — 32px', value: 'md'},
+        {title: 'Mid — 48px (32px mobile)', value: 'h3'},
+        {title: 'Medium — 32px (24px mobile)', value: 'md'},
       ],
       layout: 'radio',
     },
@@ -114,9 +114,41 @@ export function headingSizeField(options?: {
   })
 }
 
+/**
+ * Sans (Bloyd) vs Display (LustText) for section headlines.
+ * Default Sans — most section / CTA copy. Display for more expressive lines.
+ */
+export function headingFontField(options?: {
+  group?: string
+  initialValue?: 'sans' | 'display'
+  hidden?: (ctx: {parent?: Record<string, unknown>}) => boolean
+}) {
+  return defineField({
+    name: 'headingFont',
+    title: 'Heading font',
+    type: 'string',
+    options: {
+      list: [
+        {title: 'Sans — Bloyd', value: 'sans'},
+        {title: 'Display — LustText', value: 'display'},
+      ],
+      layout: 'radio',
+    },
+    initialValue: options?.initialValue ?? 'sans',
+    description: 'Sans for most section copy. Display for more expressive headlines.',
+    group: options?.group,
+    hidden: options?.hidden,
+  })
+}
+
 /** Studio preview label for headingSize values. */
 export function headingSizeLabel(size?: string | null) {
   if (size === 'lg') return 'Large'
   if (size === 'h3') return 'Mid'
   return 'Medium'
+}
+
+export function headingFontLabel(font?: string | null) {
+  if (font === 'display') return 'Display'
+  return 'Sans'
 }

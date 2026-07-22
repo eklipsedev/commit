@@ -3,6 +3,8 @@ import {ThLargeIcon} from '../../lib/icons'
 import {
   brandColorField,
   collapseLineBreaksOnMobileField,
+  headingFontField,
+  headingFontLabel,
   headingSizeField,
   sectionSpacingFields,
   headingSizeLabel,
@@ -93,6 +95,13 @@ export const twoColCardsType = defineType({
       group: 'style',
     },
     {
+      ...headingFontField({
+        group: 'style',
+        hidden: ({parent}) => parent?.showHeader === false,
+      }),
+      group: 'style',
+    },
+    {
       ...collapseLineBreaksOnMobileField({
         group: 'style',
         hidden: ({parent}) => parent?.showHeader === false,
@@ -109,13 +118,14 @@ export const twoColCardsType = defineType({
       projects: 'projects',
       projectsSource: 'projectsSource',
       headingSize: 'headingSize',
+      headingFont: 'headingFont',
     },
-    prepare({heading, projects, projectsSource, headingSize}) {
+    prepare({heading, projects, projectsSource, headingSize, headingFont}) {
       const source =
         projectsSource === 'all' ? 'all projects' : `${projects?.length ?? 0} hand-picked`
       return {
         title: heading || 'Project cards',
-        subtitle: `Project cards · ${source} · ${headingSizeLabel(headingSize)}`,
+        subtitle: `Project cards · ${source} · ${headingSizeLabel(headingSize)} · ${headingFontLabel(headingFont)}`,
         media: ThLargeIcon,
       }
     },

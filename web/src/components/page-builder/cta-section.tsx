@@ -3,7 +3,7 @@ import {CmsButton} from '@/components/ui/cms-button'
 import {RichHeadline} from '@/components/ui/rich-headline'
 import {Section} from '@/components/ui/section'
 import {Tagline} from '@/components/ui/tagline'
-import {headingSizeFromBlock} from '@/lib/heading-styles'
+import {headingFontFromBlock, headingSizeFromBlock} from '@/lib/heading-styles'
 import type {PageBuilderBlock, RichHeadline as RichHeadlineType} from '@/sanity/types'
 
 type CtaBlock = PageBuilderBlock & {
@@ -24,6 +24,7 @@ export function CtaSection({block}: {block: CtaBlock}) {
             value={block.headline}
             as="h2"
             size={size}
+            font={headingFontFromBlock(block, size)}
             className="min-w-0 flex-1"
             collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
           />

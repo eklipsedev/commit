@@ -2,7 +2,7 @@ import {cn} from '@/lib/cn'
 import {CmsButton} from '@/components/ui/cms-button'
 import {RichHeadline} from '@/components/ui/rich-headline'
 import {Tagline} from '@/components/ui/tagline'
-import {headingSizeFromBlock} from '@/lib/heading-styles'
+import {headingFontFromBlock, headingSizeFromBlock, TEXT_SIZE_CLASSES} from '@/lib/heading-styles'
 import type {ButtonValue, RichHeadline as RichHeadlineType} from '@/sanity/types'
 
 type TextGridItem =
@@ -27,6 +27,7 @@ type TextGrid = {
 
 type DetailAttributes = {
   label?: string
+  valueSize?: 'md' | 'lg'
   attributes?: {label?: string; values?: string[]}[]
 }
 
@@ -49,6 +50,7 @@ type CustomModule = {
   steps?: {text?: string}[]
   headline?: RichHeadlineType
   headingSize?: string
+  headingFont?: string
   fullWidth?: boolean
   collapseLineBreaksOnMobile?: boolean
   /** New flexible split layout */
@@ -108,9 +110,12 @@ function resolveGroupItems(group: TextGridGroup) {
 }
 
 function textGridItemClass(itemSize?: 'sm' | 'md') {
-  return itemSize === 'md'
-    ? 'font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]'
-    : 'font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal'
+  return itemSize === 'md' ? TEXT_SIZE_CLASSES.md : TEXT_SIZE_CLASSES.sm
+}
+
+function detailAttributeValueClass(valueSize?: 'md' | 'lg') {
+  // Attributes: Medium = Small scale (20px), Large = Medium scale (24→32)
+  return valueSize === 'md' ? TEXT_SIZE_CLASSES.sm : TEXT_SIZE_CLASSES.md
 }
 
 function TextGridView({grid}: {grid?: TextGrid}) {
@@ -132,7 +137,7 @@ function TextGridView({grid}: {grid?: TextGrid}) {
         return (
           <div key={group.title ?? i} className="space-y-3">
             {group.title && (
-              <p className="font-mono text-xs tracking-normal text-brand-charcoal">{group.title}</p>
+              <p className="font-mono text-xs tracking-normal">{group.title}</p>
             )}
             {items.length > 0 && (
               <ul className={cn('space-y-2', itemClass)}>
@@ -158,6 +163,7 @@ function DetailAttributesView({details}: {details?: DetailAttributes}) {
     3: 'md:grid-cols-3',
     4: 'md:grid-cols-4',
   }[columns]
+  const valueClass = detailAttributeValueClass(details.valueSize)
 
   return (
     <div className="space-y-8">
@@ -165,8 +171,8 @@ function DetailAttributesView({details}: {details?: DetailAttributes}) {
       <dl className={cn('grid gap-6', columnClass)}>
         {details.attributes.map((attr) => (
           <div key={attr.label}>
-            <dt className="font-mono text-xs tracking-normal text-brand-charcoal">{attr.label}</dt>
-            <dd className="mt-2 space-y-1 font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]">
+            <dt className="font-mono text-xs tracking-normal">{attr.label}</dt>
+            <dd className={cn('mt-2 space-y-1', valueClass)}>
               {attr.values?.map((value, i) => (
                 <p key={`${value}-${i}`}>{value}</p>
               ))}
@@ -195,17 +201,14 @@ function StringListView({
 }) {
   const labels = resolveStringListItems(items)
   if (!labels.length) return null
-  const itemClass =
-    itemSize === 'md'
-      ? 'font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]'
-      : 'font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal'
+  const itemClass = itemSize === 'md' ? TEXT_SIZE_CLASSES.md : TEXT_SIZE_CLASSES.sm
   return (
     <div className={cn('space-y-4', className)}>
       {label && <p className="font-mono text-xs uppercase tracking-wide">{label}</p>}
       <ul
         className={cn(
           'grid gap-x-10 gap-y-2',
-          showRules && 'gap-y-0 divide-y divide-brand-charcoal border-t border-brand-charcoal',
+          showRules && 'gap-y-0 divide-y divide-current border-t border-current',
           columns === 2 && 'sm:grid-cols-2',
           columns === 3 && 'sm:grid-cols-2 md:grid-cols-3',
         )}
@@ -262,16 +265,14 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
           value={(module as {text?: RichHeadlineType}).text}
           as="h2"
           size={headingSizeFromBlock(module)}
+          font={headingFontFromBlock(module)}
           fullWidth={module.fullWidth}
           collapseLineBreaksOnMobile={module.collapseLineBreaksOnMobile}
         />
       )
     case 'moduleBody':
       return (
-        <p
-          className="max-w-3xl font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]"
-          style={{color: 'var(--section-body)'}}
-        >
+        <p className={cn('max-w-3xl', TEXT_SIZE_CLASSES.md)} style={{color: 'var(--section-body)'}}>
           {module.text}
         </p>
       )
@@ -308,13 +309,12 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
             value={module.headline}
             as="h2"
             size={headingSizeFromBlock(module)}
+            font={headingFontFromBlock(module)}
             collapseLineBreaksOnMobile={module.collapseLineBreaksOnMobile}
           />
           <div className="space-y-6">
             {module.rightType === 'body' && module.body && (
-              <p className="font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]">
-                {module.body}
-              </p>
+              <p className={TEXT_SIZE_CLASSES.md}>{module.body}</p>
             )}
             {module.rightType === 'list' && (
               <StringListView items={listItems} columns={module.listColumns} showRules />
@@ -370,16 +370,14 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
       return (
         <ol className={cn('grid gap-10', columnClass)}>
           {steps.map((step, i) => (
-            <li key={step.text ?? i} className="flex flex-col gap-5 text-brand-charcoal">
+            <li key={step.text ?? i} className="flex flex-col gap-5">
               <span
                 aria-hidden
-                className="flex size-10 items-center justify-center rounded-full border border-brand-charcoal font-sans text-base font-normal leading-none"
+                className="flex size-10 items-center justify-center rounded-full border border-current font-sans text-base font-normal leading-none"
               >
                 {i + 1}
               </span>
-              <p className="font-display text-[1.25rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]">
-                {step.text}
-              </p>
+              <p className={TEXT_SIZE_CLASSES.md}>{step.text}</p>
             </li>
           ))}
         </ol>

@@ -4,7 +4,6 @@ import Link from 'next/link'
 import {useState} from 'react'
 import {CommitWordmark} from '@/components/brand/commit-wordmark'
 import {useFooterAppearance} from '@/components/layout/set-footer-appearance'
-import {cn} from '@/lib/cn'
 import {colorHex} from '@/lib/colors'
 import {resolveLinkHref, resolveLinkLabel} from '@/lib/links'
 import {Container} from '@/components/ui/container'
@@ -21,19 +20,19 @@ export function Footer({data}: FooterProps) {
   const year = new Date().getFullYear()
   const newsletter = data?.newsletter
 
-  const buttonBg = newsletter?.buttonBackgroundColor
-    ? colorHex(newsletter.buttonBackgroundColor)
-    : 'transparent'
-  const buttonText = colorHex(newsletter?.buttonTextColor, 'charcoal')
+  const restText = colorHex(newsletter?.buttonTextColor, 'charcoal')
   const hoverBg = colorHex(
-    appearance?.buttonHoverBackgroundColor || newsletter?.buttonHoverBackgroundColor,
+    appearance?.buttonHoverBackgroundColor ||
+      newsletter?.buttonHoverBackgroundColor ||
+      newsletter?.buttonBackgroundColor,
     'charcoal',
   )
   const hoverText = colorHex(
-    appearance?.buttonHoverTextColor || newsletter?.buttonHoverTextColor,
-    'white',
+    appearance?.buttonHoverTextColor ||
+      newsletter?.buttonHoverTextColor ||
+      newsletter?.buttonTextColor,
+    'charcoal',
   )
-  const isPrimary = newsletter?.buttonVariant === 'primary'
 
   return (
     <footer className="bg-brand-white text-[1rem] leading-[1.2] text-brand-charcoal">
@@ -62,24 +61,21 @@ export function Footer({data}: FooterProps) {
               />
               <button
                 type="submit"
-                className={cn(
-                  'inline-flex h-10 shrink-0 items-center justify-center rounded-full border px-6 text-sm font-medium transition-colors',
-                  isPrimary ? 'border-transparent' : 'border-brand-charcoal',
-                )}
-                style={{backgroundColor: buttonBg, color: buttonText}}
+                className="inline-flex h-10 shrink-0 items-center justify-center rounded-full border px-6 text-sm font-medium transition-colors"
+                style={{
+                  backgroundColor: 'transparent',
+                  color: restText,
+                  borderColor: restText,
+                }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = hoverBg
                   e.currentTarget.style.color = hoverText
                   e.currentTarget.style.borderColor = hoverBg
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = buttonBg
-                  e.currentTarget.style.color = buttonText
-                  e.currentTarget.style.borderColor = isPrimary
-                    ? buttonBg === 'transparent'
-                      ? 'transparent'
-                      : buttonBg
-                    : colorHex('charcoal')
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                  e.currentTarget.style.color = restText
+                  e.currentTarget.style.borderColor = restText
                 }}
               >
                 {newsletter?.buttonText ?? 'Subscribe'}
