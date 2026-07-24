@@ -37,7 +37,7 @@ export function Footer({data}: FooterProps) {
   return (
     <footer className="bg-brand-white text-[1rem] leading-[1.2] text-brand-charcoal">
       <Container className="py-12 md:py-16">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-16">
+        <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
           <div className="space-y-6">
             {newsletter?.title && (
               <Heading size="md" className="max-w-md text-brand-charcoal">
@@ -83,7 +83,7 @@ export function Footer({data}: FooterProps) {
             </form>
           </div>
 
-          <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 lg:justify-self-end">
+          <div className="grid gap-8 sm:grid-cols-2 sm:gap-x-5">
             {data?.linkColumns?.map((column) => (
               <div key={column._key ?? column.title} className="space-y-3">
                 {column.title && (
