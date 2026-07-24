@@ -10,6 +10,7 @@ import {
 import {buttonHasContent} from './button'
 import {
   collapseLineBreaksOnMobileField,
+  fullWidthHeadlineField,
   headingFontField,
   headingFontLabel,
   headingSizeField,
@@ -55,14 +56,8 @@ export const moduleHeadlineType = defineType({
     }),
     headingSizeField({initialValue: 'md'}),
     headingFontField(),
+    fullWidthHeadlineField(),
     collapseLineBreaksOnMobileField(),
-    defineField({
-      name: 'fullWidth',
-      title: 'Full width',
-      type: 'boolean',
-      initialValue: false,
-      description: 'Off = max-width 4xl (default). On = span the full content width.',
-    }),
   ],
   preview: {
     select: {headingSize: 'headingSize', headingFont: 'headingFont', fullWidth: 'fullWidth'},

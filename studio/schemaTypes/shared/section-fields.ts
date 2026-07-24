@@ -110,7 +110,7 @@ export function showTaglineRuleField(options?: {
 
 /**
  * Shared heading size for sections that use tagline + divider + heading.
- * Frontend tokens: Large 72px (`lg`), Mid 48→32 (`h3`), Medium 32→24 (`md`).
+ * Frontend tokens: Large 64px (`lg`), Mid 48→32 (`h3`), Medium 32→24 (`md`).
  */
 export function headingSizeField(options?: {
   group?: string
@@ -123,7 +123,7 @@ export function headingSizeField(options?: {
     type: 'string',
     options: {
       list: [
-        {title: 'Large — 72px', value: 'lg'},
+        {title: 'Large — 64px', value: 'lg'},
         {title: 'Mid — 48px (32px mobile)', value: 'h3'},
         {title: 'Medium — 32px (24px mobile)', value: 'md'},
       ],
@@ -138,7 +138,7 @@ export function headingSizeField(options?: {
 
 /**
  * Sans (Bloyd) vs Display (LustText) for section headlines.
- * Default Sans — most section / CTA copy. Display for more expressive lines.
+ * Default Sans for most sections; CTA opts into Display via initialValue.
  */
 export function headingFontField(options?: {
   group?: string
@@ -160,6 +160,18 @@ export function headingFontField(options?: {
     description: 'Sans for most section copy. Display for more expressive headlines.',
     group: options?.group,
     hidden: options?.hidden,
+  })
+}
+
+/** Off = max-w-4xl on the headline. On = span the full content width. */
+export function fullWidthHeadlineField(options?: {group?: string}) {
+  return defineField({
+    name: 'fullWidth',
+    title: 'Full width',
+    type: 'boolean',
+    initialValue: false,
+    description: 'Off = max-width 4xl (default). On = span the full content width.',
+    group: options?.group,
   })
 }
 

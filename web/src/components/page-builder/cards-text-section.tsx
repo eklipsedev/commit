@@ -6,9 +6,9 @@ import {colorHex} from '@/lib/colors'
 import {useOverlay} from '@/components/overlays/overlay-provider'
 import {Container} from '@/components/ui/container'
 import {FadeIn} from '@/components/ui/fade-in'
-import {Heading} from '@/components/ui/heading'
+import {MultilineText} from '@/components/ui/multiline-text'
 import {Section} from '@/components/ui/section'
-import {headingFontFromBlock, headingSizeFromBlock, TEXT_SIZE_CLASSES} from '@/lib/heading-styles'
+import {TEXT_SIZE_CLASSES} from '@/lib/heading-styles'
 import type {OfferingCard, PageBuilderBlock} from '@/sanity/types'
 
 type CardsTextBlock = PageBuilderBlock & {
@@ -16,7 +16,13 @@ type CardsTextBlock = PageBuilderBlock & {
   offerings?: OfferingCard[]
 }
 
-function OfferingCardItem({offering}: {offering: OfferingCard}) {
+function OfferingCardItem({
+  offering,
+  onHoverChange,
+}: {
+  offering: OfferingCard
+  onHoverChange?: (hovered: boolean) => void
+}) {
   const {openOffering} = useOverlay()
   const cardRef = useRef<HTMLButtonElement>(null)
   const [hovered, setHovered] = useState(false)
@@ -44,17 +50,19 @@ function OfferingCardItem({offering}: {offering: OfferingCard}) {
       onClick={() => openOffering(offering)}
       onMouseEnter={(event) => {
         setHovered(true)
+        onHoverChange?.(true)
         updateCursor(event)
       }}
-      onMouseLeave={() => setHovered(false)}
+      onMouseLeave={() => {
+        setHovered(false)
+        onHoverChange?.(false)
+      }}
       onMouseMove={updateCursor}
       className="relative flex h-full w-full flex-col rounded-none p-8 text-left md:p-10"
       style={{backgroundColor: bg, color: text}}
     >
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-        <h3 className={cn(TEXT_SIZE_CLASSES.lg)}>
-          {offering.title}
-        </h3>
+        <h3 className={cn(TEXT_SIZE_CLASSES.lg)}>{offering.title}</h3>
         {offering.timeline && (
           <span className="font-mono text-[1.5rem] leading-[1.2]">{offering.timeline}</span>
         )}
@@ -87,24 +95,38 @@ function OfferingCardItem({offering}: {offering: OfferingCard}) {
 
 export function CardsTextSection({block}: {block: CardsTextBlock}) {
   const offerings = block.offerings ?? []
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
 
   return (
     <Section {...block}>
       <Container className="space-y-10">
         {block.heading && (
-          <Heading
-            size={headingSizeFromBlock(block)}
-            font={headingFontFromBlock(block)}
-            style={{color: 'var(--section-heading)'}}
-            collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
+          <MultilineText
+            as="p"
+            className="font-mono text-xs tracking-normal normal-case md:text-sm"
+            style={{color: 'var(--section-heading, var(--foreground))'}}
           >
             {block.heading}
-          </Heading>
+          </MultilineText>
         )}
         <div className="grid gap-x-14 gap-y-4 sm:grid-cols-2 sm:gap-y-10">
           {offerings.map((offering, index) => (
-            <FadeIn key={offering._id} delay={Math.min(index, 3) * 40} className="h-full w-full">
-              <OfferingCardItem offering={offering} />
+            <FadeIn
+              key={offering._id}
+              delay={Math.min(index, 3) * 40}
+              className={cn(
+                'relative h-full w-full',
+                // FadeIn's opacity/transform traps badge z-index — raise the grid item on hover
+                // so the cursor-following label can paint above neighboring cards.
+                hoveredId === offering._id && 'z-20',
+              )}
+            >
+              <OfferingCardItem
+                offering={offering}
+                onHoverChange={(hovered) =>
+                  setHoveredId(hovered ? offering._id : null)
+                }
+              />
             </FadeIn>
           ))}
         </div>

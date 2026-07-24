@@ -1,5 +1,6 @@
-import {defineField, defineType} from 'sanity'
+import {defineArrayMember, defineField, defineType} from 'sanity'
 import {ImagesIcon} from '../../lib/icons'
+import {imageAltField, imageFieldOptions} from '../shared/image-fields'
 import {
   brandColorField,
   collapseLineBreaksOnMobileField,
@@ -17,7 +18,8 @@ export const gridMixedType = defineType({
   title: 'Image collage',
   type: 'object',
   icon: ImagesIcon,
-  description: 'Seven-slot photo collage with optional tagline, heading, and button.',
+  description:
+    'Seven-slot photo collage. Image order maps to layout slots (top row → tall/squares → bottom).',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
@@ -42,11 +44,42 @@ export const gridMixedType = defineType({
     defineField({
       name: 'images',
       title: 'Images',
-      type: 'gridMixedImages',
-      description: 'Seven fixed slots in the collage layout.',
+      type: 'array',
+      description:
+        'Up to 7 images in collage order: top left, top right, left tall, center square, right square, bottom left, bottom wide. Drag to reorder.',
       group: 'content',
-      validation: (rule) => rule.required(),
-      initialValue: {_type: 'gridMixedImages'},
+      of: [
+        defineArrayMember({
+          type: 'image',
+          options: imageFieldOptions(),
+          fields: [
+            imageAltField({
+              description: 'Accessibility text — generate with AI Assist.',
+            }),
+            defineField({
+              name: 'description',
+              title: 'Description',
+              type: 'string',
+              description: 'Hover label on the collage (e.g. “Logo”, “Website”).',
+            }),
+          ],
+          preview: {
+            select: {
+              media: 'asset',
+              description: 'description',
+              alt: 'alt',
+            },
+            prepare({media, description, alt}) {
+              return {
+                title: description || alt || 'Image',
+                subtitle: alt && description ? alt : undefined,
+                media,
+              }
+            },
+          },
+        }),
+      ],
+      validation: (rule) => rule.required().min(1).max(7),
     }),
     defineField({
       name: 'button',
@@ -68,12 +101,14 @@ export const gridMixedType = defineType({
       heading: 'heading',
       headingSize: 'headingSize',
       headingFont: 'headingFont',
-      media: 'images.topLeft',
+      media: 'images.0',
+      images: 'images',
     },
-    prepare({heading, headingSize, headingFont, media}) {
+    prepare({heading, headingSize, headingFont, media, images}) {
+      const count = Array.isArray(images) ? images.length : 0
       return {
         title: heading || 'Image collage',
-        subtitle: `Image collage · 7 slots · ${headingSizeLabel(headingSize)} · ${headingFontLabel(headingFont)}`,
+        subtitle: `Image collage · ${count || 0} image${count === 1 ? '' : 's'} · ${headingSizeLabel(headingSize)} · ${headingFontLabel(headingFont)}`,
         media: media || ImagesIcon,
       }
     },

@@ -2,12 +2,7 @@ import {defineArrayMember, defineField, defineType} from 'sanity'
 import {StackCompactIcon} from '../../lib/icons'
 import {
   brandColorField,
-  collapseLineBreaksOnMobileField,
-  headingFontField,
-  headingFontLabel,
-  headingSizeField,
   sectionSpacingFields,
-  headingSizeLabel,
   COLORS_FIELDSET,
 } from '../shared/section-fields'
 
@@ -28,7 +23,8 @@ export const cardsTextType = defineType({
       title: 'Section heading',
       type: 'text',
       rows: 3,
-      description: 'Press Enter to control line breaks as designed in Figma.',
+      description:
+        'Small mono label above the cards (tagline size, sentence case, no rule). Press Enter for line breaks.',
       group: 'content',
     }),
     defineField({
@@ -42,18 +38,15 @@ export const cardsTextType = defineType({
     }),
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
-    {...headingSizeField({group: 'style'}), group: 'style'},
-    {...headingFontField({group: 'style'}), group: 'style'},
-    {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
     {...brandColorField('backgroundColor', 'Section background'), group: 'style', fieldset: 'colors'},
     {...brandColorField('headingColor', 'Section heading color'), group: 'style', fieldset: 'colors'},
   ],
   preview: {
-    select: {heading: 'heading', offerings: 'offerings', headingSize: 'headingSize', headingFont: 'headingFont'},
-    prepare({heading, offerings, headingSize, headingFont}) {
+    select: {heading: 'heading', offerings: 'offerings'},
+    prepare({heading, offerings}) {
       return {
         title: heading || 'Offerings cards',
-        subtitle: `Offerings cards · ${offerings?.length ?? 0} offerings · ${headingSizeLabel(headingSize)} · ${headingFontLabel(headingFont)}`,
+        subtitle: `Offerings cards · ${offerings?.length ?? 0} offerings`,
         media: StackCompactIcon,
       }
     },

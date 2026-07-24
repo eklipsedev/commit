@@ -56,7 +56,6 @@ import {listTextType} from './blocks/list-text'
 import {cardsTextType} from './blocks/cards-text'
 import {gridTextType} from './blocks/grid-text'
 import {gridMixedType} from './blocks/grid-mixed'
-import {gridMixedImagesType} from './objects/grid-mixed-images'
 import {teamType} from './blocks/team'
 import {sliderTestimonialsType} from './blocks/slider-testimonials'
 import {customSectionType} from './blocks/custom-section'
@@ -78,7 +77,6 @@ export const schemaTypes = [
   projectTestimonialType,
   footerAppearanceType,
   redirectRuleType,
-  gridMixedImagesType,
 
   // Offer overlay modules
   overlayLabeledListType,

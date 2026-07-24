@@ -5,7 +5,7 @@
  * |--------|-------------------|-------------|----------------|-------------|
  * | hero   | 9rem (144px)      | 96%         | -3%            | h1          |
  * | xl     | 5.6875rem (91px)  | 100%        | -2%            | h1          |
- * | lg     | 4.5rem (72px)     | 110%        | -2%            | h2          |
+ * | lg     | 4rem (64px)       | 110%        | -2%            | h2          |
  * | h3     | 3rem (48px) desktop / 2rem mobile | 110% / 120% | 0%             | h3          |
  * | md     | 2rem (32px) desktop / 1.5rem mobile | 120%      | 0%             | h2 / h5     |
  *
@@ -81,7 +81,7 @@ export const TEXT_SIZE_CLASSES = {
 export const HEADING_SIZE_CLASSES: Record<HeadingSize, string> = {
   hero: 'text-[clamp(3.5rem,12vw,9rem)] font-normal leading-[0.96] tracking-[-0.03em] [hanging-punctuation:first_last]',
   xl: 'text-[clamp(2.75rem,7vw,5.6875rem)] font-normal leading-none tracking-[-0.02em]',
-  lg: 'text-[clamp(2.25rem,5vw,4.5rem)] font-normal leading-[1.1] tracking-[-0.02em]',
+  lg: 'text-[clamp(2.25rem,5vw,4rem)] font-normal leading-[1.1] tracking-[-0.02em]',
   h3: 'text-[2rem] font-normal leading-[1.2] tracking-normal md:text-[3rem] md:leading-[1.1]',
   md: 'text-[1.5rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]',
 }
@@ -100,7 +100,7 @@ export const HEADING_DEFAULT_TAG: Record<HeadingSize, 'h1' | 'h2' | 'h3' | 'h5'>
 }
 
 export const HEADING_SIZE_OPTIONS = [
-  {title: 'Large — 72px', value: 'lg'},
+  {title: 'Large — 64px', value: 'lg'},
   {title: 'Mid — 48px (32px mobile)', value: 'h3'},
   {title: 'Medium — 32px (24px mobile)', value: 'md'},
 ] as const

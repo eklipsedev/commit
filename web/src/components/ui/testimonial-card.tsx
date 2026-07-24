@@ -113,7 +113,7 @@ function StaggerCopy({
         </blockquote>
       </StaggerItem>
       {(name || role) && (
-        <div className="space-y-1 text-base leading-snug">
+        <div className="space-y-0.5 font-mono text-xs tracking-normal normal-case md:text-sm">
           {name ? (
             <StaggerItem
               show={show}
@@ -121,7 +121,7 @@ function StaggerCopy({
               duration={timing.duration}
               offset={timing.offset}
             >
-              <p className="font-medium">{name}</p>
+              <p>{name}</p>
             </StaggerItem>
           ) : null}
           {role ? (
@@ -131,7 +131,7 @@ function StaggerCopy({
               duration={timing.duration}
               offset={timing.offset}
             >
-              <p className="opacity-90">{role}</p>
+              <p>{role}</p>
             </StaggerItem>
           ) : null}
         </div>
@@ -197,24 +197,31 @@ export function TestimonialCard({
   const timing = REVEAL[intensity]
 
   return (
-    <div className="flex flex-1 flex-col md:flex-row">
+    <div className="flex flex-1 flex-col md:flex-row md:items-stretch">
       <StaggerItem
         show={mediaShow}
         delay={timing.delays.media}
         duration={timing.duration}
         offset={timing.offset}
-        className="relative aspect-square w-full shrink-0 bg-neutral-100 md:aspect-auto md:w-1/3"
+        className="relative w-full shrink-0 bg-neutral-100 md:w-1/3 md:self-stretch"
       >
-        {slide.image && (
-          <SanityImage
-            image={slide.image}
-            alt={slide.name}
-            fill
-            sizes="(min-width: 768px) 33vw, 100vw"
-            className="object-cover"
-            priority={priority}
-          />
-        )}
+        {/*
+          Square spacer sets the minimum height (1:1). On md, the flex row
+          stretches this column when the quote is taller, so the image grows.
+        */}
+        <div className="aspect-square w-full" aria-hidden />
+        {slide.image ? (
+          <div className="absolute inset-0">
+            <SanityImage
+              image={slide.image}
+              alt={slide.name}
+              fill
+              sizes="(min-width: 768px) 33vw, 100vw"
+              className="object-cover"
+              priority={priority}
+            />
+          </div>
+        ) : null}
       </StaggerItem>
       <div
         className="flex flex-1 flex-col justify-between gap-10 p-8 md:p-10 lg:p-12"

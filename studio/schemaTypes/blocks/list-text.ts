@@ -8,7 +8,6 @@ import {
   headingSizeField,
   sectionSpacingFields,
   headingSizeLabel,
-  showTaglineRuleField,
   COLORS_FIELDSET,
 } from '../shared/section-fields'
 
@@ -28,9 +27,9 @@ export const listTextType = defineType({
       name: 'tagline',
       title: 'Tagline',
       type: 'string',
+      description: 'Sentence case — shown above the list without a full-width rule.',
       group: 'content',
     }),
-    {...showTaglineRuleField({group: 'content'}), group: 'content'},
     defineField({
       name: 'headline',
       title: 'Headline',

@@ -13,7 +13,7 @@ export function Tagline({children, className, showRule = true}: TaglineProps) {
   return (
     <div className={cn('w-full', showRule && 'space-y-4', className)}>
       <p
-        className="font-mono text-xs tracking-normal md:text-sm"
+        className="font-mono text-xs tracking-normal normal-case md:text-sm"
         style={{color: 'var(--section-tagline, var(--foreground))'}}
       >
         {children}

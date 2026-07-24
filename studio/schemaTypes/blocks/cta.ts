@@ -67,7 +67,7 @@ export const ctaType = defineType({
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...headingSizeField({group: 'style', initialValue: 'lg'}), group: 'style'},
-    {...headingFontField({group: 'style'}), group: 'style'},
+    {...headingFontField({group: 'style', initialValue: 'display'}), group: 'style'},
     {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
     {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('headingColor', 'Heading color'), group: 'style', fieldset: 'colors'},
@@ -84,7 +84,7 @@ export const ctaType = defineType({
       const size = headingSize ?? headlineSize
       return {
         title: tagline || 'CTA',
-        subtitle: `CTA · ${headingSizeLabel(size)} · ${headingFontLabel(headingFont)}`,
+        subtitle: `CTA · ${headingSizeLabel(size)} · ${headingFontLabel(headingFont ?? 'display')}`,
         media: BoltIcon,
         tagline,
       }

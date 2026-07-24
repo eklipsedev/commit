@@ -15,7 +15,7 @@ type ListTextBlock = PageBuilderBlock & {
 }
 
 /** Fill columns top-to-bottom (same as CSS `columns`). */
-function distributeColumns<T>(items: T[], columnCount: number): T[][] {
+export function distributeColumns<T>(items: T[], columnCount: number): T[][] {
   const count = Math.max(1, columnCount)
   const perColumn = Math.ceil(items.length / count)
   const columns: T[][] = Array.from({length: count}, () => [])
@@ -28,21 +28,31 @@ function distributeColumns<T>(items: T[], columnCount: number): T[][] {
   return columns.filter((column) => column.length > 0)
 }
 
-function ListColumn({items}: {items: string[]}) {
+export function RuledListColumn({
+  items,
+  itemClassName = TEXT_SIZE_CLASSES.md,
+}: {
+  items: string[]
+  itemClassName?: string
+}) {
   return (
-    <ul className="text-brand-charcoal">
-      {items.map((item, i) => (
-        <li
-          key={`${item}-${i}`}
-          className={cn(
-            TEXT_SIZE_CLASSES.md,
-            'border-t border-brand-charcoal py-4',
-            i === items.length - 1 && 'border-b border-brand-charcoal',
-          )}
-        >
-          {item}
-        </li>
-      ))}
+    <ul>
+      {items.map((item, i) => {
+        const isLast = i === items.length - 1
+        return (
+          <li
+            key={`${item}-${i}`}
+            className={cn(
+              itemClassName,
+              // Per-column rules: top on every row, bottom on the last
+              'border-t border-current py-6 md:py-7',
+              isLast && 'border-b',
+            )}
+          >
+            {item}
+          </li>
+        )
+      })}
     </ul>
   )
 }
@@ -51,20 +61,18 @@ export function ListTextSection({block}: {block: ListTextBlock}) {
   const columnCount = block.columns ?? 2
   const items = block.items ?? []
   const columns = distributeColumns(items, columnCount)
-  const showTaglineRule = block.showTaglineRule !== false
   const hasHeader = Boolean(block.tagline || block.headline)
 
   return (
     <Section {...block}>
-      <Container
-        className={cn(
-          hasHeader && (showTaglineRule || block.headline) ? 'space-y-10' : 'space-y-4',
-        )}
-      >
+      <Container className={cn(hasHeader && 'space-y-10')}>
         {hasHeader && (
           <div className={cn(block.tagline && block.headline && 'space-y-6')}>
             {block.tagline && (
-              <Tagline showRule={showTaglineRule}>{block.tagline}</Tagline>
+              // Column borders provide the rules — never a full-width tagline rule here.
+              <Tagline showRule={false} className="normal-case">
+                {block.tagline}
+              </Tagline>
             )}
             {block.headline && (
               <RichHeadline
@@ -79,7 +87,7 @@ export function ListTextSection({block}: {block: ListTextBlock}) {
         )}
 
         <div className="md:hidden">
-          <ListColumn items={items} />
+          <RuledListColumn items={items} />
         </div>
 
         <div
@@ -91,7 +99,7 @@ export function ListTextSection({block}: {block: ListTextBlock}) {
           )}
         >
           {columns.map((column, index) => (
-            <ListColumn key={index} items={column} />
+            <RuledListColumn key={index} items={column} />
           ))}
         </div>
       </Container>

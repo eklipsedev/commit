@@ -15,6 +15,21 @@ const LINK_PROJECTION = `{
   }
 }`
 
+/** Portable text body with resolved link markDefs (internal page refs). */
+const PORTABLE_TEXT_PROJECTION = `{
+  ...,
+  markDefs[]{
+    ...,
+    _type == "link" => {
+      ...,
+      internalLink->{
+        _type,
+        slug
+      }
+    }
+  }
+}`
+
 const BUTTON_PROJECTION = `{
   label,
   backgroundColor,
@@ -31,6 +46,7 @@ const CTA_CONTENT_PROJECTION = `{
   headingSize,
   headingFont,
   headlineSize,
+  collapseLineBreaksOnMobile,
   backgroundColor,
   headingColor,
   taglineColor,
@@ -240,6 +256,10 @@ const PAGE_BUILDER_PROJECTION = `pageBuilder[]{
     ...,
     button ${BUTTON_PROJECTION}
   },
+  _type == "twoColImage" => {
+    ...,
+    body[]${PORTABLE_TEXT_PROJECTION}
+  },
   _type == "gridText" => {
     ...,
     items[]{
@@ -353,7 +373,7 @@ export const PROJECT_BY_SLUG_QUERY = `*[_type == "project" && slug.current == $s
   eyebrow,
   headline,
   collapseLineBreaksOnMobile,
-  overviewBody,
+  overviewBody[]${PORTABLE_TEXT_PROJECTION},
   overviewServices[]->{
     _id,
     title
@@ -464,7 +484,7 @@ export const LEGAL_PAGE_BY_SLUG_QUERY = `*[_type == "legalPage" && slug.current 
   collapseLineBreaksOnMobile,
   slug,
   description,
-  body,
+  body[]${PORTABLE_TEXT_PROJECTION},
   _updatedAt,
   footerAppearance,
   seo

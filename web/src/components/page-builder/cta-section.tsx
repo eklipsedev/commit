@@ -14,6 +14,11 @@ type CtaBlock = PageBuilderBlock & {
 
 export function CtaSection({block}: {block: CtaBlock}) {
   const size = headingSizeFromBlock(block, 'lg')
+  // CTAs default to Display (LustText); other sections default to Sans.
+  const font = headingFontFromBlock(
+    {headingFont: block.headingFont ?? 'display'},
+    size,
+  )
 
   return (
     <Section {...block}>
@@ -24,7 +29,7 @@ export function CtaSection({block}: {block: CtaBlock}) {
             value={block.headline}
             as="h2"
             size={size}
-            font={headingFontFromBlock(block, size)}
+            font={font}
             className="min-w-0 flex-1"
             collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
           />

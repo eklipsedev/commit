@@ -11,7 +11,8 @@
     "dev": "sanity dev",
     "start": "sanity start",
     "migrate:testimonial-people": "node scripts/migrate-testimonial-people.mjs",
-    "migrate:offering-modules": "node --env-file=.env.local scripts/migrate-offering-modules.mjs"
+    "migrate:offering-modules": "node --env-file=.env.local scripts/migrate-offering-modules.mjs",
+    "migrate:grid-mixed-images": "node --env-file=.env.local scripts/migrate-grid-mixed-images.mjs"
   },
   "keywords": [
     "sanity"

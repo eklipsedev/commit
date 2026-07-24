@@ -41,29 +41,11 @@ export const portableTextType = defineType({
           {title: 'Italic', value: 'em'},
         ],
         annotations: [
-          {
+          defineArrayMember({
             name: 'link',
-            type: 'object',
+            type: 'link',
             title: 'Link',
-            fields: [
-              {
-                name: 'href',
-                type: 'url',
-                title: 'URL',
-                validation: (rule) =>
-                  rule.uri({
-                    allowRelative: true,
-                    scheme: ['http', 'https', 'mailto', 'tel'],
-                  }),
-              },
-              {
-                name: 'openInNewTab',
-                type: 'boolean',
-                title: 'Open in new tab',
-                initialValue: false,
-              },
-            ],
-          },
+          }),
         ],
       },
     }),

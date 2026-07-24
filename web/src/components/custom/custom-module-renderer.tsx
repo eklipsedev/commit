@@ -2,6 +2,10 @@ import {cn} from '@/lib/cn'
 import {CmsButton} from '@/components/ui/cms-button'
 import {RichHeadline} from '@/components/ui/rich-headline'
 import {Tagline} from '@/components/ui/tagline'
+import {
+  distributeColumns,
+  RuledListColumn,
+} from '@/components/page-builder/list-text-section'
 import {headingFontFromBlock, headingSizeFromBlock, TEXT_SIZE_CLASSES} from '@/lib/heading-styles'
 import type {ButtonValue, RichHeadline as RichHeadlineType} from '@/sanity/types'
 
@@ -210,19 +214,45 @@ function StringListView({
   const labels = resolveStringListItems(items)
   if (!labels.length) return null
   const itemClass = itemSize === 'sm' ? TEXT_SIZE_CLASSES.sm : TEXT_SIZE_CLASSES.md
+
+  if (showRules) {
+    const columnCount = Math.min(Math.max(columns ?? 2, 1), 3)
+    const cols = distributeColumns(labels, columnCount)
+    return (
+      <div className={cn('space-y-4', className)}>
+        {label && (
+          <p className="font-mono text-xs tracking-normal normal-case md:text-sm">{label}</p>
+        )}
+        <div
+          className={cn(
+            'grid gap-x-10',
+            columnCount === 1 && 'grid-cols-1',
+            columnCount === 2 && 'grid-cols-1 sm:grid-cols-2',
+            columnCount === 3 && 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3',
+          )}
+        >
+          {cols.map((column, index) => (
+            <RuledListColumn key={index} items={column} itemClassName={itemClass} />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={cn('space-y-4', className)}>
-      {label && <p className="font-mono text-xs uppercase tracking-wide">{label}</p>}
+      {label && (
+        <p className="font-mono text-xs tracking-normal normal-case md:text-sm">{label}</p>
+      )}
       <ul
         className={cn(
           'grid gap-x-10 gap-y-2',
-          showRules && 'gap-y-0 divide-y divide-current border-t border-current',
           columns === 2 && 'sm:grid-cols-2',
           columns === 3 && 'sm:grid-cols-2 md:grid-cols-3',
         )}
       >
         {labels.map((item, i) => (
-          <li key={`${item}-${i}`} className={cn(itemClass, showRules && 'py-3')}>
+          <li key={`${item}-${i}`} className={itemClass}>
             {item}
           </li>
         ))}
@@ -399,16 +429,16 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
       }[columns]
 
       return (
-        <ol className={cn('grid gap-10', columnClass)}>
+        <ol className={cn('grid gap-y-10 gap-x-16', columnClass)}>
           {steps.map((step, i) => (
             <li key={step.text ?? i} className="flex flex-col gap-5">
               <span
                 aria-hidden
-                className="flex size-10 items-center justify-center rounded-full border border-current font-sans text-base font-normal leading-none"
+                className="flex size-8 items-center justify-center rounded-full border border-current font-sans text-base font-normal leading-none"
               >
                 {i + 1}
               </span>
-              <p className={TEXT_SIZE_CLASSES.md}>{step.text}</p>
+              <p className={cn(TEXT_SIZE_CLASSES.md, 'text-balance')}>{step.text}</p>
             </li>
           ))}
         </ol>
