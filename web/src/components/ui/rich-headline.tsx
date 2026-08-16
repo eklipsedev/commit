@@ -61,6 +61,8 @@ type RichHeadlineProps = {
   font?: HeadingFont | string | null
   /** When true, spans the full container width. Default is max-w-4xl. */
   fullWidth?: boolean
+  /** Horizontal text alignment. Right also pins a constrained headline to the right edge. */
+  align?: 'left' | 'right' | null
   collapseLineBreaksOnMobile?: boolean
 }
 
@@ -71,6 +73,7 @@ export function RichHeadline({
   size = 'md',
   font,
   fullWidth = false,
+  align = 'left',
   collapseLineBreaksOnMobile = false,
 }: RichHeadlineProps) {
   if (!value?.length) return null
@@ -79,11 +82,15 @@ export function RichHeadline({
   const resolvedFont = resolveHeadingFont(font, resolved)
   const Tag = as ?? HEADING_DEFAULT_TAG[resolved]
   const spanFull = fullWidth || resolved === 'hero'
+  const sitRight = align === 'right'
 
   return (
     <Tag
       className={cn(
         spanFull ? 'max-w-none' : 'max-w-4xl',
+        // Right = pin the block to the right edge; text stays left-aligned inside.
+        sitRight && !spanFull && 'ml-auto',
+        'text-left',
         resolved === 'hero' && '[hanging-punctuation:first_last]',
         className,
       )}

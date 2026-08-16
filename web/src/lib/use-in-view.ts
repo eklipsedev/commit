@@ -19,7 +19,7 @@ type UseInViewOptions = {
  */
 export function useInView<T extends Element = HTMLElement>({
   threshold = 0.12,
-  rootMargin = '0px 0px -6% 0px',
+  rootMargin = '0px 0px -8% 0px',
   once = true,
 }: UseInViewOptions = {}): [RefObject<T | null>, boolean] {
   const ref = useRef<T | null>(null)

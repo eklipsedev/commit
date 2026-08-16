@@ -1,3 +1,4 @@
+import {stegaClean} from 'next-sanity'
 import {cn} from '@/lib/cn'
 import {sectionColors} from '@/lib/colors'
 import type {SectionStyle} from '@/sanity/types'
@@ -37,12 +38,16 @@ export function Section({
     accentColor,
   })
 
+  // stegaClean so Presentation overlays don't turn booleans into truthy strings.
+  const collapseTop = stegaClean(collapsePaddingTop) === true
+  const collapseBottom = stegaClean(collapsePaddingBottom) === true
+
   return (
     <section
       id={id}
       className={cn(
-        !collapsePaddingTop && 'pt-12 md:pt-16',
-        !collapsePaddingBottom && 'pb-12 md:pb-16',
+        !collapseTop && 'pt-16 md:pt-24',
+        !collapseBottom && 'pb-16 md:pb-24',
         className,
       )}
       style={

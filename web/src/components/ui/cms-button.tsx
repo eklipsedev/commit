@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import {cn} from '@/lib/cn'
-import {colorHex} from '@/lib/colors'
+import {buttonHoverTextHex, colorHex} from '@/lib/colors'
 import {resolveLinkHref} from '@/lib/links'
 import type {ButtonValue} from '@/sanity/types'
 
@@ -20,38 +20,26 @@ export function CmsButton({button, className, onClick}: CmsButtonProps) {
   if (!button?.label) return null
 
   const href = resolveLinkHref(button.link)
-  const classes = cn(
-    'inline-flex items-center justify-center rounded-full border px-6 py-2.5 text-sm font-medium transition-colors',
-    className,
-  )
-
   const restText = colorHex(button.textColor, 'charcoal')
   const hoverBg = colorHex(
     button.hoverBackgroundColor ?? button.backgroundColor,
     'charcoal',
   )
-  const hoverText = colorHex(
-    button.hoverTextColor ?? button.textColor,
-    'charcoal',
+  const hoverText = buttonHoverTextHex(button)
+
+  const classes = cn(
+    'inline-flex items-center justify-center rounded-full border px-7 py-2 text-sm font-medium transition-colors',
+    'bg-transparent [color:var(--btn-rest)] [border-color:var(--btn-rest)]',
+    'hover:[background-color:var(--btn-hover-bg)] hover:[color:var(--btn-hover-text)] hover:[border-color:var(--btn-hover-bg)]',
+    'focus-visible:outline-none focus-visible:[background-color:var(--btn-hover-bg)] focus-visible:[color:var(--btn-hover-text)] focus-visible:[border-color:var(--btn-hover-bg)]',
+    className,
   )
 
-  const style: React.CSSProperties = {
-    backgroundColor: 'transparent',
-    color: restText,
-    borderColor: restText,
-  }
-
-  const onMouseEnter: React.MouseEventHandler<HTMLElement> = (e) => {
-    e.currentTarget.style.backgroundColor = hoverBg
-    e.currentTarget.style.color = hoverText
-    e.currentTarget.style.borderColor = hoverBg
-  }
-
-  const onMouseLeave: React.MouseEventHandler<HTMLElement> = (e) => {
-    e.currentTarget.style.backgroundColor = 'transparent'
-    e.currentTarget.style.color = restText
-    e.currentTarget.style.borderColor = restText
-  }
+  const style = {
+    '--btn-rest': restText,
+    '--btn-hover-bg': hoverBg,
+    '--btn-hover-text': hoverText,
+  } as React.CSSProperties
 
   if (href && !onClick) {
     const external = button.link?.linkType === 'external' && button.link.openInNewTab
@@ -62,8 +50,6 @@ export function CmsButton({button, className, onClick}: CmsButtonProps) {
         style={style}
         target={external ? '_blank' : undefined}
         rel={external ? 'noopener noreferrer' : undefined}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
       >
         {button.label}
       </Link>
@@ -71,14 +57,7 @@ export function CmsButton({button, className, onClick}: CmsButtonProps) {
   }
 
   return (
-    <button
-      type="button"
-      className={classes}
-      style={style}
-      onClick={onClick}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    >
+    <button type="button" className={classes} style={style} onClick={onClick}>
       {button.label}
     </button>
   )

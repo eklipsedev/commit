@@ -2,6 +2,7 @@ import {notFound} from 'next/navigation'
 import type {Metadata} from 'next'
 import {BodyPortableText} from '@/components/portable-text/body-portable-text'
 import {Container} from '@/components/ui/container'
+import {FadeInStack} from '@/components/ui/fade-in'
 import {PageHeroIntro} from '@/components/ui/page-hero-intro'
 import {RichHeadline} from '@/components/ui/rich-headline'
 import {Section} from '@/components/ui/section'
@@ -71,28 +72,30 @@ export default async function LegalPage({params}: PageProps) {
     <>
       <SetFooterAppearance appearance={page.footerAppearance} />
       <Section>
-        <Container className="space-y-10 md:space-y-14">
-          <PageHeroIntro
-            headline={
-              <RichHeadline
-                value={page.heading}
-                size="hero"
-                collapseLineBreaksOnMobile={page.collapseLineBreaksOnMobile}
-              />
-            }
-            fullWidthTagline={
-              updated ? <Tagline>Last updated {updated}</Tagline> : undefined
-            }
-          />
-          {page.description && (
-            <p
-              className="max-w-xl text-base leading-relaxed md:text-lg"
-              style={{color: 'var(--section-body)'}}
-            >
-              {page.description}
-            </p>
-          )}
-          <BodyPortableText value={page.body} />
+        <Container>
+          <FadeInStack className="space-y-10 md:space-y-14" stagger={120}>
+            <PageHeroIntro
+              headline={
+                <RichHeadline
+                  value={page.heading}
+                  size="hero"
+                  collapseLineBreaksOnMobile={page.collapseLineBreaksOnMobile}
+                />
+              }
+              fullWidthTagline={
+                updated ? <Tagline>Last updated {updated}</Tagline> : undefined
+              }
+            />
+            {page.description ? (
+              <p
+                className="max-w-xl text-base leading-relaxed md:text-lg"
+                style={{color: 'var(--section-body)'}}
+              >
+                {page.description}
+              </p>
+            ) : null}
+            <BodyPortableText value={page.body} />
+          </FadeInStack>
         </Container>
       </Section>
     </>

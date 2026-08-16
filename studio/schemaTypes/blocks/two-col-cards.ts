@@ -17,7 +17,7 @@ export const twoColCardsType = defineType({
   title: 'Project cards',
   type: 'object',
   icon: ThLargeIcon,
-  description: 'Two-column project cards with thumbnail, title, and categories. Links to case studies.',
+  description: 'Two-column project cards with image, GIF, or looping video. Labels reveal on hover.',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},

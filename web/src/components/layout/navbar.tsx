@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useId, useRef, useState} from 'react'
 import {createPortal} from 'react-dom'
 import {CommitWordmark} from '@/components/brand/commit-wordmark'
 import {useIntroLogo} from '@/components/layout/intro-logo-context'
@@ -17,7 +17,24 @@ type NavbarProps = {
   variant?: 'light' | 'dark'
 }
 
-function NavLink({
+function isActivePath(pathname: string, href: string) {
+  return pathname === href || (href !== '/' && pathname.startsWith(href))
+}
+
+function navLinkClass(variant: 'light' | 'dark', active?: boolean) {
+  return cn(
+    'font-mono text-sm tracking-normal transition-colors',
+    variant === 'dark' ? 'text-white/70 hover:text-white' : 'text-brand-charcoal',
+    'underline-offset-4 hover:underline',
+    active && 'underline',
+  )
+}
+
+/**
+ * Dropdown item hover: charcoal underline (same language as top-level nav).
+ * Avoids a second yellow-dot motif competing with Get Started.
+ */
+function DropdownLink({
   item,
   variant,
   pathname,
@@ -28,30 +45,156 @@ function NavLink({
 }) {
   const href = resolveLinkHref(item.link)
   if (!href) return null
-
   const label = item.label || resolveLinkLabel(item.link)
-  const active = pathname === href || (href !== '/' && pathname.startsWith(href))
+  const active = isActivePath(pathname, href)
 
   return (
-    <Link
-      href={href}
-      className={cn(
-        'font-mono text-sm transition-colors',
-        variant === 'dark' ? 'text-white/70 hover:text-white' : 'text-brand-charcoal',
-        'underline-offset-4 hover:underline',
-        active && 'underline',
-      )}
+    <li>
+      <Link
+        href={href}
+        className={cn(
+          'inline-block whitespace-nowrap font-mono text-sm tracking-normal underline-offset-4',
+          'transition-colors hover:underline',
+          variant === 'dark' ? 'text-white/80 hover:text-white' : 'text-brand-charcoal',
+          active && 'underline',
+        )}
+      >
+        {label}
+      </Link>
+    </li>
+  )
+}
+
+function NavLink({
+  item,
+  variant,
+  pathname,
+}: {
+  item: NavItem
+  variant: 'light' | 'dark'
+  pathname: string
+}) {
+  const href = resolveLinkHref(item.link)
+  const label = item.label || resolveLinkLabel(item.link)
+  const children = item.children?.filter((child) => resolveLinkHref(child.link)) ?? []
+  const hasMenu = children.length > 0
+  const [open, setOpen] = useState(false)
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const menuId = useId()
+
+  const active =
+    (href ? isActivePath(pathname, href) : false) ||
+    children.some((child) => {
+      const childHref = resolveLinkHref(child.link)
+      return childHref ? isActivePath(pathname, childHref) : false
+    })
+
+  function clearCloseTimer() {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current)
+      closeTimer.current = null
+    }
+  }
+
+  function openMenu() {
+    clearCloseTimer()
+    setOpen(true)
+  }
+
+  function scheduleClose() {
+    clearCloseTimer()
+    closeTimer.current = setTimeout(() => setOpen(false), 120)
+  }
+
+  useEffect(() => () => clearCloseTimer(), [])
+
+  useEffect(() => {
+    setOpen(false)
+  }, [pathname])
+
+  if (!hasMenu) {
+    if (!href) return null
+    return (
+      <Link href={href} className={navLinkClass(variant, active)}>
+        {label}
+      </Link>
+    )
+  }
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={openMenu}
+      onMouseLeave={scheduleClose}
+      onFocusCapture={openMenu}
+      onBlurCapture={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+          setOpen(false)
+        }
+      }}
     >
-      {label}
-    </Link>
+      {href ? (
+        <Link
+          href={href}
+          className={navLinkClass(variant, active || open)}
+          aria-expanded={open}
+          aria-haspopup="menu"
+          aria-controls={menuId}
+        >
+          {label}
+        </Link>
+      ) : (
+        <button
+          type="button"
+          className={navLinkClass(variant, active || open)}
+          aria-expanded={open}
+          aria-haspopup="menu"
+          aria-controls={menuId}
+          onClick={() => setOpen((v) => !v)}
+        >
+          {label}
+        </button>
+      )}
+
+      <div
+        id={menuId}
+        hidden={!open}
+        className={cn(
+          'absolute left-0 top-full z-50 pt-3',
+          !open && 'pointer-events-none',
+        )}
+      >
+        {/*
+          Open list under the parent — solid header-matching surface so hero
+          type doesn’t show through; no card chrome (matches the mock).
+        */}
+        <ul
+          className={cn(
+            'min-w-max space-y-2.5 p-4',
+            variant === 'dark' ? 'bg-black' : 'bg-brand-white',
+          )}
+        >
+          {children.map((child) => (
+            <DropdownLink
+              key={child._key ?? child.label}
+              item={child}
+              variant={variant}
+              pathname={pathname}
+            />
+          ))}
+        </ul>
+      </div>
+    </div>
   )
 }
 
 function flattenNavItems(items?: NavItem[]) {
-  const flat: NavItem[] = []
+  const flat: {item: NavItem; depth: number}[] = []
   for (const item of items ?? []) {
-    flat.push(item)
-    if (item.children?.length) flat.push(...item.children)
+    flat.push({item, depth: 0})
+    for (const child of item.children ?? []) {
+      flat.push({item: child, depth: 1})
+    }
   }
   return flat
 }
@@ -59,6 +202,7 @@ function flattenNavItems(items?: NavItem[]) {
 export function Navbar({data, variant = 'light'}: NavbarProps) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const navItems = flattenNavItems(data?.items)
   const {logoRef, introActive} = useIntroLogo()
@@ -66,6 +210,15 @@ export function Navbar({data, variant = 'light'}: NavbarProps) {
   useEffect(() => {
     setOpen(false)
   }, [pathname])
+
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 8)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, {passive: true})
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   useEffect(() => {
     if (!open) return
@@ -98,7 +251,7 @@ export function Navbar({data, variant = 'light'}: NavbarProps) {
         variant === 'dark' ? 'bg-black text-white' : 'bg-brand-white/95 text-brand-charcoal backdrop-blur-sm',
       )}
     >
-      <Container className="space-y-2 pt-2 md:pt-3">
+      <Container className="pt-2 md:pt-3">
         <nav className="flex h-14 items-center justify-between gap-6 md:h-16">
           <Link
             href="/"
@@ -153,21 +306,24 @@ export function Navbar({data, variant = 'light'}: NavbarProps) {
             {open && (
               <div
                 className={cn(
-                  'absolute right-0 top-full z-50 mt-2 min-w-[12rem] rounded-md border py-2 shadow-lg',
+                  'absolute right-0 top-full z-50 mt-2 min-w-[14rem] rounded-md border py-2 shadow-lg',
                   variant === 'dark'
                     ? 'border-white/10 bg-black text-white'
                     : 'border-neutral-200 bg-brand-white text-brand-charcoal',
                 )}
               >
-                {navItems.map((item) => {
-                  const href = resolveLinkHref(item.link)
+                {navItems.map(({item, depth}) => {
+                  const itemHref = resolveLinkHref(item.link)
                   const label = item.label || resolveLinkLabel(item.link)
-                  if (!href) return null
+                  if (!itemHref) return null
                   return (
                     <Link
-                      key={item._key ?? label}
-                      href={href}
-                      className="block px-4 py-2 font-mono text-sm underline-offset-4 hover:underline"
+                      key={item._key ?? `${depth}-${label}`}
+                      href={itemHref}
+                      className={cn(
+                        'block py-2 font-mono text-sm underline-offset-4 hover:underline',
+                        depth === 0 ? 'px-4' : 'px-4 pl-7 opacity-80',
+                      )}
                     >
                       {label}
                     </Link>
@@ -199,11 +355,13 @@ export function Navbar({data, variant = 'light'}: NavbarProps) {
             document.body,
           )}
 
-        {/* Same rule weight as Tagline <hr>; tighter gap than section taglines */}
+        {/* Rule at top of page only — hides once scrolled */}
         <hr
+          aria-hidden
           className={cn(
-            'w-full border-0 border-t',
+            'w-full border-0 border-t transition-all duration-300',
             variant === 'dark' ? 'border-white' : 'border-brand-charcoal',
+            scrolled ? 'mt-0 h-0 opacity-0' : 'mt-2 opacity-100',
           )}
         />
       </Container>

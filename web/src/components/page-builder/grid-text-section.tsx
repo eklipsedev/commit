@@ -6,6 +6,7 @@ import {cn} from '@/lib/cn'
 import {colorHex} from '@/lib/colors'
 import {resolveLinkHref, resolveLinkLabel} from '@/lib/links'
 import {Container} from '@/components/ui/container'
+import {FadeIn, FADE_IN_STAGGER_MS} from '@/components/ui/fade-in'
 import {Heading} from '@/components/ui/heading'
 import {Section} from '@/components/ui/section'
 import {Tagline} from '@/components/ui/tagline'
@@ -122,16 +123,19 @@ export function GridTextSection({block}: {block: GridTextBlock}) {
     <Section {...block}>
       <Container className="space-y-10">
         {block.tagline && (
-          <Tagline showRule={block.showTaglineRule !== false}>{block.tagline}</Tagline>
+          <FadeIn>
+            <Tagline showRule={block.showTaglineRule !== false}>{block.tagline}</Tagline>
+          </FadeIn>
         )}
         <div className={cn('grid gap-8', COLUMN_CLASSES[columns])}>
-          {items.map((item) => (
-            <GridTextCard
-              key={item._key ?? item.title}
-              item={item}
-              buttonBg={buttonBg}
-              buttonText={buttonText}
-            />
+          {items.map((item, index) => (
+            <FadeIn key={item._key ?? item.title} delay={Math.min(index, 3) * FADE_IN_STAGGER_MS}>
+              <GridTextCard
+                item={item}
+                buttonBg={buttonBg}
+                buttonText={buttonText}
+              />
+            </FadeIn>
           ))}
         </div>
       </Container>

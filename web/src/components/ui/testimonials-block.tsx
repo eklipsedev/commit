@@ -4,6 +4,7 @@ import useEmblaCarousel from 'embla-carousel-react'
 import {useCallback, useEffect, useState} from 'react'
 import {ArrowIcon} from '@/components/ui/arrow-icon'
 import {Container} from '@/components/ui/container'
+import {FadeIn} from '@/components/ui/fade-in'
 import {Section} from '@/components/ui/section'
 import {
   TestimonialCard,
@@ -169,10 +170,16 @@ export function TestimonialsBlock({
   if (sectionProps) {
     return (
       <Section {...sectionProps}>
-        <Container>{content}</Container>
+        <Container>
+          <FadeIn>{content}</FadeIn>
+        </Container>
       </Section>
     )
   }
 
-  return <Container>{content}</Container>
+  return (
+    <Container>
+      <FadeIn>{content}</FadeIn>
+    </Container>
+  )
 }

@@ -59,3 +59,22 @@ export function isDarkBackground(token?: string | null) {
   const darkTokens = new Set(['charcoal', 'black', 'deep-blue', 'plum', 'brown', 'olive', 'burnt-orange'])
   return darkTokens.has(cleanToken(token) ?? '')
 }
+
+/**
+ * Resolve outline-button hover label color.
+ * Explicit hoverTextColor wins; otherwise dark fills default to white
+ * (resting text / charcoal would stay illegible on plum, charcoal, etc.).
+ */
+export function buttonHoverTextHex(colors?: {
+  hoverTextColor?: string | null
+  textColor?: string | null
+  hoverBackgroundColor?: string | null
+  backgroundColor?: string | null
+}) {
+  const fillToken = colors?.hoverBackgroundColor ?? colors?.backgroundColor
+  const darkFill = isDarkBackground(fillToken)
+  return colorHex(
+    colors?.hoverTextColor ?? (darkFill ? 'white' : colors?.textColor),
+    darkFill ? 'white' : 'charcoal',
+  )
+}

@@ -26,7 +26,7 @@ type RuleProps = {
 export function Rule({
   className,
   delay = 0,
-  duration = 900,
+  duration = 1400,
   threshold = 0.2,
   rootMargin = '0px 0px -4% 0px',
   once = true,
@@ -44,7 +44,7 @@ export function Rule({
         maxWidth: '100%',
         transitionProperty: 'width',
         transitionDuration: `${duration}ms`,
-        transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
+        transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
         transitionDelay: visible ? `${delay}ms` : '0ms',
         willChange: visible ? undefined : 'width',
         ...style,

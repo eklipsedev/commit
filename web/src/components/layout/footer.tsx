@@ -4,10 +4,12 @@ import Link from 'next/link'
 import {useState} from 'react'
 import {CommitWordmark} from '@/components/brand/commit-wordmark'
 import {useFooterAppearance} from '@/components/layout/set-footer-appearance'
-import {colorHex} from '@/lib/colors'
+import {buttonHoverTextHex, colorHex} from '@/lib/colors'
 import {resolveLinkHref, resolveLinkLabel} from '@/lib/links'
 import {Container} from '@/components/ui/container'
 import {Heading} from '@/components/ui/heading'
+import {TEXT_SIZE_CLASSES} from '@/lib/heading-styles'
+import {cn} from '@/lib/cn'
 import type {FooterData} from '@/sanity/types'
 
 type FooterProps = {
@@ -27,12 +29,15 @@ export function Footer({data}: FooterProps) {
       newsletter?.buttonBackgroundColor,
     'charcoal',
   )
-  const hoverText = colorHex(
-    appearance?.buttonHoverTextColor ||
-      newsletter?.buttonHoverTextColor ||
-      newsletter?.buttonTextColor,
-    'charcoal',
-  )
+  const hoverText = buttonHoverTextHex({
+    hoverTextColor:
+      appearance?.buttonHoverTextColor || newsletter?.buttonHoverTextColor,
+    textColor: newsletter?.buttonTextColor,
+    hoverBackgroundColor:
+      appearance?.buttonHoverBackgroundColor ||
+      newsletter?.buttonHoverBackgroundColor,
+    backgroundColor: newsletter?.buttonBackgroundColor,
+  })
 
   return (
     <footer className="bg-brand-white text-[1rem] leading-[1.2] text-brand-charcoal">
@@ -61,7 +66,7 @@ export function Footer({data}: FooterProps) {
               />
               <button
                 type="submit"
-                className="inline-flex h-10 shrink-0 items-center justify-center rounded-full border px-6 text-sm font-medium transition-colors"
+                className="inline-flex h-10 shrink-0 items-center justify-center rounded-full border px-7 text-sm font-medium transition-colors"
                 style={{
                   backgroundColor: 'transparent',
                   color: restText,
@@ -123,8 +128,12 @@ export function Footer({data}: FooterProps) {
           />
         </div>
 
-        <div className="mt-8 flex flex-col gap-4 border-t border-brand-charcoal pt-6 font-mono text-sm leading-[1.2] text-brand-charcoal md:text-[1rem] sm:flex-row sm:items-center sm:justify-between">
-          <p>
+        <div
+          className={cn(
+            TEXT_SIZE_CLASSES.xs,
+            'mt-8 flex flex-col gap-4 border-t border-brand-charcoal pt-6 font-mono text-brand-charcoal sm:flex-row sm:items-center sm:justify-between',
+          )}
+        >          <p>
             © {year} {data?.copyrightText ?? 'Commit, All Rights Reserved'}
           </p>
           <div className="flex flex-wrap gap-4">

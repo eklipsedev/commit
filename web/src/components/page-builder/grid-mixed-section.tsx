@@ -1,6 +1,7 @@
 import {cn} from '@/lib/cn'
 import {Container} from '@/components/ui/container'
 import {CmsButton} from '@/components/ui/cms-button'
+import {FadeIn, FadeInStack} from '@/components/ui/fade-in'
 import {Heading} from '@/components/ui/heading'
 import {SanityImage} from '@/components/ui/sanity-image'
 import {Section} from '@/components/ui/section'
@@ -136,11 +137,11 @@ export function GridMixedSection({block}: {block: GridMixedBlock}) {
   return (
     <Section {...block}>
       <Container className="space-y-10">
-        <div className="space-y-8">
-          {block.tagline && (
+        <FadeInStack className="space-y-8">
+          {block.tagline ? (
             <Tagline showRule={block.showTaglineRule !== false}>{block.tagline}</Tagline>
-          )}
-          {block.heading && (
+          ) : null}
+          {block.heading ? (
             <Heading
               size={headingSizeFromBlock(block)}
               font={headingFontFromBlock(block)}
@@ -149,51 +150,57 @@ export function GridMixedSection({block}: {block: GridMixedBlock}) {
             >
               {block.heading}
             </Heading>
-          )}
-        </div>
+          ) : null}
+        </FadeInStack>
 
-        <div className="flex flex-col gap-3 md:gap-4">
-          <div className="grid grid-cols-2 gap-3 md:gap-4">
-            <SlotImage
-              image={images.topLeft}
-              className="aspect-[2/1]"
-              sizes="(max-width: 768px) 50vw, 50vw"
-              priority
-            />
-            <SlotImage
-              image={images.topRight}
-              className="aspect-[2/1]"
-              sizes="(max-width: 768px) 50vw, 50vw"
-              priority
-            />
-          </div>
-
-          {/*
-            Left column sets height (tall + bottomLeft aspects).
-            Right column stretches to match; bottomWide flex-fills the rest
-            so it tucks under the squares and lines up with bottomLeft’s base.
-          */}
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:items-stretch md:gap-4">
-            <div className="flex flex-col gap-3 md:gap-4">
-              <SlotImage image={images.leftTall} className="aspect-[3/4] w-full shrink-0" />
-              <SlotImage image={images.bottomLeft} className="aspect-[2/1] w-full shrink-0" />
-            </div>
-
-            <div className="flex min-h-0 flex-col gap-3 md:col-span-2 md:gap-4">
-              <div className="grid shrink-0 grid-cols-2 gap-3 md:gap-4">
-                <SlotImage image={images.centerSquare} className="aspect-square w-full" />
-                <SlotImage image={images.rightSquare} className="aspect-square w-full" />
-              </div>
+        <FadeIn>
+          <div className="flex flex-col gap-3 md:gap-4">
+            <div className="grid grid-cols-2 gap-3 md:gap-4">
               <SlotImage
-                image={images.bottomWide}
-                className="min-h-48 w-full flex-1 basis-0 md:min-h-0"
-                sizes="(max-width: 768px) 100vw, 66vw"
+                image={images.topLeft}
+                className="aspect-[2/1]"
+                sizes="(max-width: 768px) 50vw, 50vw"
+                priority
+              />
+              <SlotImage
+                image={images.topRight}
+                className="aspect-[2/1]"
+                sizes="(max-width: 768px) 50vw, 50vw"
+                priority
               />
             </div>
-          </div>
-        </div>
 
-        {block.button && <CmsButton button={block.button} className="shrink-0" />}
+            {/*
+              Left column sets height (tall + bottomLeft aspects).
+              Right column stretches to match; bottomWide flex-fills the rest
+              so it tucks under the squares and lines up with bottomLeft’s base.
+            */}
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:items-stretch md:gap-4">
+              <div className="flex flex-col gap-3 md:gap-4">
+                <SlotImage image={images.leftTall} className="aspect-[3/4] w-full shrink-0" />
+                <SlotImage image={images.bottomLeft} className="aspect-[2/1] w-full shrink-0" />
+              </div>
+
+              <div className="flex min-h-0 flex-col gap-3 md:col-span-2 md:gap-4">
+                <div className="grid shrink-0 grid-cols-2 gap-3 md:gap-4">
+                  <SlotImage image={images.centerSquare} className="aspect-square w-full" />
+                  <SlotImage image={images.rightSquare} className="aspect-square w-full" />
+                </div>
+                <SlotImage
+                  image={images.bottomWide}
+                  className="min-h-48 w-full flex-1 basis-0 md:min-h-0"
+                  sizes="(max-width: 768px) 100vw, 66vw"
+                />
+              </div>
+            </div>
+          </div>
+        </FadeIn>
+
+        {block.button && (
+          <FadeIn>
+            <CmsButton button={block.button} className="shrink-0" />
+          </FadeIn>
+        )}
       </Container>
     </Section>
   )

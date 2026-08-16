@@ -4,13 +4,15 @@ import Link from 'next/link'
 import {useEffect, useState} from 'react'
 import {Container} from '@/components/ui/container'
 import {CmsButton} from '@/components/ui/cms-button'
-import {FadeIn} from '@/components/ui/fade-in'
+import {FadeIn, FADE_IN_STAGGER_MS} from '@/components/ui/fade-in'
 import {Heading} from '@/components/ui/heading'
+import {MuxVideo} from '@/components/ui/mux-video'
 import {SanityImage} from '@/components/ui/sanity-image'
 import {Section} from '@/components/ui/section'
 import {Tagline} from '@/components/ui/tagline'
 import {cn} from '@/lib/cn'
 import {headingFontFromBlock, headingSizeFromBlock} from '@/lib/heading-styles'
+import {muxPosterUrl} from '@/lib/mux'
 import {useInView} from '@/lib/use-in-view'
 import type {PageBuilderBlock, ProjectCard} from '@/sanity/types'
 
@@ -36,6 +38,57 @@ function useTouchWithoutHover() {
   return touchWithoutHover
 }
 
+function ProjectCardMedia({
+  project,
+  priority,
+}: {
+  project: ProjectCard
+  priority?: boolean
+}) {
+  const playbackId = project.thumbnailVideo?.playbackId
+  const useVideo = project.thumbnailMediaType === 'video' && Boolean(playbackId)
+
+  if (useVideo && playbackId) {
+    return (
+      <div className="absolute inset-0">
+        {project.thumbnail?.asset ? (
+          <SanityImage
+            image={project.thumbnail}
+            alt={project.thumbnail.alt ?? project.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority={priority}
+            className="object-cover"
+          />
+        ) : null}
+        <MuxVideo
+          playbackId={playbackId}
+          background
+          objectFit="cover"
+          poster={
+            project.thumbnail?.asset ? undefined : muxPosterUrl(playbackId, 1200)
+          }
+          title={project.title}
+          className="absolute inset-0 h-full w-full"
+        />
+      </div>
+    )
+  }
+
+  if (!project.thumbnail) return null
+
+  return (
+    <SanityImage
+      image={project.thumbnail}
+      alt={project.thumbnail.alt ?? project.title}
+      fill
+      sizes="(max-width: 768px) 100vw, 50vw"
+      priority={priority}
+      className="object-cover"
+    />
+  )
+}
+
 function ProjectCardItem({
   project,
   priority,
@@ -53,46 +106,42 @@ function ProjectCardItem({
     once: false,
   })
   const active = touchWithoutHover && fullyInView
+  const categoryLine = project.categories?.length
+    ? project.categories.join(' / ')
+    : null
 
   return (
-    <Link ref={ref} href={href} className={cn('group block', active && 'is-active')}>
+    <Link
+      ref={ref}
+      href={href}
+      aria-label={project.title}
+      className={cn('group block', active && 'is-active')}
+    >
       <div className="relative aspect-[636/358] overflow-hidden bg-neutral-100">
-        {project.thumbnail && (
-          <SanityImage
-            image={project.thumbnail}
-            alt={project.thumbnail.alt ?? project.title}
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            priority={priority}
-            className={cn(
-              'transition-transform duration-500 group-hover:scale-105',
-              'group-[.is-active]:scale-105',
-            )}
-          />
-        )}
-      </div>
-      <div className="relative flex items-start justify-between gap-4 overflow-hidden px-4 py-3 text-sm md:px-5 md:py-3.5 md:text-base">
-        {/* Yellow fill — same easing as Tagline Rule, slightly faster */}
-        <span
-          aria-hidden
+        <div
           className={cn(
-            'pointer-events-none absolute inset-0 origin-left scale-x-0 bg-brand-yellow transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-x-100',
-            'group-[.is-active]:scale-x-100',
+            'absolute inset-0 transition-transform duration-500 group-hover:scale-105',
+            'group-[.is-active]:scale-105',
           )}
-        />
-        <p className="relative z-10 font-medium" style={{color: 'var(--section-heading)'}}>
-          {project.title}
-        </p>
-        {project.categories?.length ? (
-          <p
-            className={cn(
-              'relative z-10 text-right font-mono text-xs tracking-normal text-brand-charcoal opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 group-hover:delay-500 md:text-sm',
-              'group-[.is-active]:opacity-100 group-[.is-active]:delay-500',
-            )}
-          >
-            {project.categories.join(' / ')}
-          </p>
-        ) : null}
+        >
+          <ProjectCardMedia project={project} priority={priority} />
+        </div>
+
+        {/* Labels overlay the image — hidden at rest, slide up on hover */}
+        <div
+          className={cn(
+            'absolute inset-x-0 bottom-0 z-10 flex items-start justify-between gap-4 bg-brand-white px-4 py-3 text-sm md:px-5 md:py-3.5 md:text-base',
+            'translate-y-full transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]',
+            'group-hover:translate-y-0 group-[.is-active]:translate-y-0',
+          )}
+        >
+          <p className="font-medium text-brand-charcoal">{project.title}</p>
+          {categoryLine ? (
+            <p className="text-right font-mono text-xs tracking-normal text-brand-charcoal md:text-sm">
+              {categoryLine}
+            </p>
+          ) : null}
+        </div>
       </div>
     </Link>
   )
@@ -107,7 +156,7 @@ export function TwoColCardsSection({block}: {block: TwoColCardsBlock}) {
     <Section {...block}>
       <Container className="space-y-10 md:space-y-14">
         {showHeader && (
-          <div className="space-y-8">
+          <FadeIn className="space-y-8">
             {block.tagline && (
               <Tagline showRule={block.showTaglineRule !== false}>{block.tagline}</Tagline>
             )}
@@ -124,11 +173,11 @@ export function TwoColCardsSection({block}: {block: TwoColCardsBlock}) {
               )}
               {block.button && <CmsButton button={block.button} className="shrink-0" />}
             </div>
-          </div>
+          </FadeIn>
         )}
         <div className="grid gap-8 md:grid-cols-2 md:gap-x-10 md:gap-y-12">
           {projects.map((project, index) => (
-            <FadeIn key={project._id} delay={Math.min(index, 3) * 40}>
+            <FadeIn key={project._id} delay={Math.min(index, 3) * FADE_IN_STAGGER_MS}>
               <ProjectCardItem
                 project={project}
                 priority={index < 2}

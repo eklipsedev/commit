@@ -72,7 +72,8 @@ export const buttonType = defineType({
       fieldset: 'colors',
     }),
     brandColorField('hoverTextColor', 'Hover text', {
-      description: 'Label color on hover. Defaults to resting text / charcoal when unset.',
+      description:
+        'Label color on hover. Defaults to white on dark fills (plum, charcoal, etc.), otherwise resting text / charcoal.',
       fieldset: 'colors',
     }),
     // Legacy alias — older docs used this as primary fill or secondary hover fill.

@@ -11,6 +11,8 @@ import {buttonHasContent} from './button'
 import {
   collapseLineBreaksOnMobileField,
   fullWidthHeadlineField,
+  headlineAlignField,
+  headlineAlignLabel,
   headingFontField,
   headingFontLabel,
   headingSizeField,
@@ -54,17 +56,23 @@ export const moduleHeadlineType = defineType({
       type: 'richHeadline',
       validation: (rule) => rule.required(),
     }),
+    headlineAlignField(),
     headingSizeField({initialValue: 'md'}),
     headingFontField(),
     fullWidthHeadlineField(),
     collapseLineBreaksOnMobileField(),
   ],
   preview: {
-    select: {headingSize: 'headingSize', headingFont: 'headingFont', fullWidth: 'fullWidth'},
-    prepare({headingSize, headingFont, fullWidth}) {
+    select: {
+      headingSize: 'headingSize',
+      headingFont: 'headingFont',
+      fullWidth: 'fullWidth',
+      textAlign: 'textAlign',
+    },
+    prepare({headingSize, headingFont, fullWidth, textAlign}) {
       return {
         title: 'Headline',
-        subtitle: `${headingSizeLabel(headingSize)} · ${headingFontLabel(headingFont)}${fullWidth ? ' · Full width' : ''}`,
+        subtitle: `${headingSizeLabel(headingSize)} · ${headingFontLabel(headingFont)} · ${headlineAlignLabel(textAlign)}${fullWidth ? ' · Full width' : ''}`,
         media: BlockContentIcon,
       }
     },
@@ -125,6 +133,7 @@ const SPLIT_COLUMN_MODULES = [
   defineArrayMember({type: 'moduleStringList'}),
   defineArrayMember({type: 'detailAttributes'}),
   defineArrayMember({type: 'moduleSteps'}),
+  defineArrayMember({type: 'moduleChecklist'}),
   defineArrayMember({type: 'moduleButton'}),
   defineArrayMember({type: 'moduleSpacer'}),
 ]
@@ -365,6 +374,48 @@ export const moduleStepsType = defineType({
         title: 'Numbered steps',
         subtitle: `${steps?.length ?? 0} steps`,
         media: NumberIcon,
+      }
+    },
+  },
+})
+
+export const moduleChecklistType = defineType({
+  name: 'moduleChecklist',
+  title: 'Checklist',
+  type: 'object',
+  icon: BulletOutlineIcon,
+  fields: [
+    defineField({
+      name: 'items',
+      title: 'Items',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'moduleChecklistItem',
+          fields: [
+            defineField({
+              name: 'text',
+              title: 'Text',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: {
+            select: {title: 'text'},
+          },
+        }),
+      ],
+      validation: (rule) => rule.min(1),
+    }),
+  ],
+  preview: {
+    select: {items: 'items'},
+    prepare({items}) {
+      return {
+        title: 'Checklist',
+        subtitle: `${items?.length ?? 0} items`,
+        media: BulletOutlineIcon,
       }
     },
   },

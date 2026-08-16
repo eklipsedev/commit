@@ -1,6 +1,6 @@
 import {CaseStudyVideoBlock} from '@/components/case-study/video-block'
 import {Container} from '@/components/ui/container'
-import {FadeIn} from '@/components/ui/fade-in'
+import {FadeIn, FADE_IN_STAGGER_MS} from '@/components/ui/fade-in'
 import {SanityImage} from '@/components/ui/sanity-image'
 import {cn} from '@/lib/cn'
 import type {CaseStudyMediaRow, SanityImage as SanityImageType} from '@/sanity/types'
@@ -43,7 +43,7 @@ export function CaseStudyMediaGrid({
       <div className="flex flex-col gap-5">
         {rows.map((row, index) => {
           const key = row._key ?? index
-          const delay = index === 0 ? 0 : 40
+          const delay = index === 0 ? 0 : FADE_IN_STAGGER_MS
           const aboveFold = index === 0
 
           if (row.layout === 'video') {
@@ -65,7 +65,7 @@ export function CaseStudyMediaGrid({
                     priority={aboveFold}
                   />
                 </FadeIn>
-                <FadeIn delay={delay + 40}>
+                <FadeIn delay={delay + FADE_IN_STAGGER_MS}>
                   <MediaFrame
                     image={row.rightImage}
                     aspectClassName="aspect-[636/730]"

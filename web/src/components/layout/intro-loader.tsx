@@ -10,9 +10,10 @@ import {useIntroLogo} from '@/components/layout/intro-logo-context'
 import {cn} from '@/lib/cn'
 
 const ALWAYS_SHOW_FOR_TESTING = INTRO_ALWAYS_SHOW_FOR_TESTING
-const HOLD_MS = 2000
-const MORPH_MS = 900
-const FADE_MS = 500
+const HOLD_MS = 650
+const MORPH_MS = 700
+const FADE_MS = 280
+const MOTION_EASE = 'cubic-bezier(0.16, 1, 0.3, 1)'
 
 type Phase = 'hold' | 'morph' | 'fade' | 'done'
 
@@ -54,7 +55,6 @@ export function IntroLoader() {
     document.documentElement.classList.add('intro-pending')
     document.documentElement.classList.remove('intro-seen')
     setIntroActive(true)
-    document.documentElement.style.overflow = 'hidden'
 
     const finish = () => {
       if (!ALWAYS_SHOW_FOR_TESTING) {
@@ -66,7 +66,6 @@ export function IntroLoader() {
       }
       document.documentElement.classList.remove('intro-pending')
       document.documentElement.classList.add('intro-seen')
-      document.documentElement.style.overflow = ''
       setIntroActive(false)
       setPhase('done')
     }
@@ -74,9 +73,7 @@ export function IntroLoader() {
     if (prefersReducedMotion()) {
       // Instant reveal — no motion
       finish()
-      return () => {
-        document.documentElement.style.overflow = ''
-      }
+      return
     }
 
     setPhase('hold')
@@ -111,7 +108,6 @@ export function IntroLoader() {
 
     return () => {
       timers.current.forEach(clearTimeout)
-      document.documentElement.style.overflow = ''
     }
   }, [logoRef, setIntroActive])
 
@@ -122,10 +118,13 @@ export function IntroLoader() {
   return (
     <div
       className={cn(
-        'fixed inset-0 z-50 flex items-start justify-center bg-brand-pale-yellow pt-[18vh] transition-opacity ease-out md:pt-[20vh]',
+        'fixed inset-0 z-50 flex items-start justify-center bg-brand-pale-yellow px-6 pt-[10vh] transition-opacity md:px-10',
         fading ? 'pointer-events-none opacity-0' : 'opacity-100',
       )}
-      style={{transitionDuration: `${FADE_MS}ms`}}
+      style={{
+        transitionDuration: `${FADE_MS}ms`,
+        transitionTimingFunction: MOTION_EASE,
+      }}
       aria-hidden={fading}
     >
       <div
@@ -135,15 +134,15 @@ export function IntroLoader() {
           transform,
           transition:
             phase === 'morph' || phase === 'fade'
-              ? `transform ${MORPH_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`
+              ? `transform ${MORPH_MS}ms ${MOTION_EASE}`
               : undefined,
         }}
       >
         <CommitWordmark
-          className="h-auto w-[min(78vw,42rem)]"
+          className="h-auto w-[calc(100vw-3rem)] max-w-[80rem] md:w-[calc(100vw-5rem)]"
           periodStyle={{
             fill: fading ? 'var(--brand-yellow)' : 'var(--brand-charcoal)',
-            transition: `fill ${FADE_MS}ms ease-out`,
+            transition: `fill ${FADE_MS}ms ${MOTION_EASE}`,
           }}
         />
       </div>

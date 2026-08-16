@@ -7,17 +7,19 @@ import {cssAspectRatio} from '@/lib/media-dimensions'
 type MuxVideoProps = {
   playbackId?: string | null
   className?: string
-  /** Looping muted background (hero). */
+  /** Looping muted background (hero / cards). */
   background?: boolean
   /** Mux aspect ratio string e.g. `16:9` — sizes the player to the video. */
   aspectRatio?: string | null
   poster?: string
   title?: string
   autoPlay?: boolean
+  /** Background fit — cards use `cover`; heroes usually `contain`. */
+  objectFit?: 'contain' | 'cover'
 }
 
 /**
- * Mux-backed video player. Use `background` for looping hero videos.
+ * Mux-backed video player. Use `background` for looping muted videos.
  */
 export function MuxVideo({
   playbackId,
@@ -27,6 +29,7 @@ export function MuxVideo({
   poster,
   title,
   autoPlay,
+  objectFit = 'contain',
 }: MuxVideoProps) {
   if (!playbackId) return null
 
@@ -47,10 +50,10 @@ export function MuxVideo({
         (background
           ? {
               width: '100%',
-              height: 'auto',
-              ...(ratio ? {aspectRatio: ratio} : {}),
+              height: objectFit === 'cover' ? '100%' : 'auto',
+              ...(ratio && objectFit !== 'cover' ? {aspectRatio: ratio} : {}),
               '--controls': 'none',
-              '--media-object-fit': 'contain',
+              '--media-object-fit': objectFit,
               '--media-object-position': 'center',
             }
           : {

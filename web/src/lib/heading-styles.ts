@@ -9,7 +9,7 @@
  * | h3     | 3rem (48px) desktop / 2rem mobile | 110% / 120% | 0%             | h3          |
  * | md     | 2rem (32px) desktop / 1.5rem mobile | 120%      | 0%             | h2 / h5     |
  *
- * Font family is separate: Sans (Bloyd) vs Display (LustText / Lora stand-in).
+ * Font family is separate: Sans (Bloyd) vs Display (LustText).
  */
 
 import {stegaClean} from 'next-sanity'
@@ -69,12 +69,14 @@ export const HEADING_FONT_CLASSES: Record<HeadingFont, string> = {
 
 /**
  * Shared content scale (lists / attributes / module body — always Sans):
- * Large  48→32 · Medium 32→24 · Small 20→20
+ * Large  48→32 · Medium 32→24 · Small 20→20 · XS 12pt (fine print)
  */
 export const TEXT_SIZE_CLASSES = {
   lg: 'font-sans text-[2rem] font-normal leading-[1.2] tracking-normal md:text-[3rem] md:leading-[1.1]',
   md: 'font-sans text-[1.5rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]',
   sm: 'font-sans text-[1.25rem] font-normal leading-[1.2] tracking-normal',
+  /** 12pt — copyright, terms, privacy, and other fine print */
+  xs: 'font-sans text-[0.75rem] font-normal leading-[1.2] tracking-normal',
 } as const
 
 /** Size metrics only — pair with `HEADING_FONT_CLASSES` via `headingClassName`. */

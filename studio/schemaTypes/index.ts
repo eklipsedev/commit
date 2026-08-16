@@ -24,6 +24,7 @@ import {
   moduleSplitType,
   moduleStringListType,
   moduleStepsType,
+  moduleChecklistType,
   moduleButtonType,
   moduleSpacerType,
 } from './objects/custom-modules'
@@ -91,6 +92,7 @@ export const schemaTypes = [
   moduleSplitType,
   moduleStringListType,
   moduleStepsType,
+  moduleChecklistType,
   moduleButtonType,
   moduleSpacerType,
 

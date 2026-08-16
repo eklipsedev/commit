@@ -1,5 +1,6 @@
 import {cn} from '@/lib/cn'
 import {Container} from '@/components/ui/container'
+import {FadeIn, FadeInStack, FADE_IN_STAGGER_MS} from '@/components/ui/fade-in'
 import {RichHeadline} from '@/components/ui/rich-headline'
 import {Section} from '@/components/ui/section'
 import {Tagline} from '@/components/ui/tagline'
@@ -67,14 +68,14 @@ export function ListTextSection({block}: {block: ListTextBlock}) {
     <Section {...block}>
       <Container className={cn(hasHeader && 'space-y-10')}>
         {hasHeader && (
-          <div className={cn(block.tagline && block.headline && 'space-y-6')}>
-            {block.tagline && (
+          <FadeInStack className={cn(block.tagline && block.headline && 'space-y-6')}>
+            {block.tagline ? (
               // Column borders provide the rules — never a full-width tagline rule here.
               <Tagline showRule={false} className="normal-case">
                 {block.tagline}
               </Tagline>
-            )}
-            {block.headline && (
+            ) : null}
+            {block.headline ? (
               <RichHeadline
                 value={block.headline}
                 as="h2"
@@ -82,12 +83,14 @@ export function ListTextSection({block}: {block: ListTextBlock}) {
                 font={headingFontFromBlock(block)}
                 collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
               />
-            )}
-          </div>
+            ) : null}
+          </FadeInStack>
         )}
 
         <div className="md:hidden">
-          <RuledListColumn items={items} />
+          <FadeIn>
+            <RuledListColumn items={items} />
+          </FadeIn>
         </div>
 
         <div
@@ -99,7 +102,9 @@ export function ListTextSection({block}: {block: ListTextBlock}) {
           )}
         >
           {columns.map((column, index) => (
-            <RuledListColumn key={index} items={column} />
+            <FadeIn key={index} delay={index * FADE_IN_STAGGER_MS}>
+              <RuledListColumn items={column} />
+            </FadeIn>
           ))}
         </div>
       </Container>

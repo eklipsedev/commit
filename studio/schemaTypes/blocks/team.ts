@@ -12,12 +12,21 @@ import {
   COLORS_FIELDSET,
 } from '../shared/section-fields'
 
+const personRef = defineArrayMember({
+  type: 'reference',
+  to: [{type: 'person'}],
+  options: {
+    filter: 'kind == "employee"',
+  },
+})
+
 export const teamType = defineType({
   name: 'team',
   title: 'Team',
   type: 'object',
   icon: UsersIcon,
-  description: 'Team member cards with photo; click opens the person overlay.',
+  description:
+    'First two people in the list are large cards; the rest are smaller squares below. Click opens the person overlay.',
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'style', title: 'Style'},
@@ -40,47 +49,42 @@ export const teamType = defineType({
       group: 'content',
     }),
     defineField({
+      name: 'body',
+      title: 'Supportive text',
+      type: 'text',
+      rows: 4,
+      description: 'Optional copy between the headline and people cards.',
+      group: 'content',
+    }),
+    defineField({
       name: 'people',
       title: 'People',
       type: 'array',
-      of: [
-        defineArrayMember({
-          type: 'reference',
-          to: [{type: 'person'}],
-          options: {
-            filter: 'kind == "employee"',
-          },
-        }),
-      ],
-      validation: (rule) => rule.min(1),
+      of: [personRef],
+      description: 'First two appear as large cards; everyone after that is in the smaller grid.',
+      group: 'content',
+    }),
+    // Legacy — hidden; no longer used in the UI.
+    defineField({
+      name: 'featuredPeople',
+      title: 'Featured people',
+      type: 'array',
+      of: [personRef],
+      hidden: true,
       group: 'content',
     }),
     defineField({
       name: 'columns',
       title: 'Columns',
       type: 'number',
-      options: {
-        list: [
-          {title: '2', value: 2},
-          {title: '3', value: 3},
-          {title: '4', value: 4},
-        ],
-      },
-      initialValue: 3,
+      hidden: true,
       group: 'content',
     }),
     defineField({
       name: 'photoStyle',
       title: 'Photo style',
       type: 'string',
-      options: {
-        list: [
-          {title: 'Centered / round', value: 'round'},
-          {title: 'Anchored to bottom', value: 'anchored'},
-        ],
-        layout: 'radio',
-      },
-      initialValue: 'round',
+      hidden: true,
       group: 'content',
     }),
     defineField({...sectionSpacingFields[0], group: 'style'}),
@@ -90,14 +94,21 @@ export const teamType = defineType({
     {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
     {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('headingColor', 'Heading color'), group: 'style', fieldset: 'colors'},
+    {...brandColorField('bodyColor', 'Supportive text color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('taglineColor', 'Tagline color'), group: 'style', fieldset: 'colors'},
   ],
   preview: {
-    select: {headline: 'headline', people: 'people', headingSize: 'headingSize', headingFont: 'headingFont'},
+    select: {
+      headline: 'headline',
+      people: 'people',
+      headingSize: 'headingSize',
+      headingFont: 'headingFont',
+    },
     prepare({headline, people, headingSize, headingFont}) {
+      const count = people?.length ?? 0
       return {
         title: headline || 'Team',
-        subtitle: `Team · ${people?.length ?? 0} people · ${headingSizeLabel(headingSize)} · ${headingFontLabel(headingFont)}`,
+        subtitle: `Team · ${count} people · ${headingSizeLabel(headingSize)} · ${headingFontLabel(headingFont)}`,
         media: UsersIcon,
       }
     },

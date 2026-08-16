@@ -43,13 +43,45 @@ export const projectType = defineType({
       group: 'card',
     }),
     defineField({
+      name: 'thumbnailMediaType',
+      title: 'Card media',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Image / GIF', value: 'image'},
+          {title: 'Video (looping)', value: 'video'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'image',
+      description:
+        'Card background on work grids. GIFs upload as images; MP4s use Mux and loop muted like a background.',
+      group: 'card',
+    }),
+    defineField({
       name: 'thumbnail',
-      title: 'Thumbnail',
+      title: 'Thumbnail image / GIF',
       type: 'image',
       options: imageFieldOptions(),
       fields: caseStudyImageFields,
       validation: (rule) => rule.required(),
+      description:
+        'Still or animated GIF. Required even for video cards (poster, SEO, and fallback).',
       group: 'card',
+    }),
+    defineField({
+      name: 'thumbnailVideo',
+      title: 'Thumbnail video',
+      type: 'mux.video',
+      description: 'Muted, looping, autoplaying card background (Mux).',
+      hidden: ({parent}) => parent?.thumbnailMediaType !== 'video',
+      group: 'card',
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          const parent = context.parent as {thumbnailMediaType?: string} | undefined
+          if (parent?.thumbnailMediaType !== 'video') return true
+          return value ? true : 'Add a looping video for this card'
+        }),
     }),
     defineField({
       name: 'categories',

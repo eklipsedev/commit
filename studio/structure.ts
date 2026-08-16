@@ -60,7 +60,21 @@ export const structure: StructureResolver = (S, context) =>
       S.listItem()
         .title('Landing pages')
         .icon(DocumentIcon)
-        .child(S.documentTypeList('page').title('Landing pages')),
+        .child(
+          S.documentTypeList('page')
+            .title('Landing pages')
+            .filter('_type == "page" && kind != "sales"')
+            .initialValueTemplates([S.initialValueTemplateItem('landing-page')]),
+        ),
+      orderableDocumentListDeskItem({
+        type: 'page',
+        id: 'sales-pages',
+        title: 'Sales Pages',
+        icon: DocumentIcon,
+        filter: 'kind == "sales"',
+        S,
+        context,
+      }),
       S.listItem()
         .title('Legal pages')
         .icon(DocumentTextIcon)

@@ -1,4 +1,5 @@
 import {Container} from '@/components/ui/container'
+import {FadeIn, FadeInStack} from '@/components/ui/fade-in'
 import {Tagline} from '@/components/ui/tagline'
 import {BodyPortableText} from '@/components/portable-text/body-portable-text'
 import type {PortableTextBlock} from '@portabletext/types'
@@ -16,18 +17,20 @@ export function CaseStudyOverview({
 
   return (
     <Container className="space-y-8 md:space-y-10">
-      <Tagline>Project Overview</Tagline>
+      <FadeIn>
+        <Tagline>Project Overview</Tagline>
+      </FadeIn>
 
       <div className="grid md:grid-cols-2 md:gap-x-14">
         <div className="hidden md:block" aria-hidden />
-        <div className="space-y-10 md:space-y-14">
-          {hasBody && (
+        <FadeInStack className="space-y-10 md:space-y-14" stagger={120}>
+          {hasBody ? (
             <BodyPortableText
               value={body}
               className="text-brand-charcoal [&_p]:text-base [&_p]:leading-[1.5] md:[&_p]:text-lg"
             />
-          )}
-          {items.length > 0 && (
+          ) : null}
+          {items.length > 0 ? (
             <ul className="grid grid-cols-1 gap-x-10 gap-y-2 sm:grid-cols-2">
               {items.map((item) => (
                 <li
@@ -38,8 +41,8 @@ export function CaseStudyOverview({
                 </li>
               ))}
             </ul>
-          )}
-        </div>
+          ) : null}
+        </FadeInStack>
       </div>
     </Container>
   )

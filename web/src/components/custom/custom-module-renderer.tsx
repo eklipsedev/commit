@@ -7,6 +7,7 @@ import {
   RuledListColumn,
 } from '@/components/page-builder/list-text-section'
 import {headingFontFromBlock, headingSizeFromBlock, TEXT_SIZE_CLASSES} from '@/lib/heading-styles'
+import {moduleStackGapClass} from '@/lib/module-stack'
 import type {ButtonValue, RichHeadline as RichHeadlineType} from '@/sanity/types'
 
 type TextGridItem =
@@ -59,6 +60,10 @@ type CustomModule = {
   headingSize?: string
   headingFont?: string
   fullWidth?: boolean
+  /** Horizontal text alignment. Right also pins a constrained headline to the right edge. */
+  align?: 'left' | 'right' | null
+  /** Preferred field name from Studio (`textAlign`). */
+  textAlign?: 'left' | 'right' | null
   collapseLineBreaksOnMobile?: boolean
   /** New flexible split layout */
   layout?: 1 | 2
@@ -275,7 +280,7 @@ function SplitColumn({modules}: {modules?: CustomModule[]}) {
             className={cn(
               index > 0 &&
                 !afterSpacer &&
-                (tightToPrev ? 'mt-7 md:mt-8' : 'mt-6 md:mt-8'),
+                moduleStackGapClass({tightToPrev, nested: true}),
             )}
           >
             <CustomModuleRenderer module={mod} />
@@ -325,6 +330,7 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
           size={headingSizeFromBlock(module)}
           font={headingFontFromBlock(module)}
           fullWidth={module.fullWidth}
+          align={module.textAlign ?? module.align}
           collapseLineBreaksOnMobile={module.collapseLineBreaksOnMobile}
         />
       )
@@ -444,6 +450,8 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
         </ol>
       )
     }
+    case 'moduleChecklist':
+      return <ChecklistView items={module.items} />
     case 'moduleButton':
       return <CmsButton button={module.button} />
     case 'moduleSpacer': {
@@ -462,4 +470,23 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
     default:
       return null
   }
+}
+
+function ChecklistView({items}: {items?: StringListItem[]}) {
+  const labels = resolveStringListItems(items)
+  if (!labels.length) return null
+
+  return (
+    <ul className="space-y-6">
+      {labels.map((item) => (
+        <li key={item} className="flex gap-4">
+          <span
+            aria-hidden
+            className="mt-[0.35em] size-3 shrink-0 rounded-full border border-current"
+          />
+          <p className={cn(TEXT_SIZE_CLASSES.md, 'text-balance')}>{item}</p>
+        </li>
+      ))}
+    </ul>
+  )
 }

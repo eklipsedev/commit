@@ -2,6 +2,7 @@ import {notFound} from 'next/navigation'
 import type {Metadata} from 'next'
 import Link from 'next/link'
 import {Container} from '@/components/ui/container'
+import {FadeIn, FadeInStack} from '@/components/ui/fade-in'
 import {RichHeadline} from '@/components/ui/rich-headline'
 import {Tagline} from '@/components/ui/tagline'
 import {SetFooterAppearance} from '@/components/layout/set-footer-appearance'
@@ -51,16 +52,18 @@ export default async function ContactPage() {
       <section className="py-16 md:py-24">
         <Container>
           <div className="grid gap-10 md:grid-cols-2 md:gap-x-14 md:gap-y-0">
-            <RichHeadline
-              value={page.heading}
-              size="hero"
-              className="min-w-0 self-start"
-            />
+            <FadeIn>
+              <RichHeadline
+                value={page.heading}
+                size="hero"
+                className="min-w-0 self-start"
+              />
+            </FadeIn>
 
-            <div className="space-y-8 self-start">
-              {page.tagline && (
+            <FadeInStack className="space-y-8 self-start" stagger={120}>
+              {page.tagline ? (
                 <Tagline showRule={page.showTaglineRule !== false}>{page.tagline}</Tagline>
-              )}
+              ) : null}
 
               {page.attributes?.length ? (
                 <ul className="space-y-3 text-base leading-snug text-brand-charcoal md:space-y-4 md:text-lg">
@@ -86,7 +89,7 @@ export default async function ContactPage() {
                   })}
                 </ul>
               ) : null}
-            </div>
+            </FadeInStack>
           </div>
         </Container>
       </section>

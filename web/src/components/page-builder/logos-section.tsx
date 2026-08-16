@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import {colorHex} from '@/lib/colors'
 import {Container} from '@/components/ui/container'
+import {FadeIn} from '@/components/ui/fade-in'
 import {SanityImage} from '@/components/ui/sanity-image'
 import {Section} from '@/components/ui/section'
 import type {PageBuilderBlock, SanityImage as SanityImageType} from '@/sanity/types'
@@ -76,13 +77,15 @@ export function LogosSection({block}: {block: LogosBlock}) {
 
   if (block.variant === 'limited') {
     return (
-      <Section {...block} className="py-10">
+      <Section {...block}>
         <Container>
-          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-8 md:gap-x-16">
-            {logos.slice(0, 6).map((logo) => (
-              <LogoItemView key={logo._id ?? logo.name} logo={logo} />
-            ))}
-          </div>
+          <FadeIn>
+            <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-8 md:gap-x-16">
+              {logos.slice(0, 6).map((logo) => (
+                <LogoItemView key={logo._id ?? logo.name} logo={logo} />
+              ))}
+            </div>
+          </FadeIn>
         </Container>
       </Section>
     )
@@ -92,18 +95,20 @@ export function LogosSection({block}: {block: LogosBlock}) {
   const fadeColor = colorHex(block.backgroundColor, 'white')
 
   return (
-    <Section {...block} className="overflow-hidden py-10">
-      <div className="relative">
-        <MarqueeEdgeFade side="left" color={fadeColor} />
-        <MarqueeEdgeFade side="right" color={fadeColor} />
-        <div className="flex">
-          <div className="marquee-track flex min-w-max items-center gap-6 md:gap-20">
-            {duplicated.map((logo, i) => (
-              <LogoItemView key={`${logo._id ?? logo.name}-${i}`} logo={logo} />
-            ))}
+    <Section {...block} className="overflow-hidden">
+      <FadeIn>
+        <div className="relative">
+          <MarqueeEdgeFade side="left" color={fadeColor} />
+          <MarqueeEdgeFade side="right" color={fadeColor} />
+          <div className="flex">
+            <div className="marquee-track flex min-w-max items-center gap-6 md:gap-20">
+              {duplicated.map((logo, i) => (
+                <LogoItemView key={`${logo._id ?? logo.name}-${i}`} logo={logo} />
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      </FadeIn>
     </Section>
   )
 }

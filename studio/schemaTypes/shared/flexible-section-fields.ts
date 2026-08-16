@@ -10,6 +10,7 @@ export const FLEXIBLE_SECTION_MODULES = [
   defineArrayMember({type: 'moduleStringList'}),
   defineArrayMember({type: 'detailAttributes'}),
   defineArrayMember({type: 'moduleSteps'}),
+  defineArrayMember({type: 'moduleChecklist'}),
   defineArrayMember({type: 'moduleButton'}),
   defineArrayMember({type: 'moduleSpacer'}),
 ]

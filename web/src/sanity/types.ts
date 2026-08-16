@@ -131,7 +131,9 @@ export type ProjectCard = {
   _id: string
   title?: string
   slug?: {current?: string}
+  thumbnailMediaType?: 'image' | 'video' | null
   thumbnail?: SanityImage
+  thumbnailVideo?: MuxVideoAsset | null
   categories?: string[]
   summary?: string
 }

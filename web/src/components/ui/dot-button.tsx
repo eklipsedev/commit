@@ -22,7 +22,11 @@ const transition = 'duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]'
 
 /**
  * Pill CTA with a leading yellow dot that slides to the trailing edge on hover.
- * Hover fills the pill yellow, matches the border, and turns the dot charcoal.
+ * Hover fills the pill yellow and turns the dot white.
+ *
+ * --inset: border↔dot (outer horizontal padding)
+ * --gap: dot↔label (kept equal on both sides when the dot slides)
+ * Sized to match site outline buttons (`py-2` / `text-sm`).
  */
 export function DotButton({
   children,
@@ -42,8 +46,8 @@ export function DotButton({
     (button?.link?.linkType === 'external' && Boolean(button.link.openInNewTab))
 
   const classes = cn(
-    'group relative inline-flex h-11 items-center overflow-hidden rounded-full border',
-    'bg-transparent py-1.5 pl-1.5 pr-5',
+    'group relative inline-flex items-center overflow-hidden rounded-full border',
+    'bg-transparent py-2 pl-[var(--inset)] pr-[var(--inset)]',
     'transition-[background-color,border-color,color]',
     transition,
     tone === 'dark'
@@ -52,27 +56,33 @@ export function DotButton({
     className,
   )
 
+  const style = {
+    '--dot': '14px',
+    '--inset': '0.75rem', // 12px — outer padding / border↔dot
+    '--gap': '0.5rem', // 8px — dot↔text
+  } as React.CSSProperties
+
   const inner = (
     <>
-      {/* Sliding dot — yellow left by default; charcoal on the right when hovered */}
+      {/* Sliding dot — yellow left at rest; white on the right when hovered */}
       <span
         aria-hidden
         className={cn(
-          'pointer-events-none absolute top-1/2 size-8 -translate-y-1/2 rounded-full',
-          'left-1.5 bg-brand-yellow',
+          'pointer-events-none absolute top-1/2 size-[var(--dot)] -translate-y-1/2 rounded-full',
+          'left-[var(--inset)] bg-brand-yellow',
           'transition-[left,background-color]',
           transition,
-          'group-hover:left-[calc(100%-0.375rem-2rem)] group-hover:bg-brand-charcoal',
+          'group-hover:left-[calc(100%-var(--inset)-var(--dot))] group-hover:bg-white',
         )}
       />
-      {/* Label shifts padding so it clears the moving dot */}
+      {/* Label reserves (dot + gap) on the active side */}
       <span
         className={cn(
           'relative z-10 whitespace-nowrap text-sm font-medium',
-          'pl-10 pr-1',
+          'pl-[calc(var(--dot)+var(--gap))] pr-0',
           'transition-[padding]',
           transition,
-          'group-hover:pl-1 group-hover:pr-10',
+          'group-hover:pl-0 group-hover:pr-[calc(var(--dot)+var(--gap))]',
         )}
       >
         {label}
@@ -85,6 +95,7 @@ export function DotButton({
       <Link
         href={href}
         className={classes}
+        style={style}
         target={external ? '_blank' : undefined}
         rel={external ? 'noopener noreferrer' : undefined}
       >
@@ -94,7 +105,7 @@ export function DotButton({
   }
 
   return (
-    <button type="button" className={classes} onClick={onClick}>
+    <button type="button" className={classes} style={style} onClick={onClick}>
       {inner}
     </button>
   )

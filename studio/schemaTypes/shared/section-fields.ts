@@ -175,6 +175,27 @@ export function fullWidthHeadlineField(options?: {group?: string}) {
   })
 }
 
+/** Pin the headline block left (default) or right within the section. */
+export function headlineAlignField(options?: {group?: string}) {
+  return defineField({
+    name: 'textAlign',
+    title: 'Position',
+    type: 'string',
+    options: {
+      list: [
+        {title: 'Left', value: 'left'},
+        {title: 'Right', value: 'right'},
+      ],
+      layout: 'radio',
+      direction: 'horizontal',
+    },
+    initialValue: 'left',
+    description:
+      'Place the headline on the left or right side of the section. Text stays left-aligned within the block.',
+    group: options?.group,
+  })
+}
+
 /** Studio preview label for headingSize values. */
 export function headingSizeLabel(size?: string | null) {
   if (size === 'lg') return 'Large'
@@ -185,4 +206,9 @@ export function headingSizeLabel(size?: string | null) {
 export function headingFontLabel(font?: string | null) {
   if (font === 'display') return 'Display'
   return 'Sans'
+}
+
+export function headlineAlignLabel(align?: string | null) {
+  if (align === 'right') return 'Right'
+  return 'Left'
 }

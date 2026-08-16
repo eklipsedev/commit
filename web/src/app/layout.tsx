@@ -1,4 +1,4 @@
-import {Geist_Mono, Lora} from 'next/font/google'
+import {Geist_Mono} from 'next/font/google'
 import localFont from 'next/font/local'
 import {draftMode} from 'next/headers'
 import {VisualEditing} from 'next-sanity/visual-editing'
@@ -13,6 +13,7 @@ import {OverlayProvider} from '@/components/overlays/overlay-provider'
 import {NavThemeProvider} from '@/context/nav-theme-context'
 import {sanityFetch, SanityLive} from '@/sanity/live'
 import {FOOTER_QUERY, NAVIGATION_QUERY} from '@/sanity/queries'
+import {resolveNavigationWithSalesPages, type SalesPageNavItem} from '@/lib/resolve-navigation'
 import type {FooterData, NavigationData} from '@/sanity/types'
 import './globals.css'
 
@@ -33,15 +34,26 @@ const bloyd = localFont({
   display: 'swap',
 })
 
+const lustText = localFont({
+  src: [
+    {
+      path: '../fonts/lust-text/lust-text-book.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../fonts/lust-text/lust-text-italic.woff2',
+      weight: '400',
+      style: 'italic',
+    },
+  ],
+  variable: '--font-lust-text',
+  display: 'swap',
+})
+
 const geistMono = Geist_Mono({
   subsets: ['latin'],
   variable: '--font-geist-mono',
-})
-
-const displaySerif = Lora({
-  subsets: ['latin'],
-  variable: '--font-display-serif',
-  display: 'swap',
 })
 
 export default async function RootLayout({
@@ -49,15 +61,24 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const [{data: navigation}, {data: footer}] = await Promise.all([
+  const [{data: navigationPayload}, {data: footer}] = await Promise.all([
     sanityFetch({query: NAVIGATION_QUERY}),
     sanityFetch({query: FOOTER_QUERY}),
   ])
 
+  const payload = navigationPayload as {
+    navigation?: NavigationData | null
+    salesPages?: SalesPageNavItem[]
+  } | null
+  const navigation = resolveNavigationWithSalesPages(
+    payload?.navigation,
+    payload?.salesPages ?? [],
+  )
+
   return (
     <html
       lang="en"
-      className={`${bloyd.variable} ${geistMono.variable} ${displaySerif.variable} intro-pending h-full antialiased`}
+      className={`${bloyd.variable} ${lustText.variable} ${geistMono.variable} intro-pending h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-brand-white font-sans text-brand-charcoal">
         <FooterAppearanceProvider>

@@ -1,5 +1,6 @@
 import {Container} from '@/components/ui/container'
 import {CmsButton} from '@/components/ui/cms-button'
+import {FadeInStack} from '@/components/ui/fade-in'
 import {RichHeadline} from '@/components/ui/rich-headline'
 import {Section} from '@/components/ui/section'
 import {Tagline} from '@/components/ui/tagline'
@@ -22,21 +23,25 @@ export function CtaSection({block}: {block: CtaBlock}) {
 
   return (
     <Section {...block}>
-      <Container className="space-y-8">
-        {block.tagline && <Tagline showRule={block.showTaglineRule !== false}>{block.tagline}</Tagline>}
-        <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between md:gap-12">
-          <RichHeadline
-            value={block.headline}
-            as="h2"
-            size={size}
-            font={font}
-            className="min-w-0 flex-1"
-            collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
-          />
-          {block.button?.label ? (
-            <CmsButton button={block.button} className="shrink-0 self-start" />
+      <Container>
+        <FadeInStack className="space-y-8">
+          {block.tagline ? (
+            <Tagline showRule={block.showTaglineRule !== false}>{block.tagline}</Tagline>
           ) : null}
-        </div>
+          <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between md:gap-12">
+            <RichHeadline
+              value={block.headline}
+              as="h2"
+              size={size}
+              font={font}
+              className="min-w-0 flex-1"
+              collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
+            />
+            {block.button?.label ? (
+              <CmsButton button={block.button} className="shrink-0 self-start" />
+            ) : null}
+          </div>
+        </FadeInStack>
       </Container>
     </Section>
   )

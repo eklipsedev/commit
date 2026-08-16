@@ -49,5 +49,20 @@ export default defineConfig({
 
   schema: {
     types: schemaTypes,
+    templates: (prev) => [
+      ...prev.filter((template) => template.schemaType !== 'page'),
+      {
+        id: 'landing-page',
+        title: 'Landing page',
+        schemaType: 'page',
+        value: {kind: 'general'},
+      },
+      {
+        id: 'sales-page',
+        title: 'Sales page',
+        schemaType: 'page',
+        value: {kind: 'sales'},
+      },
+    ],
   },
 })

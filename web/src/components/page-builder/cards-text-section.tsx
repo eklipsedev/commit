@@ -1,134 +1,209 @@
 'use client'
 
-import {useCallback, useRef, useState} from 'react'
-import {cn} from '@/lib/cn'
 import {colorHex} from '@/lib/colors'
 import {useOverlay} from '@/components/overlays/overlay-provider'
 import {Container} from '@/components/ui/container'
-import {FadeIn} from '@/components/ui/fade-in'
-import {MultilineText} from '@/components/ui/multiline-text'
+import {FadeIn, FADE_IN_STAGGER_MS} from '@/components/ui/fade-in'
+import {Heading} from '@/components/ui/heading'
+import {CmsButton} from '@/components/ui/cms-button'
 import {Section} from '@/components/ui/section'
-import {TEXT_SIZE_CLASSES} from '@/lib/heading-styles'
-import type {OfferingCard, PageBuilderBlock} from '@/sanity/types'
+import {Tagline} from '@/components/ui/tagline'
+import {headingFontFromBlock, headingSizeFromBlock} from '@/lib/heading-styles'
+import type {ButtonValue, OfferingCard, PageBuilderBlock} from '@/sanity/types'
 
 type CardsTextBlock = PageBuilderBlock & {
+  tagline?: string
   heading?: string
+  cardsSource?: 'salesPages' | 'manual' | 'offerings'
+  cards?: PageCard[]
+  salesPages?: SalesPageCard[]
   offerings?: OfferingCard[]
 }
 
-function OfferingCardItem({
-  offering,
-  onHoverChange,
+type PageCard = {
+  _key?: string
+  title?: string
+  body?: string
+  button?: ButtonValue
+  backgroundColor?: string
+  headingColor?: string
+  bodyColor?: string
+}
+
+type SalesPageCard = {
+  _id: string
+  title?: string
+  slug?: {current?: string}
+  cardTitle?: string
+  cardBody?: string
+  cardButtonLabel?: string
+  cardBackgroundColor?: string
+  cardHeadingColor?: string
+  cardBodyColor?: string
+  buttonTextColor?: string
+  buttonHoverBackgroundColor?: string
+  buttonHoverTextColor?: string
+}
+
+function CardFrame({
+  title,
+  body,
+  button,
+  backgroundColor,
+  headingColor,
+  bodyColor,
+  onClick,
 }: {
-  offering: OfferingCard
-  onHoverChange?: (hovered: boolean) => void
+  title?: string
+  body?: string
+  button?: ButtonValue
+  backgroundColor?: string
+  headingColor?: string
+  bodyColor?: string
+  onClick?: () => void
 }) {
-  const {openOffering} = useOverlay()
-  const cardRef = useRef<HTMLButtonElement>(null)
-  const [hovered, setHovered] = useState(false)
-  const [cursor, setCursor] = useState({x: 0, y: 0})
-
-  const bg = colorHex(offering.cardBackgroundColor, 'yellow')
-  const text = colorHex(offering.cardHeadingColor, 'charcoal')
-  const btnText = colorHex(offering.buttonTextColor, 'white')
-  const label = offering.cardButtonLabel ?? 'Learn More'
-
-  const updateCursor = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-    const card = cardRef.current
-    if (!card) return
-    const rect = card.getBoundingClientRect()
-    setCursor({
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top,
-    })
-  }, [])
+  const background = colorHex(backgroundColor, 'yellow')
+  const heading = colorHex(headingColor, 'charcoal')
+  const copy = colorHex(bodyColor ?? headingColor, 'charcoal')
 
   return (
-    <button
-      ref={cardRef}
-      type="button"
-      onClick={() => openOffering(offering)}
-      onMouseEnter={(event) => {
-        setHovered(true)
-        onHoverChange?.(true)
-        updateCursor(event)
-      }}
-      onMouseLeave={() => {
-        setHovered(false)
-        onHoverChange?.(false)
-      }}
-      onMouseMove={updateCursor}
-      className="relative flex h-full w-full flex-col rounded-none p-8 text-left md:p-10"
-      style={{backgroundColor: bg, color: text}}
+    <article
+      className="flex h-full min-h-[17rem] w-full flex-col rounded-none p-6 sm:p-8 md:min-h-[20rem] md:p-10"
+      style={{backgroundColor: background}}
     >
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-        <h3 className={cn(TEXT_SIZE_CLASSES.lg)}>{offering.title}</h3>
-        {offering.timeline && (
-          <span className="font-mono text-[1.5rem] leading-[1.2]">{offering.timeline}</span>
-        )}
-      </div>
-
-      {offering.cardDescription && (
-        <p className="mt-4 text-base leading-relaxed md:text-lg">{offering.cardDescription}</p>
+      {title && (
+        <h3
+          className="max-w-[14ch] whitespace-pre-line font-sans text-[2rem] leading-[1.05] tracking-[-0.02em] md:text-[2.5rem]"
+          style={{color: heading}}
+        >
+          {title}
+        </h3>
       )}
-
-      {/* Magnetic Learn More — tracks cursor across the whole card */}
-      <span
-        aria-hidden
-        className={cn(
-          'pointer-events-none absolute z-10 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium shadow-sm transition-opacity duration-200',
-          hovered ? 'opacity-100' : 'opacity-0',
-        )}
-        style={{
-          left: cursor.x,
-          top: cursor.y,
-          transform: 'translate(0.5rem, calc(-100% - 0.5rem))',
-          backgroundColor: text,
-          color: btnText,
-        }}
-      >
-        {label}
-      </span>
-    </button>
+      {body && (
+        <p
+          className="mt-5 whitespace-pre-line text-balance text-base leading-relaxed"
+          style={{color: copy}}
+        >
+          {body}
+        </p>
+      )}
+      {button && (
+        <div className="mt-auto self-start pt-8">
+          <CmsButton button={button} onClick={onClick} />
+        </div>
+      )}
+    </article>
   )
 }
 
+function salesPageToCard(page: SalesPageCard): PageCard {
+  return {
+    _key: page._id,
+    title: page.cardTitle || page.title,
+    body: page.cardBody,
+    backgroundColor: page.cardBackgroundColor,
+    headingColor: page.cardHeadingColor,
+    bodyColor: page.cardBodyColor,
+    button: {
+      label: page.cardButtonLabel ?? 'Learn More',
+      textColor: page.buttonTextColor ?? page.cardHeadingColor ?? 'charcoal',
+      hoverBackgroundColor: page.buttonHoverBackgroundColor ?? 'deep-blue',
+      hoverTextColor: page.buttonHoverTextColor,
+      link: {
+        linkType: 'internal',
+        internalLink: {
+          _type: 'page',
+          _id: page._id,
+          slug: page.slug,
+        },
+      },
+    },
+  }
+}
+
+function OfferingCardItem({offering}: {offering: OfferingCard}) {
+  const {openOffering} = useOverlay()
+
+  return (
+    <CardFrame
+      title={offering.title}
+      body={offering.cardDescription}
+      backgroundColor={offering.cardBackgroundColor}
+      headingColor={offering.cardHeadingColor}
+      bodyColor={offering.cardBodyColor}
+      button={{
+        label: offering.cardButtonLabel ?? 'Learn More',
+        textColor: offering.buttonTextColor ?? offering.cardHeadingColor,
+        hoverBackgroundColor: offering.buttonBackgroundColor ?? offering.cardHeadingColor,
+        hoverTextColor: offering.buttonTextColor,
+      }}
+      onClick={() => openOffering(offering)}
+    />
+  )
+}
+
+function resolveCards(block: CardsTextBlock): {
+  pageCards: PageCard[]
+  offerings: OfferingCard[]
+} {
+  const source = block.cardsSource
+    ?? (block.cards?.length ? 'manual' : block.offerings?.length ? 'offerings' : 'salesPages')
+
+  if (source === 'salesPages') {
+    return {
+      pageCards: (block.salesPages ?? []).map(salesPageToCard),
+      offerings: [],
+    }
+  }
+  if (source === 'manual') {
+    return {pageCards: block.cards ?? [], offerings: []}
+  }
+  return {pageCards: [], offerings: block.offerings ?? []}
+}
+
 export function CardsTextSection({block}: {block: CardsTextBlock}) {
-  const offerings = block.offerings ?? []
-  const [hoveredId, setHoveredId] = useState<string | null>(null)
+  const {pageCards, offerings} = resolveCards(block)
 
   return (
     <Section {...block}>
-      <Container className="space-y-10">
-        {block.heading && (
-          <MultilineText
-            as="p"
-            className="font-mono text-xs tracking-normal normal-case md:text-sm"
-            style={{color: 'var(--section-heading, var(--foreground))'}}
-          >
-            {block.heading}
-          </MultilineText>
+      <Container className="space-y-10 md:space-y-14">
+        {(block.tagline || block.heading) && (
+          <FadeIn className="space-y-8">
+            {block.tagline && (
+              <Tagline showRule={block.showTaglineRule !== false}>{block.tagline}</Tagline>
+            )}
+            {block.heading && (
+              <Heading
+                size={headingSizeFromBlock(block)}
+                font={headingFontFromBlock(block)}
+                style={{color: 'var(--section-heading)'}}
+                collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
+              >
+                {block.heading}
+              </Heading>
+            )}
+          </FadeIn>
         )}
-        <div className="grid gap-x-14 gap-y-4 sm:grid-cols-2 sm:gap-y-10">
-          {offerings.map((offering, index) => (
-            <FadeIn
-              key={offering._id}
-              delay={Math.min(index, 3) * 40}
-              className={cn(
-                'relative h-full w-full',
-                // FadeIn's opacity/transform traps badge z-index — raise the grid item on hover
-                // so the cursor-following label can paint above neighboring cards.
-                hoveredId === offering._id && 'z-20',
-              )}
-            >
-              <OfferingCardItem
-                offering={offering}
-                onHoverChange={(hovered) =>
-                  setHoveredId(hovered ? offering._id : null)
-                }
-              />
-            </FadeIn>
-          ))}
+        <div className="grid gap-4 sm:grid-cols-2 md:gap-6">
+          {pageCards.length > 0
+            ? pageCards.map((card, index) => (
+                <FadeIn
+                  key={card._key ?? card.title}
+                  delay={Math.min(index, 3) * FADE_IN_STAGGER_MS}
+                  className="h-full w-full"
+                >
+                  <CardFrame {...card} />
+                </FadeIn>
+              ))
+            : offerings.map((offering, index) => (
+                <FadeIn
+                  key={offering._id}
+                  delay={Math.min(index, 3) * FADE_IN_STAGGER_MS}
+                  className="h-full w-full"
+                >
+                  <OfferingCardItem offering={offering} />
+                </FadeIn>
+              ))}
         </div>
       </Container>
     </Section>

@@ -8,6 +8,7 @@ import {CaseStudyTestimonial} from '@/components/case-study/project-testimonial'
 import {SetFooterAppearance} from '@/components/layout/set-footer-appearance'
 import {CtaSection} from '@/components/page-builder/cta-section'
 import {Container} from '@/components/ui/container'
+import {FadeInStack} from '@/components/ui/fade-in'
 import {Heading} from '@/components/ui/heading'
 import {resolveProjectCta, type CtaContent} from '@/lib/resolve-cta'
 import {resolveSeoMetadata, type DefaultSeo, type PageSeo} from '@/lib/seo'
@@ -89,32 +90,34 @@ export default async function WorkProjectPage({params}: PageProps) {
         />
 
         <div className="space-y-16 pt-6 md:space-y-24 md:pt-8">
-          <Container className="space-y-6 md:space-y-8">
-            {(project.title || categoryLine) && (
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                {project.title && (
-                  <Heading size="md" as="h5" className="text-brand-charcoal">
-                    {project.title}
-                  </Heading>
-                )}
-                {categoryLine && (
-                  <p className="font-mono text-xs tracking-normal text-brand-charcoal md:text-sm">
-                    {categoryLine}
-                  </p>
-                )}
-              </div>
-            )}
+          <Container>
+            <FadeInStack className="space-y-6 md:space-y-8" stagger={120}>
+              {(project.title || categoryLine) && (
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                  {project.title && (
+                    <Heading size="md" as="h5" className="text-brand-charcoal">
+                      {project.title}
+                    </Heading>
+                  )}
+                  {categoryLine && (
+                    <p className="font-mono text-xs tracking-normal text-brand-charcoal md:text-sm">
+                      {categoryLine}
+                    </p>
+                  )}
+                </div>
+              )}
 
-            {project.headline && (
-              <Heading
-                size="xl"
-                as="h1"
-                className="text-brand-charcoal"
-                collapseLineBreaksOnMobile={project.collapseLineBreaksOnMobile}
-              >
-                {project.headline}
-              </Heading>
-            )}
+              {project.headline ? (
+                <Heading
+                  size="xl"
+                  as="h1"
+                  className="text-brand-charcoal"
+                  collapseLineBreaksOnMobile={project.collapseLineBreaksOnMobile}
+                >
+                  {project.headline}
+                </Heading>
+              ) : null}
+            </FadeInStack>
           </Container>
 
           {hasOverview && (

@@ -39,6 +39,40 @@ const BUTTON_PROJECTION = `{
   link ${LINK_PROJECTION}
 }`
 
+const PROJECT_CARD_PROJECTION = `{
+  _id,
+  title,
+  slug,
+  thumbnailMediaType,
+  thumbnail,
+  "thumbnailVideo": thumbnailVideo.asset->{
+    playbackId,
+    assetId,
+    filename,
+    status,
+    thumbTime,
+    "aspectRatio": data.aspect_ratio
+  },
+  categories,
+  summary
+}`
+
+const SALES_PAGE_CARD_PROJECTION = `{
+  _id,
+  title,
+  slug,
+  navLabel,
+  cardTitle,
+  cardBody,
+  cardButtonLabel,
+  cardBackgroundColor,
+  cardHeadingColor,
+  cardBodyColor,
+  buttonTextColor,
+  buttonHoverBackgroundColor,
+  buttonHoverTextColor
+}`
+
 const CTA_CONTENT_PROJECTION = `{
   tagline,
   showTaglineRule,
@@ -128,26 +162,21 @@ const PAGE_BUILDER_PROJECTION = `pageBuilder[]{
     ...,
     button ${BUTTON_PROJECTION},
     "projects": select(
-      projectsSource == "all" => *[_type == "project"] | order(orderRank) {
-        _id,
-        title,
-        slug,
-        thumbnail,
-        categories,
-        summary
-      },
-      projects[]->{
-        _id,
-        title,
-        slug,
-        thumbnail,
-        categories,
-        summary
-      }
+      projectsSource == "all" => *[_type == "project"] | order(orderRank) ${PROJECT_CARD_PROJECTION},
+      projects[]->${PROJECT_CARD_PROJECTION}
     )
   },
   _type == "cardsText" => {
     ...,
+    cards[]{
+      ...,
+      _key,
+      button ${BUTTON_PROJECTION}
+    },
+    "salesPages": select(
+      cardsSource == "salesPages" => *[_type == "page" && kind == "sales"] | order(orderRank) ${SALES_PAGE_CARD_PROJECTION},
+      []
+    ),
     offerings[]->{
       _id,
       title,
@@ -176,6 +205,19 @@ const PAGE_BUILDER_PROJECTION = `pageBuilder[]{
   },
   _type == "team" => {
     ...,
+    featuredPeople[]->{
+      _id,
+      name,
+      slug,
+      role,
+      photo,
+      cardBackgroundColor,
+      cardHoverBackgroundColor,
+      buttonBackgroundColor,
+      buttonTextColor,
+      bio,
+      textColor
+    },
     people[]->{
       _id,
       name,
@@ -311,19 +353,28 @@ export const DEFAULT_SEO_QUERY = `*[_id == "defaultSeo"][0]{
   image
 }`
 
-export const NAVIGATION_QUERY = `*[_id == "navigation"][0]{
-  logo,
-  items[]{
-    _key,
-    label,
-    link ${LINK_PROJECTION},
-    children[]{
+export const NAVIGATION_QUERY = `{
+  "navigation": *[_id == "navigation"][0]{
+    logo,
+    items[]{
       _key,
       label,
-      link ${LINK_PROJECTION}
-    }
+      link ${LINK_PROJECTION},
+      children[]{
+        _key,
+        label,
+        link ${LINK_PROJECTION}
+      }
+    },
+    button ${BUTTON_PROJECTION}
   },
-  button ${BUTTON_PROJECTION}
+  "salesPages": *[_type == "page" && kind == "sales"] | order(orderRank) {
+    _id,
+    title,
+    slug,
+    navLabel,
+    cardTitle
+  }
 }`
 
 export const FOOTER_QUERY = `*[_id == "footer"][0]{

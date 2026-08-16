@@ -3,6 +3,7 @@ import {Heading} from '@/components/ui/heading'
 import {cn} from '@/lib/cn'
 import {colorHex} from '@/lib/colors'
 import {headingClassName, TEXT_SIZE_CLASSES} from '@/lib/heading-styles'
+import {moduleStackGapClass} from '@/lib/module-stack'
 import type {DetailAttributes, OverlayModule, OverlayRow} from '@/sanity/types'
 import type {PortableTextBlock} from '@portabletext/types'
 import {PortableText, type PortableTextComponents} from '@portabletext/react'
@@ -179,7 +180,7 @@ export function OfferingOverlayBody({
               className={cn(
                 index > 0 &&
                   !afterSpacer &&
-                  (tightToPrev ? 'mt-7 md:mt-8' : 'mt-10 md:mt-14'),
+                  moduleStackGapClass({tightToPrev}),
               )}
             >
               <CustomModuleRenderer module={module} />
