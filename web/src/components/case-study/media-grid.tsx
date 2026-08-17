@@ -49,7 +49,11 @@ export function CaseStudyMediaGrid({
           if (row.layout === 'video') {
             return (
               <FadeIn key={key} delay={delay}>
-                <CaseStudyVideoBlock video={row.video} poster={row.poster} />
+                <CaseStudyVideoBlock
+                  video={row.video}
+                  poster={row.poster}
+                  loop={Boolean(row.videoLoop)}
+                />
               </FadeIn>
             )
           }
@@ -61,7 +65,7 @@ export function CaseStudyMediaGrid({
                   <MediaFrame
                     image={row.leftImage}
                     aspectClassName="aspect-[636/730]"
-                    sizes="(min-width: 1320px) 590px, (min-width: 768px) calc(50vw - 3rem), calc(100vw - 3rem)"
+                    sizes="(min-width: 1320px) 650px, (min-width: 768px) calc(50vw - 2.5rem), calc(100vw - 3rem)"
                     priority={aboveFold}
                   />
                 </FadeIn>
@@ -69,7 +73,7 @@ export function CaseStudyMediaGrid({
                   <MediaFrame
                     image={row.rightImage}
                     aspectClassName="aspect-[636/730]"
-                    sizes="(min-width: 1320px) 590px, (min-width: 768px) calc(50vw - 3rem), calc(100vw - 3rem)"
+                    sizes="(min-width: 1320px) 650px, (min-width: 768px) calc(50vw - 2.5rem), calc(100vw - 3rem)"
                     priority={aboveFold}
                   />
                 </FadeIn>
@@ -82,7 +86,7 @@ export function CaseStudyMediaGrid({
               <MediaFrame
                 image={row.image}
                 aspectClassName="aspect-[1296/730]"
-                sizes="(min-width: 1320px) 1200px, calc(100vw - 3rem)"
+                sizes="(min-width: 1320px) 1320px, 100vw"
                 priority={aboveFold}
               />
             </FadeIn>

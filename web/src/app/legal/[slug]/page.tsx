@@ -83,7 +83,7 @@ export default async function LegalPage({params}: PageProps) {
                 />
               }
               fullWidthTagline={
-                updated ? <Tagline>Last updated {updated}</Tagline> : undefined
+                updated ? <Tagline>Last updated: {updated}</Tagline> : undefined
               }
             />
             {page.description ? (

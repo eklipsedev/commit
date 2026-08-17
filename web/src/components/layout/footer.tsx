@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import {usePathname} from 'next/navigation'
 import {useState} from 'react'
 import {CommitWordmark} from '@/components/brand/commit-wordmark'
 import {useFooterAppearance} from '@/components/layout/set-footer-appearance'
@@ -17,10 +18,12 @@ type FooterProps = {
 }
 
 export function Footer({data}: FooterProps) {
+  const pathname = usePathname()
   const [email, setEmail] = useState('')
   const {appearance} = useFooterAppearance()
   const year = new Date().getFullYear()
   const newsletter = data?.newsletter
+  const isContact = pathname === '/contact'
 
   const restText = colorHex(newsletter?.buttonTextColor, 'charcoal')
   const hoverBg = colorHex(
@@ -40,7 +43,12 @@ export function Footer({data}: FooterProps) {
   })
 
   return (
-    <footer className="bg-brand-white text-[1rem] leading-[1.2] text-brand-charcoal">
+    <footer
+      className={cn(
+        'text-[1rem] leading-[1.2] text-brand-charcoal',
+        isContact ? 'bg-transparent' : 'bg-brand-white',
+      )}
+    >
       <Container className="py-12 md:py-16">
         <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
           <div className="space-y-6">

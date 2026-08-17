@@ -425,6 +425,7 @@ export const PROJECT_BY_SLUG_QUERY = `*[_type == "project" && slug.current == $s
   headline,
   collapseLineBreaksOnMobile,
   overviewBody[]${PORTABLE_TEXT_PROJECTION},
+  overviewCollapsible,
   overviewServices[]->{
     _id,
     title
@@ -436,6 +437,7 @@ export const PROJECT_BY_SLUG_QUERY = `*[_type == "project" && slug.current == $s
     leftImage,
     rightImage,
     poster,
+    videoLoop,
     "video": video.asset->{
       playbackId,
       assetId,

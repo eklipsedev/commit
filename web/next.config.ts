@@ -11,8 +11,8 @@ const nextConfig: NextConfig = {
     root,
   },
   images: {
-    // Container content ~1200px; include 2x retina candidates up to ~2560.
-    deviceSizes: [640, 750, 828, 1080, 1200, 1320, 1600, 1920, 2400, 2560],
+    // Container max 1320px; include 2x/3x retina candidates.
+    deviceSizes: [640, 750, 828, 1080, 1200, 1320, 1600, 1920, 2400, 2560, 2880, 3840],
     qualities: [75, 85, 100],
     remotePatterns: [
       {

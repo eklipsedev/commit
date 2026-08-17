@@ -160,6 +160,16 @@ export const projectType = defineType({
       group: 'caseStudy',
     }),
     defineField({
+      name: 'overviewCollapsible',
+      title: 'Collapse overview body into a dropdown',
+      type: 'boolean',
+      initialValue: true,
+      description:
+        'On by default. Turn off for short overviews so the text is always visible without the (+) toggle.',
+      group: 'caseStudy',
+      hidden: ({document}) => !(document?.overviewBody as unknown[] | undefined)?.length,
+    }),
+    defineField({
       name: 'overviewServices',
       title: 'Overview services',
       type: 'array',
@@ -250,13 +260,22 @@ export const projectType = defineType({
                 }),
             }),
             defineField({
+              name: 'videoLoop',
+              title: 'Loop as background video',
+              type: 'boolean',
+              initialValue: false,
+              description:
+                'Autoplays muted on loop with no controls — for ambient / GIF-like clips. Off = click-to-play with controls.',
+              hidden: ({parent}) => parent?.layout !== 'video',
+            }),
+            defineField({
               name: 'poster',
               title: 'Cover image',
               type: 'image',
               description: 'Shown before play. Falls back to a Mux frame if empty.',
               options: imageFieldOptions(),
               fields: caseStudyImageFields,
-              hidden: ({parent}) => parent?.layout !== 'video',
+              hidden: ({parent}) => parent?.layout !== 'video' || Boolean(parent?.videoLoop),
             }),
           ],
           preview: {
@@ -266,10 +285,17 @@ export const projectType = defineType({
               left: 'leftImage',
               right: 'rightImage',
               poster: 'poster',
+              videoLoop: 'videoLoop',
             },
-            prepare({layout, full, left, right, poster}) {
+            prepare({layout, full, left, right, poster, videoLoop}) {
               const title =
-                layout === 'twoCol' ? 'Two columns' : layout === 'video' ? 'Video' : 'Full width'
+                layout === 'twoCol'
+                  ? 'Two columns'
+                  : layout === 'video'
+                    ? videoLoop
+                      ? 'Video (looping)'
+                      : 'Video'
+                    : 'Full width'
               const media =
                 layout === 'twoCol' ? left || right : layout === 'video' ? poster : full
               return {

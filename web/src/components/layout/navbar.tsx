@@ -206,6 +206,9 @@ export function Navbar({data, variant = 'light'}: NavbarProps) {
   const menuRef = useRef<HTMLDivElement>(null)
   const navItems = flattenNavItems(data?.items)
   const {logoRef, introActive} = useIntroLogo()
+  const isContact = pathname === '/contact'
+  /** Contact: transparent over page color until scroll (or mobile menu open). */
+  const solidNav = !isContact || scrolled || open
 
   useEffect(() => {
     setOpen(false)
@@ -247,8 +250,12 @@ export function Navbar({data, variant = 'light'}: NavbarProps) {
   return (
     <header
       className={cn(
-        'sticky top-0 z-40',
-        variant === 'dark' ? 'bg-black text-white' : 'bg-brand-white/95 text-brand-charcoal backdrop-blur-sm',
+        'sticky top-0 z-40 transition-[background-color,backdrop-filter] duration-300',
+        variant === 'dark'
+          ? 'bg-black text-white'
+          : solidNav
+            ? 'bg-brand-white/95 text-brand-charcoal backdrop-blur-sm'
+            : 'bg-transparent text-brand-charcoal',
       )}
     >
       <Container className="pt-2 md:pt-3">

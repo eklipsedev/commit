@@ -6,6 +6,7 @@ import {FadeIn, FadeInStack} from '@/components/ui/fade-in'
 import {RichHeadline} from '@/components/ui/rich-headline'
 import {Tagline} from '@/components/ui/tagline'
 import {SetFooterAppearance} from '@/components/layout/set-footer-appearance'
+import {SetPageBackground} from '@/components/layout/set-page-background'
 import {resolveLinkHref} from '@/lib/links'
 import {resolveSeoMetadata, richTextToPlain, type DefaultSeo, type PageSeo} from '@/lib/seo'
 import {sanityFetch} from '@/sanity/live'
@@ -49,6 +50,7 @@ export default async function ContactPage() {
   return (
     <>
       <SetFooterAppearance appearance={page.footerAppearance} />
+      <SetPageBackground color="#FBFFC0" />
       <section className="py-16 md:py-24">
         <Container>
           <div className="grid gap-10 md:grid-cols-2 md:gap-x-14 md:gap-y-0">

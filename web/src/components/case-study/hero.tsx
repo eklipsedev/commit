@@ -40,7 +40,7 @@ export function CaseStudyHero({
           alt={image?.alt ?? title}
           width={imageSize.width}
           height={imageSize.height}
-          sizes="(min-width: 1320px) 1200px, calc(100vw - 3rem)"
+          sizes="(min-width: 1320px) 1320px, 100vw"
           priority
           className="h-auto w-full"
           style={{width: '100%', height: 'auto'}}

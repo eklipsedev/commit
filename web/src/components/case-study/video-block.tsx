@@ -12,11 +12,14 @@ export function CaseStudyVideoBlock({
   video,
   poster,
   title,
+  loop = false,
   className,
 }: {
   video?: MuxVideoAsset | null
   poster?: SanityImageType | null
   title?: string
+  /** Autoplay muted loop with no controls — ambient / GIF-like. */
+  loop?: boolean
   className?: string
 }) {
   const playbackId = video?.playbackId
@@ -26,6 +29,25 @@ export function CaseStudyVideoBlock({
 
   const muxPoster = muxPosterUrl(playbackId)
   const hasSanityPoster = Boolean(poster?.asset)
+
+  if (loop) {
+    return (
+      <div
+        className={cn(
+          'relative aspect-[1296/730] w-full overflow-hidden bg-neutral-100',
+          className,
+        )}
+      >
+        <MuxVideo
+          playbackId={playbackId}
+          background
+          objectFit="cover"
+          title={title}
+          className="absolute inset-0 h-full w-full"
+        />
+      </div>
+    )
+  }
 
   return (
     <div
@@ -48,7 +70,7 @@ export function CaseStudyVideoBlock({
         <button
           type="button"
           onClick={() => setPlaying(true)}
-          className="group absolute inset-0 block w-full cursor-pointer"
+          className="absolute inset-0 block w-full cursor-pointer"
           aria-label={title ? `Play ${title}` : 'Play video'}
         >
           {hasSanityPoster ? (
@@ -56,7 +78,7 @@ export function CaseStudyVideoBlock({
               image={poster}
               alt={poster?.alt ?? title ?? 'Video cover'}
               fill
-              sizes="(min-width: 1320px) 1200px, calc(100vw - 3rem)"
+              sizes="(min-width: 1320px) 1320px, 100vw"
               className="object-cover"
             />
           ) : (
@@ -64,21 +86,15 @@ export function CaseStudyVideoBlock({
               src={muxPoster}
               alt={title ?? 'Video cover'}
               fill
-              sizes="(min-width: 1320px) 1200px, calc(100vw - 3rem)"
+              sizes="(min-width: 1320px) 1320px, 100vw"
               className="object-cover"
               unoptimized
             />
           )}
-          <span className="absolute inset-0 flex items-center justify-center bg-black/20 transition-colors group-hover:bg-black/30">
-            <span className="flex size-16 items-center justify-center rounded-full bg-brand-white text-brand-charcoal shadow-sm md:size-20">
-              <svg
-                viewBox="0 0 24 24"
-                className="ml-1 size-7 fill-current md:size-8"
-                aria-hidden
-              >
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            </span>
+          <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <svg viewBox="0 0 24 24" className="size-12 fill-white md:size-14" aria-hidden>
+              <path d="M8 5v14l11-7z" />
+            </svg>
           </span>
         </button>
       )}

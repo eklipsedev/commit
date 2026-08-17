@@ -154,6 +154,8 @@ export type CaseStudyMediaRow = {
   leftImage?: SanityImage
   rightImage?: SanityImage
   video?: MuxVideoAsset
+  /** Autoplay muted loop with no controls (ambient / GIF-like). */
+  videoLoop?: boolean
   poster?: SanityImage
 }
 
@@ -198,6 +200,7 @@ export type CaseStudyProject = ProjectCard & {
   headline?: string
   collapseLineBreaksOnMobile?: boolean
   overviewBody?: PortableTextBlock[]
+  overviewCollapsible?: boolean
   overviewServices?: {_id: string; title?: string}[]
   mediaRows?: CaseStudyMediaRow[]
   testimonial?: {

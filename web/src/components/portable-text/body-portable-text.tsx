@@ -1,6 +1,7 @@
 import {PortableText, type PortableTextComponents} from '@portabletext/react'
 import Link from 'next/link'
 import {cn} from '@/lib/cn'
+import {headingClassName} from '@/lib/heading-styles'
 import {resolveLinkHref, type LinkValue} from '@/lib/links'
 import type {PortableTextBlock} from '@portabletext/types'
 
@@ -29,19 +30,36 @@ const components: PortableTextComponents = {
       <p className="mb-4 break-words text-base leading-relaxed last:mb-0">{children}</p>
     ),
     h2: ({children}) => (
-      <h2 className="mb-4 break-words font-sans text-3xl tracking-tight md:text-4xl">{children}</h2>
+      <h2
+        className={cn(
+          'mt-12 mb-5 break-words first:mt-0',
+          headingClassName('h3', 'display'),
+        )}
+      >
+        {children}
+      </h2>
     ),
     h3: ({children}) => (
-      <h3 className="mb-3 break-words font-sans text-2xl tracking-tight md:text-3xl">{children}</h3>
+      <h3 className="mt-8 mb-3 break-words font-sans text-xl font-medium leading-snug tracking-normal md:text-2xl">
+        {children}
+      </h3>
     ),
   },
   list: {
-    bullet: ({children}) => <ul className="mb-4 list-disc space-y-2 pl-5">{children}</ul>,
-    number: ({children}) => <ol className="mb-4 list-decimal space-y-2 pl-5">{children}</ol>,
+    bullet: ({children}) => (
+      <ul className="mb-4 list-disc space-y-3 pl-5 marker:text-current">{children}</ul>
+    ),
+    number: ({children}) => (
+      <ol className="mb-4 list-decimal space-y-3 pl-5 marker:text-current">{children}</ol>
+    ),
   },
   listItem: {
-    bullet: ({children}) => <li className="break-words">{children}</li>,
-    number: ({children}) => <li className="break-words">{children}</li>,
+    bullet: ({children}) => (
+      <li className="break-words pl-1 text-base leading-relaxed">{children}</li>
+    ),
+    number: ({children}) => (
+      <li className="break-words pl-1 text-base leading-relaxed">{children}</li>
+    ),
   },
   marks: {
     strong: ({children}) => <strong className="font-semibold">{children}</strong>,

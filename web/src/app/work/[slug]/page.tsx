@@ -124,6 +124,7 @@ export default async function WorkProjectPage({params}: PageProps) {
             <CaseStudyOverview
               body={project.overviewBody}
               services={project.overviewServices}
+              collapsible={project.overviewCollapsible !== false}
             />
           )}
 

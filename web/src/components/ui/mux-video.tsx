@@ -2,6 +2,7 @@
 
 import MuxPlayer from '@mux/mux-player-react'
 import {cn} from '@/lib/cn'
+import {colorHex} from '@/lib/colors'
 import {cssAspectRatio} from '@/lib/media-dimensions'
 
 type MuxVideoProps = {
@@ -34,6 +35,7 @@ export function MuxVideo({
   if (!playbackId) return null
 
   const ratio = cssAspectRatio(aspectRatio)
+  const accentColor = colorHex('yellow')
 
   return (
     <MuxPlayer
@@ -45,6 +47,7 @@ export function MuxVideo({
       loop={background || undefined}
       playsInline
       preload={background ? 'auto' : 'metadata'}
+      accentColor={accentColor}
       className={cn(background && 'mux-background', className)}
       style={
         (background

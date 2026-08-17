@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import Image, {type ImageLoaderProps} from 'next/image'
 import {imageLoader} from 'next-sanity/image'
 import {cn} from '@/lib/cn'
 import {urlFor} from '@/sanity/image'
@@ -24,14 +24,27 @@ type SanityImageProps = {
   preserveFormat?: boolean
 }
 
+/** Request ~2× the layout width so portfolio stills stay crisp on retina. */
+const PORTFOLIO_DENSITY = 2
+const MAX_CDN_WIDTH = 4000
+
 function isGifAsset(image: SanityImageType) {
   const ref = image.asset?._ref ?? image.asset?._id
   return typeof ref === 'string' && /-gif$/i.test(ref)
 }
 
+function portfolioImageLoader({src, width, quality}: ImageLoaderProps) {
+  return imageLoader({
+    src,
+    width: Math.min(Math.round(width * PORTFOLIO_DENSITY), MAX_CDN_WIDTH),
+    quality,
+  })
+}
+
 /**
  * Renders a Sanity image via next/image.
  *
+ * Still images request a denser CDN width than layout size for portfolio crispness.
  * Animated GIFs skip Sanity CDN transforms (`w`, `fm`, `q`, `auto=format`) —
  * resizing GIFs on the CDN often corrupts frames. The original asset is served
  * and layout sizing is handled in CSS.
@@ -55,6 +68,7 @@ export function SanityImage({
   // Base URL with no width/format params — required for GIF originals.
   const src = urlFor(image).url()
   const imageAlt = alt ?? image.alt ?? ''
+  const loader = isGif ? undefined : portfolioImageLoader
 
   if (fill) {
     return (
@@ -67,7 +81,7 @@ export function SanityImage({
         sizes={isGif ? undefined : sizes}
         priority={priority}
         quality={quality}
-        loader={isGif ? undefined : imageLoader}
+        loader={loader}
         unoptimized={isGif}
       />
     )
@@ -84,7 +98,7 @@ export function SanityImage({
       sizes={isGif ? undefined : sizes}
       priority={priority}
       quality={quality}
-      loader={isGif ? undefined : imageLoader}
+      loader={loader}
       unoptimized={isGif}
     />
   )
