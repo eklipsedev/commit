@@ -1,7 +1,7 @@
 import {linkType} from './objects/link'
 import {buttonType} from './objects/button'
 import {seoType} from './objects/seo'
-import {richHeadlineType, portableTextType} from './objects/portable-text'
+import {richHeadlineType, portableTextType, simplePortableTextType} from './objects/portable-text'
 import {navItemType, linkColumnType} from './objects/nav-item'
 import {textGridType} from './objects/text-grid'
 import {detailAttributesType} from './objects/detail-attributes'
@@ -68,6 +68,7 @@ export const schemaTypes = [
   seoType,
   richHeadlineType,
   portableTextType,
+  simplePortableTextType,
   navItemType,
   linkColumnType,
   textGridType,

@@ -102,6 +102,12 @@ const MIXED_LIST_ITEMS_PROJECTION = `items[]{
   !defined(_type) => @
 }`
 
+/** Body module: portable text when migrated, plain string until then. */
+const MODULE_BODY_TEXT_PROJECTION = `"text": select(
+  defined(text[0]) => text[]${PORTABLE_TEXT_PROJECTION},
+  text
+)`
+
 const TEXT_GRID_PROJECTION = `{
   ...,
   groups[]{
@@ -115,6 +121,10 @@ const CUSTOM_MODULE_ITEM_PROJECTION = `{
   _key,
   _type,
   _type == "textGrid" => ${TEXT_GRID_PROJECTION},
+  _type == "moduleBody" => {
+    ...,
+    ${MODULE_BODY_TEXT_PROJECTION}
+  },
   _type == "moduleStringList" => {
     ...,
     ${MIXED_LIST_ITEMS_PROJECTION},
@@ -143,6 +153,10 @@ const OFFERING_MODULES_PROJECTION = `modules[]{
     textGrid${TEXT_GRID_PROJECTION}
   },
   _type == "textGrid" => ${TEXT_GRID_PROJECTION},
+  _type == "moduleBody" => {
+    ...,
+    ${MODULE_BODY_TEXT_PROJECTION}
+  },
   _type == "moduleStringList" => {
     ...,
     ${MIXED_LIST_ITEMS_PROJECTION},
@@ -329,6 +343,10 @@ const PAGE_BUILDER_PROJECTION = `pageBuilder[]{
         textGrid${TEXT_GRID_PROJECTION}
       },
       _type == "textGrid" => ${TEXT_GRID_PROJECTION},
+      _type == "moduleBody" => {
+        ...,
+        ${MODULE_BODY_TEXT_PROJECTION}
+      },
       _type == "moduleStringList" => {
         ...,
         ${MIXED_LIST_ITEMS_PROJECTION},

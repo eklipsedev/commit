@@ -51,3 +51,33 @@ export const portableTextType = defineType({
     }),
   ],
 })
+
+/** Paragraphs with links — Flexible Body modules. Enter = new paragraph. */
+export const simplePortableTextType = defineType({
+  name: 'simplePortableText',
+  title: 'Simple portable text',
+  type: 'array',
+  of: [
+    defineArrayMember({
+      type: 'block',
+      styles: [{title: 'Normal', value: 'normal'}],
+      lists: [
+        {title: 'Bullet', value: 'bullet'},
+        {title: 'Numbered', value: 'number'},
+      ],
+      marks: {
+        decorators: [
+          {title: 'Strong', value: 'strong'},
+          {title: 'Italic', value: 'em'},
+        ],
+        annotations: [
+          defineArrayMember({
+            name: 'link',
+            type: 'link',
+            title: 'Link',
+          }),
+        ],
+      },
+    }),
+  ],
+})

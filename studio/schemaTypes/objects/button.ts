@@ -33,14 +33,7 @@ function linkHasDestination(link?: LinkValue | null) {
 /** True when the editor has started configuring a button (not just schema defaults). */
 export function buttonHasContent(button?: ButtonValue | null) {
   if (!button) return false
-  return Boolean(
-    button.label ||
-      linkHasDestination(button.link) ||
-      button.backgroundColor ||
-      button.textColor ||
-      button.hoverBackgroundColor ||
-      button.hoverTextColor,
-  )
+  return Boolean(button.label || linkHasDestination(button.link))
 }
 
 export const buttonType = defineType({

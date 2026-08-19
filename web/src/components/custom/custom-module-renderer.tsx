@@ -2,6 +2,7 @@ import {cn} from '@/lib/cn'
 import {CmsButton} from '@/components/ui/cms-button'
 import {RichHeadline} from '@/components/ui/rich-headline'
 import {Tagline} from '@/components/ui/tagline'
+import {BodyPortableText} from '@/components/portable-text/body-portable-text'
 import {
   distributeColumns,
   RuledListColumn,
@@ -9,6 +10,7 @@ import {
 import {headingFontFromBlock, headingSizeFromBlock, TEXT_SIZE_CLASSES} from '@/lib/heading-styles'
 import {moduleStackGapClass} from '@/lib/module-stack'
 import type {ButtonValue, RichHeadline as RichHeadlineType} from '@/sanity/types'
+import type {PortableTextBlock} from '@portabletext/types'
 
 type TextGridItem =
   | string
@@ -45,7 +47,7 @@ type StringListItem =
 type CustomModule = {
   _key?: string
   _type?: string
-  text?: string
+  text?: string | PortableTextBlock[]
   button?: ButtonValue
   buttonPlacement?: 'beside' | 'below'
   columns?: number
@@ -67,6 +69,8 @@ type CustomModule = {
   collapseLineBreaksOnMobile?: boolean
   /** New flexible split layout */
   layout?: 1 | 2
+  arrangement?: 'auto' | 'grid' | 'stack'
+  columnGap?: 'sm' | 'md' | 'lg'
   content?: CustomModule[]
   left?: CustomModule[]
   right?: CustomModule[]
@@ -218,7 +222,10 @@ function StringListView({
 }) {
   const labels = resolveStringListItems(items)
   if (!labels.length) return null
-  const itemClass = itemSize === 'sm' ? TEXT_SIZE_CLASSES.sm : TEXT_SIZE_CLASSES.md
+  const itemClass =
+    itemSize === 'sm'
+      ? 'text-base leading-snug'
+      : 'font-sans text-[1.25rem] font-normal leading-snug tracking-normal'
 
   if (showRules) {
     const columnCount = Math.min(Math.max(columns ?? 2, 1), 3)
@@ -226,7 +233,9 @@ function StringListView({
     return (
       <div className={cn('space-y-4', className)}>
         {label && (
-          <p className="font-mono text-xs tracking-normal normal-case md:text-sm">{label}</p>
+          <p className="font-sans text-[1.5rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]">
+            {label}
+          </p>
         )}
         <div
           className={cn(
@@ -247,18 +256,24 @@ function StringListView({
   return (
     <div className={cn('space-y-4', className)}>
       {label && (
-        <p className="font-mono text-xs tracking-normal normal-case md:text-sm">{label}</p>
+        <p className="font-sans text-[1.5rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]">
+          {label}
+        </p>
       )}
       <ul
         className={cn(
-          'grid gap-x-10 gap-y-2',
+          'grid gap-x-10 gap-y-1.5',
           columns === 2 && 'sm:grid-cols-2',
           columns === 3 && 'sm:grid-cols-2 md:grid-cols-3',
         )}
       >
         {labels.map((item, i) => (
-          <li key={`${item}-${i}`} className={itemClass}>
-            {item}
+          <li key={`${item}-${i}`} className={cn('flex gap-2.5', itemClass)}>
+            <span
+              aria-hidden
+              className="mt-[0.55em] size-1.5 shrink-0 rounded-full bg-current"
+            />
+            <span>{item}</span>
           </li>
         ))}
       </ul>
@@ -283,11 +298,28 @@ function SplitColumn({modules}: {modules?: CustomModule[]}) {
                 moduleStackGapClass({tightToPrev, nested: true}),
             )}
           >
-            <CustomModuleRenderer module={mod} />
+            <CustomModuleRenderer module={mod} nested />
           </div>
         )
       })}
     </div>
+  )
+}
+
+function splitColumnGapClass(columnGap?: 'sm' | 'md' | 'lg') {
+  if (columnGap === 'sm') return 'grid gap-8 md:grid-cols-2 md:gap-10'
+  if (columnGap === 'lg') return 'grid gap-8 md:grid-cols-2 md:gap-24 lg:gap-28'
+  return 'grid gap-8 md:grid-cols-2 md:gap-16'
+}
+
+function StepIndex({n}: {n: number}) {
+  return (
+    <span
+      aria-hidden
+      className="flex size-7 shrink-0 items-center justify-center rounded-full border border-current font-sans text-base font-normal leading-none"
+    >
+      {n}
+    </span>
   )
 }
 
@@ -316,12 +348,18 @@ function bodyTextClass(module: CustomModule) {
   return TEXT_SIZE_CLASSES.md
 }
 
-export function CustomModuleRenderer({module}: {module: CustomModule}) {
+export function CustomModuleRenderer({
+  module,
+  nested = false,
+}: {
+  module: CustomModule
+  nested?: boolean
+}) {
   switch (module._type) {
     case 'moduleTagline':
-      return (
+      return typeof module.text === 'string' ? (
         <Tagline showRule={module.showTaglineRule !== false}>{module.text}</Tagline>
-      )
+      ) : null
     case 'moduleHeadline':
       return (
         <RichHeadline
@@ -334,15 +372,27 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
           collapseLineBreaksOnMobile={module.collapseLineBreaksOnMobile}
         />
       )
-    case 'moduleBody':
+    case 'moduleBody': {
+      const paragraphClass = cn(bodyTextClass(module), 'leading-[1.35]')
+      if (Array.isArray(module.text)) {
+        return (
+          <BodyPortableText
+            value={module.text}
+            className="max-w-3xl"
+            paragraphClassName={paragraphClass}
+          />
+        )
+      }
+      if (!module.text) return null
       return (
         <p
-          className={cn('max-w-3xl', bodyTextClass(module))}
+          className={cn('max-w-3xl whitespace-pre-line', paragraphClass)}
           style={{color: 'var(--section-body)'}}
         >
           {module.text}
         </p>
       )
+    }
     case 'moduleSplit': {
       const hasNewColumns = Boolean(
         module.content?.length || module.left?.length || module.right?.length,
@@ -353,7 +403,7 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
           return <SplitColumn modules={module.content} />
         }
         return (
-          <div className="grid gap-8 md:grid-cols-2 md:gap-16">
+          <div className={splitColumnGapClass(module.columnGap)}>
             <SplitColumn modules={module.left} />
             <SplitColumn modules={module.right} />
           </div>
@@ -427,6 +477,23 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
       return <DetailAttributesView details={module as unknown as DetailAttributes} />
     case 'moduleSteps': {
       const steps = module.steps ?? []
+      const stacked =
+        module.arrangement === 'stack' ||
+        (module.arrangement !== 'grid' && nested)
+
+      if (stacked) {
+        return (
+          <ol className="flex flex-col gap-8 md:gap-10">
+            {steps.map((step, i) => (
+              <li key={step.text ?? i} className="flex items-start gap-8">
+                <StepIndex n={i + 1} />
+                <p className={cn(TEXT_SIZE_CLASSES.md, 'min-w-0 pt-0.5')}>{step.text}</p>
+              </li>
+            ))}
+          </ol>
+        )
+      }
+
       const columns = Math.min(Math.max(steps.length, 1), 3) as 1 | 2 | 3
       const columnClass = {
         1: 'md:grid-cols-1',
@@ -438,12 +505,7 @@ export function CustomModuleRenderer({module}: {module: CustomModule}) {
         <ol className={cn('grid gap-y-10 gap-x-16', columnClass)}>
           {steps.map((step, i) => (
             <li key={step.text ?? i} className="flex flex-col gap-5">
-              <span
-                aria-hidden
-                className="flex size-8 items-center justify-center rounded-full border border-current font-sans text-base font-normal leading-none"
-              >
-                {i + 1}
-              </span>
+              <StepIndex n={i + 1} />
               <p className={cn(TEXT_SIZE_CLASSES.md, 'text-balance')}>{step.text}</p>
             </li>
           ))}

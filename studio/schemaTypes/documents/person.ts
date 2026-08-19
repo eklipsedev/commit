@@ -95,7 +95,8 @@ export const personType = defineType({
       name: 'bio',
       title: 'Bio',
       type: 'portableText',
-      description: 'About overlay body',
+      description:
+        'About overlay body. If this is empty, the team card is static (no Learn More hover or modal).',
       group: 'overlay',
       hidden: ({document}) => document?.kind === 'testimonial',
     }),

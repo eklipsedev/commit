@@ -88,9 +88,10 @@ export const moduleBodyType = defineType({
     defineField({
       name: 'text',
       title: 'Body',
-      type: 'text',
-      rows: 4,
-      validation: (rule) => rule.required(),
+      type: 'simplePortableText',
+      validation: (rule) => rule.required().min(1),
+      description:
+        'Paragraphs with links, bold, and italic. Press Enter for a new line/paragraph; highlight text to add a link.',
     }),
     defineField({
       name: 'textSize',
@@ -117,8 +118,18 @@ export const moduleBodyType = defineType({
           : size === 'sm'
             ? 'Small'
             : 'Medium'
+      const plain = Array.isArray(title)
+        ? title
+            .map((block: {children?: {text?: string}[]}) =>
+              (block.children ?? []).map((span) => span.text ?? '').join(''),
+            )
+            .join(' ')
+            .trim()
+        : typeof title === 'string'
+          ? title
+          : ''
       return {
-        title: title?.slice(0, 60) || 'Body',
+        title: plain.slice(0, 60) || 'Body',
         subtitle: `Body · ${sizeLabel}`,
         media: TextIcon,
       }
@@ -200,10 +211,33 @@ export const moduleSplitType = defineType({
           return 'Add modules to at least one column'
         }),
     }),
+    defineField({
+      name: 'columnGap',
+      title: 'Column spacing',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Tight', value: 'sm'},
+          {title: 'Default', value: 'md'},
+          {title: 'Wide', value: 'lg'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'md',
+      hidden: ({parent}) => parent?.layout !== 2,
+      description:
+        'Gap between the two columns. Use Wide when the right column should sit further right (e.g. numbered steps).',
+    }),
   ],
   preview: {
-    select: {layout: 'layout', content: 'content', left: 'left', right: 'right'},
-    prepare({layout, content, left, right}) {
+    select: {
+      layout: 'layout',
+      content: 'content',
+      left: 'left',
+      right: 'right',
+      columnGap: 'columnGap',
+    },
+    prepare({layout, content, left, right, columnGap}) {
       const cols = layout === 1 ? 1 : 2
       const count =
         cols === 1
@@ -215,9 +249,15 @@ export const moduleSplitType = defineType({
             ? ' · right only'
             : ' · left only'
           : ''
+      const gapHint =
+        cols === 2 && columnGap && columnGap !== 'md'
+          ? columnGap === 'sm'
+            ? ' · tight'
+            : ' · wide'
+          : ''
       return {
         title: 'Split row',
-        subtitle: `${cols} column${cols === 1 ? '' : 's'} · ${count} module${count === 1 ? '' : 's'}${emptyHint}`,
+        subtitle: `${cols} column${cols === 1 ? '' : 's'} · ${count} module${count === 1 ? '' : 's'}${emptyHint}${gapHint}`,
         media: BlockContentIcon,
       }
     },
@@ -234,7 +274,7 @@ export const moduleStringListType = defineType({
       name: 'label',
       title: 'Label',
       type: 'string',
-      description: 'Optional mono label above the list',
+      description: 'Optional heading above the list (e.g. “Brand Strategy”)',
     }),
     defineField({
       name: 'items',
@@ -289,13 +329,13 @@ export const moduleStringListType = defineType({
       type: 'string',
       options: {
         list: [
-          {title: 'Small — 20px', value: 'sm'},
-          {title: 'Medium — 32px (24px mobile)', value: 'md'},
+          {title: 'Small — 16px', value: 'sm'},
+          {title: 'Medium — 20px', value: 'md'},
         ],
         layout: 'radio',
       },
       initialValue: 'md',
-      description: 'Applies to all list items. Medium uses 24px on mobile.',
+      description: 'Applies to bulleted list items under the label.',
     }),
     defineField({
       name: 'showRules',
@@ -366,13 +406,38 @@ export const moduleStepsType = defineType({
       ],
       validation: (rule) => rule.min(1),
     }),
+    defineField({
+      name: 'arrangement',
+      title: 'Layout',
+      type: 'string',
+      options: {
+        list: [
+          {
+            title: 'Auto — stacked in a column, horizontal when full width',
+            value: 'auto',
+          },
+          {title: 'Stacked — number beside text', value: 'stack'},
+          {title: 'Horizontal — number above text', value: 'grid'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'auto',
+      description:
+        'Put this module in a Split row column for the stacked “How we work” layout. Use Horizontal when it sits full width.',
+    }),
   ],
   preview: {
-    select: {steps: 'steps'},
-    prepare({steps}) {
+    select: {steps: 'steps', arrangement: 'arrangement'},
+    prepare({steps, arrangement}) {
+      const layoutLabel =
+        arrangement === 'stack'
+          ? 'stacked'
+          : arrangement === 'grid'
+            ? 'horizontal'
+            : 'auto'
       return {
         title: 'Numbered steps',
-        subtitle: `${steps?.length ?? 0} steps`,
+        subtitle: `${steps?.length ?? 0} steps · ${layoutLabel}`,
         media: NumberIcon,
       }
     },

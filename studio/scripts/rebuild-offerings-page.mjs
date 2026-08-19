@@ -140,18 +140,23 @@ const pageBuilder = [
             _type: 'moduleBody',
             _key: key(),
             textSize: 'sm',
-            text: 'We build brands and campaigns in creative intensives that disrupt the typical agency model. You get an entire team passionately focused on you and your idea.',
+            text: richText('We build brands and campaigns in creative intensives that disrupt the typical agency model. You get an entire team passionately focused on you and your idea.'),
           },
         ],
         right: [
           {
-            _type: 'moduleChecklist',
+            _type: 'moduleSteps',
             _key: key(),
-            items: listItems([
+            arrangement: 'stack',
+            steps: listItems([
               'A creative team custom-built for your needs.',
               'A facilitated process that is high-touch and nimble.',
               'Sprints that reduce back-and-forth.',
-            ]),
+            ]).map((item) => ({
+              _type: 'moduleStep',
+              _key: key(),
+              text: item.text,
+            })),
           },
         ],
       },

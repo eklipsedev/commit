@@ -74,7 +74,15 @@ function convertOverlayModule(module) {
     return {
       _type: 'moduleBody',
       _key: key,
-      text: module.text,
+      text: [
+        {
+          _type: 'block',
+          _key: newKey(),
+          style: 'normal',
+          markDefs: [],
+          children: [{_type: 'span', _key: newKey(), marks: [], text: module.text ?? ''}],
+        },
+      ],
     }
   }
 

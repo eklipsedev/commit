@@ -196,11 +196,11 @@ export function GridMixedSection({block}: {block: GridMixedBlock}) {
           </div>
         </FadeIn>
 
-        {block.button && (
+        {block.button?.label ? (
           <FadeIn>
             <CmsButton button={block.button} className="shrink-0" />
           </FadeIn>
-        )}
+        ) : null}
       </Container>
     </Section>
   )

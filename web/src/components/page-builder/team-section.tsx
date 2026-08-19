@@ -43,6 +43,10 @@ function resolveTeamRows(block: TeamBlock) {
   }
 }
 
+function personHasBio(person: PersonCard) {
+  return Boolean(person.bio?.length)
+}
+
 function PersonCardItem({
   person,
   size,
@@ -55,10 +59,11 @@ function PersonCardItem({
   const [hovered, setHovered] = useState(false)
   const [cursor, setCursor] = useState({x: 0, y: 0})
 
+  const interactive = personHasBio(person)
   const primaryBg = colorHex(person.cardBackgroundColor, 'sage')
-  const secondaryBg = colorHex(person.cardHoverBackgroundColor, 'deep-blue')
   const btnBg = colorHex(person.buttonBackgroundColor, 'yellow')
   const btnText = colorHex(person.buttonTextColor, 'deep-blue')
+  const featured = size === 'featured'
 
   const updateCursor = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     const card = cardRef.current
@@ -70,28 +75,14 @@ function PersonCardItem({
     })
   }, [])
 
-  const featured = size === 'featured'
-
-  return (
-    <button
-      ref={cardRef}
-      type="button"
-      onClick={() => openPerson(person)}
-      onMouseEnter={(event) => {
-        setHovered(true)
-        updateCursor(event)
-      }}
-      onMouseLeave={() => setHovered(false)}
-      onMouseMove={updateCursor}
-      className="group relative flex w-full min-w-0 flex-col text-left"
-    >
-      {/* Featured = project-card ratio; members = square. Photo flush to bottom. */}
+  const media = (
+    <>
       <div
         className={cn(
-          'relative w-full overflow-hidden transition-colors duration-300',
+          'relative w-full overflow-hidden',
           featured ? 'aspect-[636/358]' : 'aspect-square',
         )}
-        style={{backgroundColor: hovered ? secondaryBg : primaryBg}}
+        style={{backgroundColor: primaryBg}}
       >
         {person.photo && (
           <SanityImage
@@ -129,7 +120,27 @@ function PersonCardItem({
           </p>
         )}
       </div>
+    </>
+  )
 
+  if (!interactive) {
+    return <div className="flex w-full min-w-0 flex-col text-left">{media}</div>
+  }
+
+  return (
+    <button
+      ref={cardRef}
+      type="button"
+      onClick={() => openPerson(person)}
+      onMouseEnter={(event) => {
+        setHovered(true)
+        updateCursor(event)
+      }}
+      onMouseLeave={() => setHovered(false)}
+      onMouseMove={updateCursor}
+      className="group relative flex w-full min-w-0 flex-col text-left"
+    >
+      {media}
       <span
         aria-hidden
         className={cn(

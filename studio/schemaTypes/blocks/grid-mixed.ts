@@ -85,6 +85,7 @@ export const gridMixedType = defineType({
       name: 'button',
       title: 'Button',
       type: 'button',
+      description: 'Optional. Leave blank to hide the button under the collage.',
       group: 'content',
     }),
     defineField({...sectionSpacingFields[0], group: 'style'}),
