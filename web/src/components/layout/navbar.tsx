@@ -203,7 +203,7 @@ export function Navbar({data, variant = 'light'}: NavbarProps) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
+  const menuRef = useRef<HTMLElement>(null)
   const navItems = flattenNavItems(data?.items)
   const {logoRef, introActive} = useIntroLogo()
   const isContact = pathname === '/contact'
@@ -249,8 +249,9 @@ export function Navbar({data, variant = 'light'}: NavbarProps) {
 
   return (
     <header
+      ref={menuRef}
       className={cn(
-        'sticky top-0 z-40 transition-[background-color,backdrop-filter] duration-300',
+        'relative sticky top-0 z-40 transition-[background-color,backdrop-filter] duration-300',
         variant === 'dark'
           ? 'bg-black text-white'
           : solidNav
@@ -297,7 +298,7 @@ export function Navbar({data, variant = 'light'}: NavbarProps) {
             )}
           </div>
 
-          <div ref={menuRef} className="relative md:hidden">
+          <div className="md:hidden">
             <button
               type="button"
               aria-expanded={open}
@@ -310,43 +311,6 @@ export function Navbar({data, variant = 'light'}: NavbarProps) {
             >
               Menu
             </button>
-            {open && (
-              <div
-                className={cn(
-                  'absolute right-0 top-full z-50 mt-2 min-w-[14rem] rounded-md border py-2 shadow-lg',
-                  variant === 'dark'
-                    ? 'border-white/10 bg-black text-white'
-                    : 'border-neutral-200 bg-brand-white text-brand-charcoal',
-                )}
-              >
-                {navItems.map(({item, depth}) => {
-                  const itemHref = resolveLinkHref(item.link)
-                  const label = item.label || resolveLinkLabel(item.link)
-                  if (!itemHref) return null
-                  return (
-                    <Link
-                      key={item._key ?? `${depth}-${label}`}
-                      href={itemHref}
-                      className={cn(
-                        'block py-2 font-mono text-sm underline-offset-4 hover:underline',
-                        depth === 0 ? 'px-4' : 'px-4 pl-7 opacity-80',
-                      )}
-                    >
-                      {label}
-                    </Link>
-                  )
-                })}
-                {data?.button?.label && (
-                  <div className="mt-3 border-t border-brand-charcoal px-4 py-4">
-                    <DotButton
-                      button={data.button}
-                      tone={variant === 'dark' ? 'dark' : 'light'}
-                      className="w-full justify-center"
-                    />
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         </nav>
 
@@ -372,6 +336,49 @@ export function Navbar({data, variant = 'light'}: NavbarProps) {
           )}
         />
       </Container>
+
+      {open && (
+        <div
+          className={cn(
+            'absolute inset-x-0 top-full z-50 rounded-none py-4 shadow-lg md:hidden',
+            variant === 'dark' ? 'bg-black text-white' : 'bg-brand-white text-brand-charcoal',
+          )}
+        >
+          <Container>
+            {navItems.map(({item, depth}) => {
+              const itemHref = resolveLinkHref(item.link)
+              const label = item.label || resolveLinkLabel(item.link)
+              if (!itemHref) return null
+              return (
+                <Link
+                  key={item._key ?? `${depth}-${label}`}
+                  href={itemHref}
+                  className={cn(
+                    'block py-2 font-mono text-sm underline-offset-4 hover:underline',
+                    depth === 0 ? '' : 'pl-3 opacity-80',
+                  )}
+                >
+                  {label}
+                </Link>
+              )
+            })}
+            {data?.button?.label && (
+              <div
+                className={cn(
+                  'mt-3 border-t py-4',
+                  variant === 'dark' ? 'border-white' : 'border-brand-charcoal',
+                )}
+              >
+                <DotButton
+                  button={data.button}
+                  tone={variant === 'dark' ? 'dark' : 'light'}
+                  className="w-full justify-center"
+                />
+              </div>
+            )}
+          </Container>
+        </div>
+      )}
     </header>
   )
 }

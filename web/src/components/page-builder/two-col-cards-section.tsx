@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import {useEffect, useState} from 'react'
 import {Container} from '@/components/ui/container'
 import {CmsButton} from '@/components/ui/cms-button'
 import {FadeIn, FADE_IN_STAGGER_MS} from '@/components/ui/fade-in'
@@ -13,7 +12,6 @@ import {Tagline} from '@/components/ui/tagline'
 import {cn} from '@/lib/cn'
 import {headingFontFromBlock, headingSizeFromBlock} from '@/lib/heading-styles'
 import {muxPosterUrl} from '@/lib/mux'
-import {useInView} from '@/lib/use-in-view'
 import type {PageBuilderBlock, ProjectCard} from '@/sanity/types'
 
 type TwoColCardsBlock = PageBuilderBlock & {
@@ -22,20 +20,6 @@ type TwoColCardsBlock = PageBuilderBlock & {
   heading?: string
   button?: import('@/sanity/types').ButtonValue
   projects?: ProjectCard[]
-}
-
-function useTouchWithoutHover() {
-  const [touchWithoutHover, setTouchWithoutHover] = useState(false)
-
-  useEffect(() => {
-    const media = window.matchMedia('(hover: none), (pointer: coarse)')
-    const sync = () => setTouchWithoutHover(media.matches)
-    sync()
-    media.addEventListener('change', sync)
-    return () => media.removeEventListener('change', sync)
-  }, [])
-
-  return touchWithoutHover
 }
 
 function ProjectCardMedia({
@@ -89,60 +73,68 @@ function ProjectCardMedia({
   )
 }
 
+function ProjectCardCaption({
+  title,
+  categoryLine,
+  className,
+}: {
+  title?: string
+  categoryLine?: string | null
+  className?: string
+}) {
+  return (
+    <div
+      className={cn(
+        'flex items-start justify-between gap-4 bg-brand-white px-4 py-3 text-sm md:px-5 md:py-3.5 md:text-base',
+        className,
+      )}
+    >
+      <p className="font-medium text-brand-charcoal">{title}</p>
+      {categoryLine ? (
+        <p className="text-right font-mono text-xs tracking-normal text-brand-charcoal md:text-sm">
+          {categoryLine}
+        </p>
+      ) : null}
+    </div>
+  )
+}
+
 function ProjectCardItem({
   project,
   priority,
-  touchWithoutHover,
 }: {
   project: ProjectCard
   priority?: boolean
-  touchWithoutHover: boolean
 }) {
   const slug = project.slug?.current
   const href = slug ? `/work/${slug}` : '#'
-  const [ref, fullyInView] = useInView<HTMLAnchorElement>({
-    threshold: 1,
-    rootMargin: '0px',
-    once: false,
-  })
-  const active = touchWithoutHover && fullyInView
   const categoryLine = project.categories?.length
     ? project.categories.join(' / ')
     : null
 
   return (
-    <Link
-      ref={ref}
-      href={href}
-      aria-label={project.title}
-      className={cn('group block', active && 'is-active')}
-    >
+    <Link href={href} aria-label={project.title} className="group block">
       <div className="relative aspect-[636/358] overflow-hidden bg-neutral-100">
-        <div
-          className={cn(
-            'absolute inset-0 transition-transform duration-500 group-hover:scale-105',
-            'group-[.is-active]:scale-105',
-          )}
-        >
+        <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-105">
           <ProjectCardMedia project={project} priority={priority} />
         </div>
 
-        {/* Labels overlay the image — hidden at rest, slide up on hover */}
-        <div
+        <ProjectCardCaption
+          title={project.title}
+          categoryLine={categoryLine}
           className={cn(
-            'absolute inset-x-0 bottom-0 z-10 flex items-start justify-between gap-4 bg-brand-white px-4 py-3 text-sm md:px-5 md:py-3.5 md:text-base',
+            'absolute inset-x-0 bottom-0 z-10 hidden md:flex',
             'translate-y-full transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]',
-            'group-hover:translate-y-0 group-[.is-active]:translate-y-0',
+            'group-hover:translate-y-0',
           )}
-        >
-          <p className="font-medium text-brand-charcoal">{project.title}</p>
-          {categoryLine ? (
-            <p className="text-right font-mono text-xs tracking-normal text-brand-charcoal md:text-sm">
-              {categoryLine}
-            </p>
-          ) : null}
-        </div>
+        />
       </div>
+
+      <ProjectCardCaption
+        title={project.title}
+        categoryLine={categoryLine}
+        className="md:hidden"
+      />
     </Link>
   )
 }
@@ -150,7 +142,6 @@ function ProjectCardItem({
 export function TwoColCardsSection({block}: {block: TwoColCardsBlock}) {
   const showHeader = block.showHeader !== false
   const projects = block.projects ?? []
-  const touchWithoutHover = useTouchWithoutHover()
 
   return (
     <Section {...block}>
@@ -181,7 +172,6 @@ export function TwoColCardsSection({block}: {block: TwoColCardsBlock}) {
               <ProjectCardItem
                 project={project}
                 priority={index < 2}
-                touchWithoutHover={touchWithoutHover}
               />
             </FadeIn>
           ))}
