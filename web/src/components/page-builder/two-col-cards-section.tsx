@@ -123,7 +123,7 @@ function ProjectCardItem({
           title={project.title}
           categoryLine={categoryLine}
           className={cn(
-            'absolute inset-x-0 bottom-0 z-10 hidden md:flex',
+            'absolute inset-x-0 bottom-0 z-10 hidden py-2 md:flex md:py-2',
             'translate-y-full transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]',
             'group-hover:translate-y-0',
           )}

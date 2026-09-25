@@ -59,7 +59,7 @@ type RichHeadlineProps = {
   size?: LegacyHeadingSize
   /** Sans (Bloyd) or Display (LustText). Hero/xl default to display. */
   font?: HeadingFont | string | null
-  /** When true, spans the full container width. Default is max-w-4xl. */
+  /** When true, spans the full container width. Default is a set max width. */
   fullWidth?: boolean
   /** Horizontal text alignment. Right also pins a constrained headline to the right edge. */
   align?: 'left' | 'right' | null
@@ -87,8 +87,8 @@ export function RichHeadline({
   return (
     <Tag
       className={cn(
-        spanFull ? 'max-w-none' : 'max-w-4xl',
-        // Right = pin the block to the right edge; text stays left-aligned inside.
+        spanFull ? 'max-w-none' : resolved === 'h3' ? 'w-fit max-w-3xl' : 'w-fit max-w-4xl',
+        // Right = pin the text-width block to the right edge. Copy stays left-aligned inside.
         sitRight && !spanFull && 'ml-auto',
         'text-left',
         resolved === 'hero' && '[hanging-punctuation:first_last]',

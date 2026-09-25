@@ -101,7 +101,7 @@ export const moduleBodyType = defineType({
         list: [
           {title: 'Large — 48px (32px mobile)', value: 'lg'},
           {title: 'Medium — 32px (24px mobile)', value: 'md'},
-          {title: 'Small — 24px', value: 'sm'},
+          {title: 'Small — 20px', value: 'sm'},
         ],
         layout: 'radio',
       },
@@ -327,15 +327,24 @@ export const moduleStringListType = defineType({
       name: 'itemSize',
       title: 'Item text size',
       type: 'string',
-      options: {
-        list: [
-          {title: 'Small — 16px', value: 'sm'},
-          {title: 'Medium — 20px', value: 'md'},
-        ],
-        layout: 'radio',
-      },
+      hidden: true,
       initialValue: 'md',
-      description: 'Applies to bulleted list items under the label.',
+      description: 'List items render at 20px (1.25rem).',
+    }),
+    defineField({
+      name: 'showBullets',
+      title: 'Show bullet points',
+      type: 'boolean',
+      initialValue: true,
+      description: 'On by default. Turn off to keep the list without dots.',
+    }),
+    defineField({
+      name: 'relaxedSpacing',
+      title: 'More space between items',
+      type: 'boolean',
+      initialValue: false,
+      description:
+        'Off keeps the tighter list. On adds a bit more vertical space between items, with or without bullets.',
     }),
     defineField({
       name: 'showRules',
@@ -366,11 +375,11 @@ export const moduleStringListType = defineType({
     }),
   ],
   preview: {
-    select: {label: 'label', items: 'items'},
-    prepare({label, items}) {
+    select: {label: 'label', items: 'items', showBullets: 'showBullets', relaxedSpacing: 'relaxedSpacing'},
+    prepare({label, items, showBullets, relaxedSpacing}) {
       return {
         title: label || 'String list',
-        subtitle: `${items?.length ?? 0} items`,
+        subtitle: `${items?.length ?? 0} items${showBullets === false ? ' · no bullets' : ''}${relaxedSpacing ? ' · more space' : ''}`,
         media: BulletOutlineIcon,
       }
     },

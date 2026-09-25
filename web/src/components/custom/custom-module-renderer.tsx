@@ -1,3 +1,4 @@
+import {stegaClean} from 'next-sanity'
 import {cn} from '@/lib/cn'
 import {CmsButton} from '@/components/ui/cms-button'
 import {RichHeadline} from '@/components/ui/rich-headline'
@@ -56,6 +57,8 @@ type CustomModule = {
   label?: string
   showTaglineRule?: boolean
   showRules?: boolean
+  showBullets?: boolean
+  relaxedSpacing?: boolean
   size?: 'sm' | 'md' | 'lg'
   steps?: {text?: string}[]
   headline?: RichHeadlineType
@@ -209,23 +212,24 @@ function StringListView({
   label,
   items,
   columns = 2,
-  itemSize = 'md',
   showRules,
+  showBullets = true,
+  relaxedSpacing = false,
   className,
 }: {
   label?: string
   items?: StringListItem[]
   columns?: number
-  itemSize?: 'sm' | 'md'
   showRules?: boolean
+  showBullets?: boolean
+  relaxedSpacing?: boolean
   className?: string
 }) {
   const labels = resolveStringListItems(items)
   if (!labels.length) return null
+  // 20px either way — Small used to be 16px. Bullets do not change the size.
   const itemClass =
-    itemSize === 'sm'
-      ? 'text-base leading-snug'
-      : 'font-sans text-[1.25rem] font-normal leading-snug tracking-normal'
+    'font-sans text-[1.25rem] font-normal leading-snug tracking-normal'
 
   if (showRules) {
     const columnCount = Math.min(Math.max(columns ?? 2, 1), 3)
@@ -262,17 +266,23 @@ function StringListView({
       )}
       <ul
         className={cn(
-          'grid gap-x-10 gap-y-1.5',
+          'grid gap-x-10',
+          relaxedSpacing ? 'gap-y-4' : 'gap-y-1.5',
           columns === 2 && 'sm:grid-cols-2',
           columns === 3 && 'sm:grid-cols-2 md:grid-cols-3',
         )}
       >
         {labels.map((item, i) => (
-          <li key={`${item}-${i}`} className={cn('flex gap-2.5', itemClass)}>
-            <span
-              aria-hidden
-              className="mt-[0.55em] size-1.5 shrink-0 rounded-full bg-current"
-            />
+          <li
+            key={`${item}-${i}`}
+            className={cn(showBullets && 'flex gap-2.5', itemClass)}
+          >
+            {showBullets ? (
+              <span
+                aria-hidden
+                className="mt-[0.55em] size-1.5 shrink-0 rounded-full bg-current"
+              />
+            ) : null}
             <span>{item}</span>
           </li>
         ))}
@@ -316,7 +326,7 @@ function StepIndex({n}: {n: number}) {
   return (
     <span
       aria-hidden
-      className="flex size-7 shrink-0 items-center justify-center rounded-full border border-current font-sans text-base font-normal leading-none"
+      className="mt-1 flex size-6 shrink-0 items-center justify-center rounded-full border border-current font-sans text-sm font-normal leading-none"
     >
       {n}
     </span>
@@ -335,16 +345,19 @@ function hasLegacySplitContent(module: CustomModule) {
   )
 }
 
-function bodyTextClass(module: CustomModule) {
+function bodyTextSize(module: CustomModule) {
   // Prefer textSize; map legacy headingSize (h3/lg → Large, else Medium).
   const legacy = module.headingSize
-  const size =
+  return (
     module.textSize ??
     (legacy === 'lg' || legacy === 'h3' ? 'lg' : legacy === 'sm' ? 'sm' : 'md')
+  )
+}
+
+function bodyTextClass(module: CustomModule) {
+  const size = bodyTextSize(module)
   if (size === 'lg') return TEXT_SIZE_CLASSES.lg
-  if (size === 'sm') {
-    return 'font-sans text-[1.5rem] font-normal leading-[1.2] tracking-normal'
-  }
+  if (size === 'sm') return TEXT_SIZE_CLASSES.sm
   return TEXT_SIZE_CLASSES.md
 }
 
@@ -374,11 +387,13 @@ export function CustomModuleRenderer({
       )
     case 'moduleBody': {
       const paragraphClass = cn(bodyTextClass(module), 'leading-[1.35]')
+      // Small copy in a split column stays on a shorter measure, matching the design.
+      const widthClass = bodyTextSize(module) === 'sm' && nested ? 'max-w-md' : 'max-w-3xl'
       if (Array.isArray(module.text)) {
         return (
           <BodyPortableText
             value={module.text}
-            className="max-w-3xl"
+            className={widthClass}
             paragraphClassName={paragraphClass}
           />
         )
@@ -386,7 +401,7 @@ export function CustomModuleRenderer({
       if (!module.text) return null
       return (
         <p
-          className={cn('max-w-3xl whitespace-pre-line', paragraphClass)}
+          className={cn(widthClass, 'whitespace-pre-line', paragraphClass)}
           style={{color: 'var(--section-body)'}}
         >
           {module.text}
@@ -451,8 +466,9 @@ export function CustomModuleRenderer({
           label={module.label}
           items={module.items}
           columns={module.columns}
-          itemSize={module.itemSize}
           showRules={module.showRules}
+          showBullets={stegaClean(module.showBullets) !== false}
+          relaxedSpacing={stegaClean(module.relaxedSpacing) === true}
           className={placement === 'beside' ? 'min-w-0 flex-1' : undefined}
         />
       )
@@ -483,11 +499,11 @@ export function CustomModuleRenderer({
 
       if (stacked) {
         return (
-          <ol className="flex flex-col gap-8 md:gap-10">
+          <ol className="flex flex-col gap-8 md:gap-14">
             {steps.map((step, i) => (
-              <li key={step.text ?? i} className="flex items-start gap-8">
+              <li key={step.text ?? i} className="flex items-start gap-6 md:gap-10">
                 <StepIndex n={i + 1} />
-                <p className={cn(TEXT_SIZE_CLASSES.md, 'min-w-0 pt-0.5')}>{step.text}</p>
+                <p className={cn(TEXT_SIZE_CLASSES.md, 'min-w-0 max-w-[13em]')}>{step.text}</p>
               </li>
             ))}
           </ol>

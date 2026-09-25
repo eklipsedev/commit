@@ -264,13 +264,13 @@ export function PersonOverlayHeader({
   }
 }) {
   return (
-    <div className="space-y-4">
-      <Heading size="md" as="h5">
+    <div>
+      <Heading size="md" as="h5" className="text-[2rem]/[1.15] md:text-[2rem]/[1.15]">
         {person.name}
       </Heading>
       {person.role && (
-        <div className="space-y-4">
-          <p className="font-mono text-[1rem] leading-[1.2]">{person.role}</p>
+        <div className="mt-1 space-y-4">
+          <p className="font-mono text-[1rem]/[1.25]">{person.role}</p>
           <hr className="w-full border-0 border-t border-current" />
         </div>
       )}

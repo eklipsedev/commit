@@ -48,7 +48,13 @@ export function MuxVideo({
       playsInline
       preload={background ? 'auto' : 'metadata'}
       accentColor={accentColor}
-      className={cn(background && 'mux-background', className)}
+      className={cn(
+        background && 'mux-background',
+        // Cover boxes are often a fraction off the video ratio. Scale past the
+        // edge so Mux’s black player background can’t show as a hairline.
+        objectFit === 'cover' && 'origin-center scale-[1.01]',
+        className,
+      )}
       style={
         (background
           ? {
@@ -58,6 +64,7 @@ export function MuxVideo({
               '--controls': 'none',
               '--media-object-fit': objectFit,
               '--media-object-position': 'center',
+              ...(objectFit === 'cover' ? {'--media-background-color': 'transparent'} : {}),
             }
           : {
               width: '100%',

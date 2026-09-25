@@ -68,7 +68,7 @@ function CardFrame({
 
   return (
     <article
-      className="flex h-full min-h-[17rem] w-full flex-col rounded-none p-6 sm:p-8 md:min-h-[20rem] md:p-10"
+      className="flex w-full flex-col rounded-none p-6 pb-5 sm:p-8 sm:pb-6 md:p-10 md:pb-8"
       style={{backgroundColor: background}}
     >
       {title && (
@@ -88,7 +88,7 @@ function CardFrame({
         </p>
       )}
       {button && (
-        <div className="mt-auto self-start pt-8">
+        <div className="mt-5 self-start">
           <CmsButton button={button} onClick={onClick} />
         </div>
       )}

@@ -1,3 +1,5 @@
+import {stegaClean} from 'next-sanity'
+import {cn} from '@/lib/cn'
 import {Container} from '@/components/ui/container'
 import {FadeInStack} from '@/components/ui/fade-in'
 import {RichHeadline} from '@/components/ui/rich-headline'
@@ -10,9 +12,19 @@ type HeroBlock = PageBuilderBlock & {
   headline?: import('@/sanity/types').RichHeadline
 }
 
+/** Tighter under the nav than a normal section, with more room below the headline. */
+const HERO_PADDING_TOP = 'pt-8 md:pt-10'
+const HERO_PADDING_BOTTOM = 'pb-20 md:pb-32'
+
 export function HeroSection({block}: {block: HeroBlock}) {
+  const collapseTop = stegaClean(block.collapsePaddingTop) === true
+  const collapseBottom = stegaClean(block.collapsePaddingBottom) === true
+
   return (
-    <Section {...block}>
+    <Section
+      {...block}
+      className={cn(!collapseTop && HERO_PADDING_TOP, !collapseBottom && HERO_PADDING_BOTTOM)}
+    >
       <Container>
         <FadeInStack className="space-y-10 md:space-y-14" stagger={120}>
           <RichHeadline

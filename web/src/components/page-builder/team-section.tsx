@@ -100,11 +100,11 @@ function PersonCardItem({
         )}
       </div>
 
-      <div className={cn('min-w-0 space-y-1', featured ? 'mt-4' : 'mt-3')}>
+      <div className="mt-3 min-w-0 space-y-1">
         <p
           className={cn(
-            'font-medium leading-[1.2] text-brand-charcoal',
-            featured ? 'text-[2rem]' : 'text-xl md:text-[1.5rem]',
+            'font-medium text-brand-charcoal',
+            featured ? 'text-[2rem]/[1.15]' : 'text-xl/tight md:text-[1.5rem]/[1.15]',
           )}
         >
           {person.name}
@@ -112,8 +112,8 @@ function PersonCardItem({
         {person.role && (
           <p
             className={cn(
-              'font-mono leading-snug text-brand-charcoal',
-              featured ? 'text-sm' : 'text-xs',
+              'font-mono text-brand-charcoal',
+              featured ? 'text-sm/[1.25]' : 'text-xs/[1.25]',
             )}
           >
             {person.role}

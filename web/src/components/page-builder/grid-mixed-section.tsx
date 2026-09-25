@@ -107,7 +107,7 @@ function SlotImage({
           aria-hidden
           className={cn(
             'pointer-events-none absolute bottom-0 left-0 z-10',
-            'bg-white px-3 py-2 font-sans text-[1.25rem] leading-[1.2] text-brand-charcoal',
+            'bg-brand-white px-4 py-2 font-sans text-sm font-medium leading-snug text-brand-charcoal md:px-5 md:text-base',
             '-translate-x-full transition-transform duration-300 ease-out',
             'group-hover:translate-x-0 group-focus-within:translate-x-0',
             'motion-reduce:transition-none',

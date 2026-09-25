@@ -110,7 +110,7 @@ export function showTaglineRuleField(options?: {
 
 /**
  * Shared heading size for sections that use tagline + divider + heading.
- * Frontend tokens: Large 64px (`lg`), Mid 48→32 (`h3`), Medium 32→24 (`md`).
+ * Frontend tokens: Large 64px (`lg`), Mid 40→28 (`h3`), Medium 32→24 (`md`).
  */
 export function headingSizeField(options?: {
   group?: string
@@ -124,7 +124,7 @@ export function headingSizeField(options?: {
     options: {
       list: [
         {title: 'Large — 64px', value: 'lg'},
-        {title: 'Mid — 48px (32px mobile)', value: 'h3'},
+        {title: 'Mid — 40px (28px mobile)', value: 'h3'},
         {title: 'Medium — 32px (24px mobile)', value: 'md'},
       ],
       layout: 'radio',
@@ -163,14 +163,14 @@ export function headingFontField(options?: {
   })
 }
 
-/** Off = max-w-4xl on the headline. On = span the full content width. */
+/** Off = a set max width (narrower for Mid). On = span the full content width. */
 export function fullWidthHeadlineField(options?: {group?: string}) {
   return defineField({
     name: 'fullWidth',
     title: 'Full width',
     type: 'boolean',
     initialValue: false,
-    description: 'Off = max-width 4xl (default). On = span the full content width.',
+    description: 'Off = a set max width (Mid is a bit narrower). On = span the full content width.',
     group: options?.group,
   })
 }
@@ -191,7 +191,7 @@ export function headlineAlignField(options?: {group?: string}) {
     },
     initialValue: 'left',
     description:
-      'Place the headline on the left or right side of the section. Text stays left-aligned within the block.',
+      'Place the headline on the left or right. The block shrinks to the text, up to the max width, so it sits on that edge.',
     group: options?.group,
   })
 }

@@ -171,7 +171,7 @@ function NavLink({
         <ul
           className={cn(
             'min-w-max space-y-2.5 p-4',
-            variant === 'dark' ? 'bg-black' : 'bg-brand-white',
+            variant === 'dark' ? 'bg-black' : 'bg-page-background',
           )}
         >
           {children.map((child) => (
@@ -207,7 +207,7 @@ export function Navbar({data, variant = 'light'}: NavbarProps) {
   const navItems = flattenNavItems(data?.items)
   const {logoRef, introActive} = useIntroLogo()
   const isContact = pathname === '/contact'
-  /** Contact: transparent over page color until scroll (or mobile menu open). */
+  /** Contact rests transparent over the page color, then matches it once solid. */
   const solidNav = !isContact || scrolled || open
 
   useEffect(() => {
@@ -255,7 +255,7 @@ export function Navbar({data, variant = 'light'}: NavbarProps) {
         variant === 'dark'
           ? 'bg-black text-white'
           : solidNav
-            ? 'bg-brand-white/95 text-brand-charcoal backdrop-blur-sm'
+            ? 'bg-page-background/95 text-brand-charcoal backdrop-blur-sm'
             : 'bg-transparent text-brand-charcoal',
       )}
     >
@@ -265,8 +265,8 @@ export function Navbar({data, variant = 'light'}: NavbarProps) {
             href="/"
             ref={logoRef}
             className={cn(
-              'relative z-10 shrink-0 transition-opacity duration-200',
-              introActive && 'opacity-0',
+              'relative z-10 shrink-0 transition-opacity ease-[cubic-bezier(0.22,1,0.36,1)]',
+              introActive ? 'opacity-0 duration-0' : 'duration-500',
             )}
             aria-label="Commit home"
           >
@@ -341,7 +341,7 @@ export function Navbar({data, variant = 'light'}: NavbarProps) {
         <div
           className={cn(
             'absolute inset-x-0 top-full z-50 rounded-none py-4 shadow-lg md:hidden',
-            variant === 'dark' ? 'bg-black text-white' : 'bg-brand-white text-brand-charcoal',
+            variant === 'dark' ? 'bg-black text-white' : 'bg-page-background text-brand-charcoal',
           )}
         >
           <Container>
