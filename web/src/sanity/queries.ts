@@ -39,7 +39,7 @@ const BUTTON_PROJECTION = `{
   link ${LINK_PROJECTION}
 }`
 
-const PROJECT_CARD_PROJECTION = `{
+const PROJECT_CARD_FIELDS = `
   _id,
   title,
   slug,
@@ -55,6 +55,30 @@ const PROJECT_CARD_PROJECTION = `{
   },
   categories,
   summary
+`
+
+const PROJECT_CARD_PROJECTION = `{${PROJECT_CARD_FIELDS}}`
+
+/** Hand-picked card: project plus an optional alternate thumbnail key. */
+const PROJECT_CARD_PICK_PROJECTION = `{
+  _key,
+  thumbnailKey,
+  project->{
+    ${PROJECT_CARD_FIELDS},
+    alternateThumbnails[]{
+      _key,
+      mediaType,
+      image,
+      "video": video.asset->{
+        playbackId,
+        assetId,
+        filename,
+        status,
+        thumbTime,
+        "aspectRatio": data.aspect_ratio
+      }
+    }
+  }
 }`
 
 const SALES_PAGE_CARD_PROJECTION = `{
@@ -177,7 +201,7 @@ const PAGE_BUILDER_PROJECTION = `pageBuilder[]{
     button ${BUTTON_PROJECTION},
     "projects": select(
       projectsSource == "all" => *[_type == "project"] | order(orderRank) ${PROJECT_CARD_PROJECTION},
-      projects[]->${PROJECT_CARD_PROJECTION}
+      projects[]${PROJECT_CARD_PICK_PROJECTION}
     )
   },
   _type == "cardsText" => {
@@ -295,7 +319,11 @@ const PAGE_BUILDER_PROJECTION = `pageBuilder[]{
       _type == "reference" => @->{
         _id,
         name,
-        image,
+        image{
+          ...,
+          "dimensions": asset->metadata.dimensions{width, height}
+        },
+        scale,
         href,
         "projectSlug": project->slug.current
       },
@@ -310,6 +338,10 @@ const PAGE_BUILDER_PROJECTION = `pageBuilder[]{
   },
   _type == "gridMixed" => {
     ...,
+    images[]{
+      ...,
+      "dimensions": asset->metadata.dimensions{width, height}
+    },
     button ${BUTTON_PROJECTION}
   },
   _type == "twoColImage" => {

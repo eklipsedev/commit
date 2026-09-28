@@ -15,6 +15,7 @@
     "migrate:grid-mixed-images": "node --env-file=.env.local scripts/migrate-grid-mixed-images.mjs",
     "migrate:sales-pages": "node --env-file=.env.local scripts/migrate-sales-pages.mjs",
     "migrate:module-body-portable-text": "node --env-file=.env.local scripts/migrate-module-body-portable-text.mjs",
+    "migrate:project-card-picks": "node --env-file=.env.local scripts/migrate-project-card-picks.mjs",
     "recompose:how-we-work-steps": "node --env-file=.env.local scripts/recompose-how-we-work-steps.mjs"
   },
   "keywords": [

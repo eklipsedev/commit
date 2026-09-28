@@ -107,10 +107,26 @@ export const moduleBodyType = defineType({
       },
       initialValue: 'md',
     }),
+    defineField({
+      name: 'textAlign',
+      title: 'Position',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Left', value: 'left'},
+          {title: 'Right', value: 'right'},
+        ],
+        layout: 'radio',
+        direction: 'horizontal',
+      },
+      initialValue: 'left',
+      description:
+        'Left is the default. Right pins the block to the right edge on a wider measure than a half column.',
+    }),
   ],
   preview: {
-    select: {title: 'text', textSize: 'textSize', headingSize: 'headingSize'},
-    prepare({title, textSize, headingSize}) {
+    select: {title: 'text', textSize: 'textSize', headingSize: 'headingSize', textAlign: 'textAlign'},
+    prepare({title, textSize, headingSize, textAlign}) {
       const size = textSize || headingSize
       const sizeLabel =
         size === 'lg' || size === 'h3'
@@ -130,7 +146,7 @@ export const moduleBodyType = defineType({
           : ''
       return {
         title: plain.slice(0, 60) || 'Body',
-        subtitle: `Body · ${sizeLabel}`,
+        subtitle: `Body · ${sizeLabel}${textAlign === 'right' ? ' · Right' : ''}`,
         media: TextIcon,
       }
     },

@@ -1,5 +1,6 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {ThLargeIcon} from '../../lib/icons'
+import {ProjectCardThumbnailInput} from '../../components/project-card-thumbnail-input'
 import {
   brandColorField,
   collapseLineBreaksOnMobileField,
@@ -80,7 +81,42 @@ export const twoColCardsType = defineType({
       name: 'projects',
       title: 'Projects',
       type: 'array',
-      of: [defineArrayMember({type: 'reference', to: [{type: 'project'}]})],
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'projectCardPick',
+          fields: [
+            defineField({
+              name: 'project',
+              title: 'Project',
+              type: 'reference',
+              to: [{type: 'project'}],
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'thumbnailKey',
+              title: 'Thumbnail',
+              type: 'string',
+              components: {input: ProjectCardThumbnailInput},
+              description: 'Default uses the project thumbnail. Pick an alternate when this card needs a different GIF.',
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'project.title',
+              media: 'project.thumbnail',
+              thumbnailKey: 'thumbnailKey',
+            },
+            prepare({title, media, thumbnailKey}) {
+              return {
+                title: title || 'Project',
+                subtitle: thumbnailKey ? 'Alternate thumbnail' : 'Default thumbnail',
+                media,
+              }
+            },
+          },
+        }),
+      ],
       hidden: ({parent}) => parent?.projectsSource === 'all',
       validation: (rule) =>
         rule.custom((value, context) => {

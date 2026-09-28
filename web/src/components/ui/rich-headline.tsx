@@ -87,7 +87,13 @@ export function RichHeadline({
   return (
     <Tag
       className={cn(
-        spanFull ? 'max-w-none' : resolved === 'h3' ? 'w-fit max-w-3xl' : 'w-fit max-w-4xl',
+        spanFull
+          ? 'max-w-none'
+          : resolved === 'h3'
+            ? sitRight
+              ? 'w-fit max-w-[52rem]'
+              : 'w-fit max-w-3xl'
+            : 'w-fit max-w-4xl',
         // Right = pin the text-width block to the right edge. Copy stays left-aligned inside.
         sitRight && !spanFull && 'ml-auto',
         'text-left',

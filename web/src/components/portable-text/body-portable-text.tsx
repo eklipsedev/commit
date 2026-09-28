@@ -33,7 +33,13 @@ function portableTextComponents(paragraphClassName?: string): PortableTextCompon
 
   return {
     block: {
-      normal: ({children}) => <p className={paragraphClass}>{children}</p>,
+      normal: ({children, value}) => {
+        const block = value as {children?: {text?: string}[]} | undefined
+        const text = block?.children?.map((child) => child.text ?? '').join('') ?? ''
+        // A blank paragraph is one empty line. Filled paragraphs stack on the line-height.
+        const isBlank = Boolean(paragraphClassName) && text.trim() === ''
+        return <p className={paragraphClass}>{isBlank ? '\u00a0' : children}</p>
+      },
       h2: ({children}) => (
         <h2
           className={cn(
@@ -125,9 +131,7 @@ export function BodyPortableText({
       <PortableText
         value={value}
         components={portableTextComponents(
-          paragraphClassName
-            ? cn('mb-[0.6em] break-words last:mb-0', paragraphClassName)
-            : undefined,
+          paragraphClassName ? cn('break-words', paragraphClassName) : undefined,
         )}
       />
     </div>

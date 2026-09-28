@@ -227,9 +227,10 @@ function StringListView({
 }) {
   const labels = resolveStringListItems(items)
   if (!labels.length) return null
-  // 20px either way — Small used to be 16px. Bullets do not change the size.
-  const itemClass =
-    'font-sans text-[1.25rem] font-normal leading-snug tracking-normal'
+  // Ruled rows use Medium (32px desktop). Plain lists stay at 20px.
+  const itemClass = showRules
+    ? TEXT_SIZE_CLASSES.md
+    : 'font-sans text-[1.25rem] font-normal leading-snug tracking-normal'
 
   if (showRules) {
     const columnCount = Math.min(Math.max(columns ?? 2, 1), 3)
@@ -386,9 +387,16 @@ export function CustomModuleRenderer({
         />
       )
     case 'moduleBody': {
-      const paragraphClass = cn(bodyTextClass(module), 'leading-[1.35]')
-      // Small copy in a split column stays on a shorter measure, matching the design.
-      const widthClass = bodyTextSize(module) === 'sm' && nested ? 'max-w-md' : 'max-w-3xl'
+      const paragraphClass = bodyTextClass(module)
+      const sitRight = stegaClean(module.textAlign ?? module.align) === 'right'
+      // Small copy in a split column stays on a shorter measure. Right-aligned
+      // body sits on the section edge, wider than a half column.
+      const widthClass =
+        bodyTextSize(module) === 'sm' && nested
+          ? 'max-w-md'
+          : sitRight
+            ? 'ml-auto w-full max-w-[52rem]'
+            : 'max-w-3xl'
       if (Array.isArray(module.text)) {
         return (
           <BodyPortableText

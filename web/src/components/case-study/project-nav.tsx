@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import {Container} from '@/components/ui/container'
+import {cn} from '@/lib/cn'
 import {headingClassName} from '@/lib/heading-styles'
 
 type Sibling = {_id: string; title?: string; slug?: string}
@@ -29,11 +30,14 @@ export function CaseStudyProjectNav({
       >
         <Link
           href={`/work/${prev.slug}`}
-          className="group min-w-0 space-y-2 self-start text-left text-brand-charcoal md:flex-1"
+          className="group min-w-0 space-y-1 self-start text-left text-brand-charcoal md:flex-1"
         >
-          <p className="font-mono text-xs tracking-normal md:text-sm">Previous</p>
+          <p className="font-mono text-xs leading-none tracking-normal md:text-sm">Previous</p>
           <p
-            className={`${headingClassName('h3', 'sans')} break-words underline-offset-4 group-hover:underline`}
+            className={cn(
+              headingClassName('h3', 'sans'),
+              'break-words leading-none underline-offset-4 group-hover:underline',
+            )}
           >
             {prev.title}
           </p>
@@ -41,11 +45,14 @@ export function CaseStudyProjectNav({
 
         <Link
           href={`/work/${next.slug}`}
-          className="group min-w-0 space-y-2 self-end text-right text-brand-charcoal md:flex-1"
+          className="group min-w-0 space-y-1 self-end text-right text-brand-charcoal md:flex-1"
         >
-          <p className="font-mono text-xs tracking-normal md:text-sm">Next</p>
+          <p className="font-mono text-xs leading-none tracking-normal md:text-sm">Next</p>
           <p
-            className={`${headingClassName('h3', 'sans')} break-words underline-offset-4 group-hover:underline`}
+            className={cn(
+              headingClassName('h3', 'sans'),
+              'break-words leading-none underline-offset-4 group-hover:underline',
+            )}
           >
             {next.title}
           </p>

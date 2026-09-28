@@ -136,6 +136,19 @@ export type ProjectCard = {
   thumbnailVideo?: MuxVideoAsset | null
   categories?: string[]
   summary?: string
+  alternateThumbnails?: {
+    _key?: string
+    mediaType?: 'image' | 'video' | null
+    image?: SanityImage
+    video?: MuxVideoAsset | null
+  }[]
+}
+
+/** Hand-picked project card: which project, and which thumbnail version. */
+export type ProjectCardPick = {
+  _key?: string
+  thumbnailKey?: string | null
+  project?: ProjectCard | null
 }
 
 export type MuxVideoAsset = {

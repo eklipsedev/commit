@@ -42,7 +42,7 @@ export const logosType = defineType({
       title: 'Logos',
       type: 'array',
       description:
-        'Pre-filled from logos marked “Include in default logo set”. Reorder, remove, or add freely.',
+        'Pre-filled from logos marked “Include in default logo set”. Reorder, remove, or add freely. Open a logo to scale it inside the frame.',
       of: [
         defineArrayMember({
           type: 'reference',

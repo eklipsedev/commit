@@ -110,7 +110,7 @@ export function showTaglineRuleField(options?: {
 
 /**
  * Shared heading size for sections that use tagline + divider + heading.
- * Frontend tokens: Large 64px (`lg`), Mid 40→28 (`h3`), Medium 32→24 (`md`).
+ * Frontend tokens: Large 64px (`lg`), Mid 32px (`h3`), Medium 32→24 (`md`).
  */
 export function headingSizeField(options?: {
   group?: string
@@ -124,7 +124,7 @@ export function headingSizeField(options?: {
     options: {
       list: [
         {title: 'Large — 64px', value: 'lg'},
-        {title: 'Mid — 40px (28px mobile)', value: 'h3'},
+        {title: 'Mid — 32px', value: 'h3'},
         {title: 'Medium — 32px (24px mobile)', value: 'md'},
       ],
       layout: 'radio',

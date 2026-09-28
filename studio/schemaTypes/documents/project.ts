@@ -66,8 +66,82 @@ export const projectType = defineType({
       fields: caseStudyImageFields,
       validation: (rule) => rule.required(),
       description:
-        'Still or animated GIF. Required even for video cards (poster, SEO, and fallback).',
+        'Default card image. Still or animated GIF. Required even for video cards (poster, SEO, and fallback). Card sections use this unless they pick an alternate.',
       group: 'card',
+    }),
+    defineField({
+      name: 'alternateThumbnails',
+      title: 'Alternate thumbnails',
+      type: 'array',
+      description:
+        'Other GIFs, stills, or looping videos for this project. A hand-picked project card can choose one of these instead of the default thumbnail.',
+      group: 'card',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'projectAlternateThumbnail',
+          fields: [
+            defineField({
+              name: 'label',
+              title: 'Label',
+              type: 'string',
+              validation: (rule) => rule.required(),
+              description: 'Shown when choosing this version on a card, e.g. “Square”.',
+            }),
+            defineField({
+              name: 'mediaType',
+              title: 'Media',
+              type: 'string',
+              options: {
+                list: [
+                  {title: 'Image / GIF', value: 'image'},
+                  {title: 'Video (looping)', value: 'video'},
+                ],
+                layout: 'radio',
+              },
+              initialValue: 'image',
+              description: 'Videos play muted, loop, and autoplay on the card.',
+            }),
+            defineField({
+              name: 'image',
+              title: 'Image / GIF',
+              type: 'image',
+              options: imageFieldOptions(),
+              fields: caseStudyImageFields,
+              hidden: ({parent}) => parent?.mediaType === 'video',
+              validation: (rule) =>
+                rule.custom((value, context) => {
+                  const parent = context.parent as {mediaType?: string} | undefined
+                  if (parent?.mediaType === 'video') return true
+                  return value ? true : 'Add an image or GIF'
+                }),
+            }),
+            defineField({
+              name: 'video',
+              title: 'Video',
+              type: 'mux.video',
+              description: 'Muted, looping, autoplaying card background.',
+              hidden: ({parent}) => parent?.mediaType !== 'video',
+              validation: (rule) =>
+                rule.custom((value, context) => {
+                  const parent = context.parent as {mediaType?: string} | undefined
+                  if (parent?.mediaType !== 'video') return true
+                  return value ? true : 'Add a looping video'
+                }),
+            }),
+          ],
+          preview: {
+            select: {title: 'label', media: 'image', mediaType: 'mediaType'},
+            prepare({title, media, mediaType}) {
+              return {
+                title: title || 'Alternate thumbnail',
+                subtitle: mediaType === 'video' ? 'Video' : 'Image / GIF',
+                media,
+              }
+            },
+          },
+        }),
+      ],
     }),
     defineField({
       name: 'thumbnailVideo',

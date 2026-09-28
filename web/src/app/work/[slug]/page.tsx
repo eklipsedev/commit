@@ -67,6 +67,11 @@ export default async function WorkProjectPage({params}: PageProps) {
   const hasOverview = Boolean(
     project.overviewBody?.length || project.overviewServices?.length,
   )
+  const hasMedia = Boolean(project.mediaRows?.length)
+  const hasTestimonial = Boolean(
+    project.testimonials?.some((slide) => slide.quote || slide.testimonial?.quote) ||
+      project.testimonial?.quote,
+  )
 
   const resolvedCta = resolveProjectCta(project.ctaMode, project.cta, project.defaultCta)
   const ctaBlock = resolvedCta
@@ -128,18 +133,30 @@ export default async function WorkProjectPage({params}: PageProps) {
             />
           )}
 
-          {project.mediaRows?.length ? (
-            <CaseStudyMediaGrid rows={project.mediaRows} />
-          ) : null}
+          {hasMedia || hasTestimonial ? (
+            <div className="flex flex-col gap-5">
+              {hasMedia ? <CaseStudyMediaGrid rows={project.mediaRows} /> : null}
+              {hasTestimonial ? (
+                <CaseStudyTestimonial
+                  testimonials={project.testimonials}
+                  legacyTestimonial={project.testimonial}
+                />
+              ) : null}
+              <CaseStudyProjectNav currentId={project._id} siblings={project.siblings} />
+            </div>
+          ) : (
+            <CaseStudyProjectNav currentId={project._id} siblings={project.siblings} />
+          )}
 
-          <CaseStudyTestimonial
-            testimonials={project.testimonials}
-            legacyTestimonial={project.testimonial}
-          />
-
-          <CaseStudyProjectNav currentId={project._id} siblings={project.siblings} />
-
-          {ctaBlock && <CtaSection block={ctaBlock} />}
+          {ctaBlock && (
+            <CtaSection
+              block={{
+                ...ctaBlock,
+                collapsePaddingTop: false,
+                collapsePaddingBottom: true,
+              }}
+            />
+          )}
         </div>
       </article>
     </>

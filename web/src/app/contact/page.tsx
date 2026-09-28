@@ -58,7 +58,7 @@ export default async function ContactPage() {
               <RichHeadline
                 value={page.heading}
                 size="hero"
-                className="min-w-0 self-start"
+                className="min-w-0 self-start [&>span]:-mt-[0.3em]"
               />
             </FadeIn>
 

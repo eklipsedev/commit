@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import {stegaClean} from 'next-sanity'
 import {Container} from '@/components/ui/container'
 import {CmsButton} from '@/components/ui/cms-button'
 import {FadeIn, FADE_IN_STAGGER_MS} from '@/components/ui/fade-in'
@@ -12,14 +13,52 @@ import {Tagline} from '@/components/ui/tagline'
 import {cn} from '@/lib/cn'
 import {headingFontFromBlock, headingSizeFromBlock} from '@/lib/heading-styles'
 import {muxPosterUrl} from '@/lib/mux'
-import type {PageBuilderBlock, ProjectCard} from '@/sanity/types'
+import type {PageBuilderBlock, ProjectCard, ProjectCardPick} from '@/sanity/types'
 
 type TwoColCardsBlock = PageBuilderBlock & {
   showHeader?: boolean
   tagline?: string
   heading?: string
   button?: import('@/sanity/types').ButtonValue
-  projects?: ProjectCard[]
+  projects?: Array<ProjectCard | ProjectCardPick>
+}
+
+function isProjectCardPick(entry: ProjectCard | ProjectCardPick): entry is ProjectCardPick {
+  return 'project' in entry
+}
+
+/** Alternate thumbnail when a card picked one; otherwise the project default. */
+function resolveProjectCard(entry: ProjectCard | ProjectCardPick): ProjectCard | null {
+  if (!isProjectCardPick(entry)) return entry
+  const project = entry.project
+  if (!project) return null
+
+  const thumbnailKey = stegaClean(entry.thumbnailKey)
+  const alternate = thumbnailKey
+    ? project.alternateThumbnails?.find((item) => stegaClean(item._key) === thumbnailKey)
+    : undefined
+
+  const useVideo =
+    stegaClean(alternate?.mediaType) === 'video' && Boolean(alternate?.video?.playbackId)
+
+  if (useVideo && alternate?.video) {
+    return {
+      ...project,
+      thumbnail: alternate.image?.asset ? alternate.image : undefined,
+      thumbnailMediaType: 'video',
+      thumbnailVideo: alternate.video,
+    }
+  }
+
+  if (alternate?.image?.asset) {
+    return {
+      ...project,
+      thumbnail: alternate.image,
+      thumbnailMediaType: 'image',
+    }
+  }
+
+  return project
 }
 
 function ProjectCardMedia({
@@ -141,7 +180,9 @@ function ProjectCardItem({
 
 export function TwoColCardsSection({block}: {block: TwoColCardsBlock}) {
   const showHeader = block.showHeader !== false
-  const projects = block.projects ?? []
+  const projects = (block.projects ?? [])
+    .map(resolveProjectCard)
+    .filter((project): project is ProjectCard => Boolean(project?._id))
 
   return (
     <Section {...block}>

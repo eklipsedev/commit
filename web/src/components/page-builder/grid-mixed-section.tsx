@@ -13,6 +13,19 @@ import type {PageBuilderBlock, SanityImage as SanityImageType} from '@/sanity/ty
 type CollageImage = SanityImageType & {
   description?: string
   _key?: string
+  dimensions?: {width?: number; height?: number}
+}
+
+/** Visible frame after a Sanity crop, as a CSS aspect-ratio. */
+function imageAspect(image?: CollageImage): string | undefined {
+  const width = image?.dimensions?.width
+  const height = image?.dimensions?.height
+  if (!width || !height) return undefined
+  const crop = image.crop
+  const w = width * (1 - (crop?.left ?? 0) - (crop?.right ?? 0))
+  const h = height * (1 - (crop?.top ?? 0) - (crop?.bottom ?? 0))
+  if (w <= 0 || h <= 0) return undefined
+  return `${w} / ${h}`
 }
 
 type GridMixedImages = {
@@ -82,18 +95,25 @@ function SlotImage({
   className,
   sizes = '(max-width: 768px) 50vw, 33vw',
   priority,
+  /** Use the photo’s own aspect ratio so object-cover does not clip it. */
+  natural = false,
 }: {
   image?: CollageImage
   className?: string
   sizes?: string
   priority?: boolean
+  natural?: boolean
 }) {
   if (!image?.asset) return null
 
   const label = image.description?.trim() || image.alt?.trim()
+  const aspect = natural ? imageAspect(image) : undefined
 
   return (
-    <div className={cn('group relative w-full overflow-hidden bg-neutral-100', className)}>
+    <div
+      className={cn('group relative w-full overflow-hidden bg-neutral-100', className)}
+      style={aspect ? {aspectRatio: aspect} : undefined}
+    >
       <SanityImage
         image={image}
         alt={image.alt}
@@ -129,7 +149,7 @@ function SlotImage({
  * [ topLeft ½ ][ topRight ½ ]
  * [ leftTall  ][ sq ][ sq ]   ← tall keeps portrait aspect (not stretched)
  * [ leftTall  ][ bottomWide ] ← wide tucks under squares
- * [ bottomLeft][ bottomWide ] ← bottom tiles flex so bases align
+ * [ bottomLeft][ bottomWide ] ← wide tiles use the photo aspect (not a shorter frame)
  */
 export function GridMixedSection({block}: {block: GridMixedBlock}) {
   const images = resolveImages(block)
@@ -155,40 +175,47 @@ export function GridMixedSection({block}: {block: GridMixedBlock}) {
 
         <FadeIn>
           <div className="flex flex-col gap-3 md:gap-4">
-            <div className="grid grid-cols-2 gap-3 md:gap-4">
+            <div className="grid grid-cols-2 items-start gap-3 md:gap-4">
               <SlotImage
                 image={images.topLeft}
-                className="aspect-[2/1]"
+                natural
+                className="aspect-[8/5]"
                 sizes="(max-width: 768px) 50vw, 50vw"
                 priority
               />
               <SlotImage
                 image={images.topRight}
-                className="aspect-[2/1]"
+                natural
+                className="aspect-[8/5]"
                 sizes="(max-width: 768px) 50vw, 50vw"
                 priority
               />
             </div>
 
             {/*
-              Left column sets height (tall + bottomLeft aspects).
-              Right column stretches to match; bottomWide flex-fills the rest
-              so it tucks under the squares and lines up with bottomLeft’s base.
+              Wide photos keep their own aspect ratio. A fixed 2:1 frame, and a
+              laptop slot stretched to fill leftover height, was clipping the
+              top and bottom of those images.
             */}
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:items-stretch md:gap-4">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:items-start md:gap-4">
               <div className="flex flex-col gap-3 md:gap-4">
                 <SlotImage image={images.leftTall} className="aspect-[3/4] w-full shrink-0" />
-                <SlotImage image={images.bottomLeft} className="aspect-[2/1] w-full shrink-0" />
+                <SlotImage
+                  image={images.bottomLeft}
+                  natural
+                  className="aspect-[8/5] w-full shrink-0"
+                />
               </div>
 
-              <div className="flex min-h-0 flex-col gap-3 md:col-span-2 md:gap-4">
+              <div className="flex flex-col gap-3 md:col-span-2 md:gap-4">
                 <div className="grid shrink-0 grid-cols-2 gap-3 md:gap-4">
                   <SlotImage image={images.centerSquare} className="aspect-square w-full" />
                   <SlotImage image={images.rightSquare} className="aspect-square w-full" />
                 </div>
                 <SlotImage
                   image={images.bottomWide}
-                  className="min-h-48 w-full flex-1 basis-0 md:min-h-0"
+                  natural
+                  className="aspect-[101/47] w-full"
                   sizes="(max-width: 768px) 100vw, 66vw"
                 />
               </div>

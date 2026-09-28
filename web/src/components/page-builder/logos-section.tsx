@@ -6,12 +6,36 @@ import {SanityImage} from '@/components/ui/sanity-image'
 import {Section} from '@/components/ui/section'
 import type {PageBuilderBlock, SanityImage as SanityImageType} from '@/sanity/types'
 
+type LogoImage = SanityImageType & {
+  dimensions?: {width?: number; height?: number}
+}
+
 type LogoDocument = {
   _id?: string
   name?: string
-  image?: SanityImageType
+  image?: LogoImage
+  /** 40–100. Missing means fill the frame. */
+  scale?: number
   href?: string
   projectSlug?: string
+}
+
+function logoScale(scale?: number) {
+  if (typeof scale !== 'number' || Number.isNaN(scale)) return 100
+  return Math.min(100, Math.max(40, scale))
+}
+
+/** Pixel size of the artwork after a Sanity crop, so the row can hug the mark. */
+function logoPixelSize(image?: LogoImage) {
+  const width = image?.dimensions?.width
+  const height = image?.dimensions?.height
+  if (!width || !height) return {width: 160, height: 56}
+  const crop = image.crop
+  if (!crop) return {width, height}
+  return {
+    width: Math.max(1, Math.round(width * (1 - (crop.left ?? 0) - (crop.right ?? 0)))),
+    height: Math.max(1, Math.round(height * (1 - (crop.top ?? 0) - (crop.bottom ?? 0)))),
+  }
 }
 
 type LogosBlock = PageBuilderBlock & {
@@ -28,10 +52,23 @@ function resolveLogoHref(logo: LogoDocument) {
 function LogoItemView({logo}: {logo: LogoDocument}) {
   const href = resolveLogoHref(logo)
   const alt = logo.image?.alt || logo.name || 'Logo'
+  const scale = logoScale(logo.scale)
+  const pixels = logoPixelSize(logo.image)
   const content = (
-    <div className="flex h-12 w-32 shrink-0 items-center justify-center grayscale md:h-14 md:w-40">
+    <div
+      className="flex h-12 shrink-0 items-center grayscale md:h-14"
+      style={{['--logo-scale' as string]: String(scale / 100)}}
+    >
       {logo.image && (
-        <SanityImage image={logo.image} alt={alt} className="max-h-full max-w-full object-contain" />
+        <SanityImage
+          image={logo.image}
+          alt={alt}
+          width={pixels.width}
+          height={pixels.height}
+          sizes="160px"
+          style={{width: 'auto', height: 'auto'}}
+          className="w-auto object-contain max-h-[calc(var(--logo-scale)*3rem)] max-w-[calc(var(--logo-scale)*8rem)] md:max-h-[calc(var(--logo-scale)*3.5rem)] md:max-w-[calc(var(--logo-scale)*10rem)]"
+        />
       )}
     </div>
   )
@@ -80,7 +117,7 @@ export function LogosSection({block}: {block: LogosBlock}) {
       <Section {...block}>
         <Container>
           <FadeIn>
-            <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-8 md:gap-x-16">
+            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-6 md:gap-x-14">
               {logos.slice(0, 6).map((logo) => (
                 <LogoItemView key={logo._id ?? logo.name} logo={logo} />
               ))}
@@ -101,7 +138,7 @@ export function LogosSection({block}: {block: LogosBlock}) {
           <MarqueeEdgeFade side="left" color={fadeColor} />
           <MarqueeEdgeFade side="right" color={fadeColor} />
           <div className="flex">
-            <div className="marquee-track flex min-w-max items-center gap-6 md:gap-20">
+            <div className="marquee-track flex min-w-max items-center gap-8 md:gap-14">
               {duplicated.map((logo, i) => (
                 <LogoItemView key={`${logo._id ?? logo.name}-${i}`} logo={logo} />
               ))}

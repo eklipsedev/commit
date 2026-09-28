@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {LogoScaleInput} from '../../components/logo-scale-input'
 import {ImageIcon} from '../../lib/icons'
 import {imageAltField, imageFieldOptions} from '../shared/image-fields'
 
@@ -29,6 +30,15 @@ export const logoType = defineType({
         imageAltField({description: 'Defaults to the logo name if empty'}),
       ],
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'scale',
+      title: 'Scale in frame',
+      type: 'number',
+      description:
+        'How large this logo sits inside the fixed website frame. 100% fills the frame. Lower it when a mark looks heavier than the others.',
+      components: {input: LogoScaleInput},
+      validation: (rule) => rule.min(40).max(100).integer(),
     }),
     defineField({
       name: 'project',
