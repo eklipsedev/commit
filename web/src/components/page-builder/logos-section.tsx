@@ -136,7 +136,7 @@ function LogoMarquee({logos}: {logos: LogoDocument[]}) {
           <div
             key={copy}
             ref={copy === 0 ? setSetEl : undefined}
-            className="flex shrink-0 items-center gap-8 pr-8 md:gap-14 md:pr-14"
+            className="flex shrink-0 items-center gap-8 pr-8 md:gap-16 md:pr-16"
             aria-hidden={copy > 0}
             inert={copy > 0}
           >

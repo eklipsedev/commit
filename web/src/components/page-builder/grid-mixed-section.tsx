@@ -165,6 +165,7 @@ export function GridMixedSection({block}: {block: GridMixedBlock}) {
             <Heading
               size={headingSizeFromBlock(block)}
               font={headingFontFromBlock(block)}
+              className="text-[3rem] leading-[1.1] md:text-[3rem]"
               style={{color: 'var(--section-heading)'}}
               collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
             >
