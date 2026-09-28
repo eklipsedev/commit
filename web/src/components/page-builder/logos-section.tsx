@@ -1,3 +1,6 @@
+'use client'
+
+import {useEffect, useState} from 'react'
 import Link from 'next/link'
 import {colorHex} from '@/lib/colors'
 import {Container} from '@/components/ui/container'
@@ -91,6 +94,62 @@ function LogoItemView({logo}: {logo: LogoDocument}) {
   )
 }
 
+/**
+ * Enough repeats that a short set still covers a wide screen before measurement.
+ * ResizeObserver then keeps one extra set off to the right so the loop never gaps.
+ */
+const MARQUEE_COPIES_BEFORE_MEASURE = 4
+
+function LogoMarquee({logos}: {logos: LogoDocument[]}) {
+  const [container, setContainer] = useState<HTMLDivElement | null>(null)
+  const [setEl, setSetEl] = useState<HTMLDivElement | null>(null)
+  const [copies, setCopies] = useState(MARQUEE_COPIES_BEFORE_MEASURE)
+  const [shift, setShift] = useState(0)
+
+  useEffect(() => {
+    if (!container || !setEl) return
+
+    const measure = () => {
+      const setWidth = setEl.getBoundingClientRect().width
+      const view = container.getBoundingClientRect().width
+      if (setWidth <= 0 || view <= 0) return
+      // One full set must remain offscreen after the shift, or the right edge goes blank.
+      const needed = Math.ceil(view / setWidth) + 1
+      setCopies(Math.max(2, needed))
+      setShift(setWidth)
+    }
+
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(container)
+    observer.observe(setEl)
+    return () => observer.disconnect()
+  }, [container, setEl, logos.length])
+
+  return (
+    <div ref={setContainer} className="relative overflow-hidden">
+      <div
+        className="marquee-track flex w-max"
+        style={shift > 0 ? ({['--marquee-shift' as string]: `${shift}px`} as React.CSSProperties) : undefined}
+      >
+        {Array.from({length: copies}, (_, copy) => (
+          <div
+            key={copy}
+            ref={copy === 0 ? setSetEl : undefined}
+            className="flex shrink-0 items-center gap-8 pr-8 md:gap-14 md:pr-14"
+            aria-hidden={copy > 0}
+            inert={copy > 0}
+          >
+            {logos.map((logo, index) => (
+              <LogoItemView key={`${logo._id ?? logo.name ?? index}-${copy}`} logo={logo} />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function MarqueeEdgeFade({side, color}: {side: 'left' | 'right'; color: string}) {
   return (
     <div
@@ -128,7 +187,6 @@ export function LogosSection({block}: {block: LogosBlock}) {
     )
   }
 
-  const duplicated = [...logos, ...logos]
   const fadeColor = colorHex(block.backgroundColor, 'white')
 
   return (
@@ -137,13 +195,7 @@ export function LogosSection({block}: {block: LogosBlock}) {
         <div className="relative">
           <MarqueeEdgeFade side="left" color={fadeColor} />
           <MarqueeEdgeFade side="right" color={fadeColor} />
-          <div className="flex">
-            <div className="marquee-track flex min-w-max items-center gap-8 md:gap-14">
-              {duplicated.map((logo, i) => (
-                <LogoItemView key={`${logo._id ?? logo.name}-${i}`} logo={logo} />
-              ))}
-            </div>
-          </div>
+          <LogoMarquee logos={logos} />
         </div>
       </FadeIn>
     </Section>
