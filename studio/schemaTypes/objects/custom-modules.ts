@@ -57,7 +57,7 @@ export const moduleHeadlineType = defineType({
       validation: (rule) => rule.required(),
     }),
     headlineAlignField(),
-    headingSizeField({initialValue: 'md'}),
+    headingSizeField({variant: 'flexible', initialValue: '32'}),
     headingFontField(),
     fullWidthHeadlineField(),
     collapseLineBreaksOnMobileField(),
@@ -72,7 +72,7 @@ export const moduleHeadlineType = defineType({
     prepare({headingSize, headingFont, fullWidth, textAlign}) {
       return {
         title: 'Headline',
-        subtitle: `${headingSizeLabel(headingSize)} · ${headingFontLabel(headingFont)} · ${headlineAlignLabel(textAlign)}${fullWidth ? ' · Full width' : ''}`,
+        subtitle: `${headingSizeLabel(headingSize, 'flexible')} · ${headingFontLabel(headingFont)} · ${headlineAlignLabel(textAlign)}${fullWidth ? ' · Full width' : ''}`,
         media: BlockContentIcon,
       }
     },

@@ -64,10 +64,15 @@ export const projectType = defineType({
       type: 'image',
       options: imageFieldOptions(),
       fields: caseStudyImageFields,
-      validation: (rule) => rule.required(),
-      description:
-        'Default card image. Still or animated GIF. Required even for video cards (poster, SEO, and fallback). Card sections use this unless they pick an alternate.',
+      description: 'Default card image. Still or animated GIF. Card sections use this unless they pick an alternate.',
+      hidden: ({parent}) => parent?.thumbnailMediaType === 'video',
       group: 'card',
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          const parent = context.parent as {thumbnailMediaType?: string} | undefined
+          if (parent?.thumbnailMediaType === 'video') return true
+          return value ? true : 'Add an image or GIF'
+        }),
     }),
     defineField({
       name: 'alternateThumbnails',

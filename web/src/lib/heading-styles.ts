@@ -55,6 +55,25 @@ export function headingSizeFromBlock(
   )
 }
 
+/**
+ * Flexible headlines and image collages.
+ * Large 64px (`lg`), Medium 48px (`h3`), Small 40px (`40`), Extra small 32px (`32`).
+ */
+export function flexibleHeadlineSize(rawSize?: string | null): {
+  size: HeadingSize
+  className?: string
+} {
+  const cleaned = typeof rawSize === 'string' ? stegaClean(rawSize) : rawSize
+  if (cleaned === 'lg') return {size: 'lg'}
+  if (cleaned === 'h3') {
+    return {size: 'h3', className: 'text-[3rem] leading-[1.1] md:text-[3rem]'}
+  }
+  if (cleaned === '40') {
+    return {size: 'h3', className: 'text-[2.5rem] leading-[1.2] md:text-[2.5rem]'}
+  }
+  return {size: 'h3'}
+}
+
 export function headingFontFromBlock(
   block?: {headingFont?: string | null} | null,
   size?: HeadingSize,

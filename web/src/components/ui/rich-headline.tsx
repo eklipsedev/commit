@@ -15,6 +15,7 @@ function createComponents(
   size: HeadingSize,
   font: HeadingFont,
   collapseLineBreaksOnMobile: boolean,
+  sizeClassName?: string,
 ): PortableTextComponents {
   return {
     block: {
@@ -24,6 +25,7 @@ function createComponents(
         <span
           className={cn(
             headingClassName(size, font),
+            sizeClassName,
             'text-[var(--section-heading,var(--foreground))]',
             collapseLineBreaksOnMobile ? 'inline md:block' : 'block',
           )}
@@ -59,6 +61,8 @@ type RichHeadlineProps = {
   size?: LegacyHeadingSize
   /** Sans (Bloyd) or Display (LustText). Hero/xl default to display. */
   font?: HeadingFont | string | null
+  /** Extra size classes merged after the size token. Wins over the token's font-size. */
+  sizeClassName?: string
   /** When true, spans the full container width. Default is a set max width. */
   fullWidth?: boolean
   /** Horizontal text alignment. Right also pins a constrained headline to the right edge. */
@@ -72,6 +76,7 @@ export function RichHeadline({
   as,
   size = 'md',
   font,
+  sizeClassName,
   fullWidth = false,
   align = 'left',
   collapseLineBreaksOnMobile = false,
@@ -103,7 +108,12 @@ export function RichHeadline({
     >
       <PortableText
         value={value}
-        components={createComponents(resolved, resolvedFont, collapseLineBreaksOnMobile)}
+        components={createComponents(
+          resolved,
+          resolvedFont,
+          collapseLineBreaksOnMobile,
+          sizeClassName,
+        )}
       />
     </Tag>
   )

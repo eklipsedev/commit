@@ -8,7 +8,12 @@ import {
   distributeColumns,
   RuledListColumn,
 } from '@/components/page-builder/list-text-section'
-import {headingFontFromBlock, headingSizeFromBlock, TEXT_SIZE_CLASSES} from '@/lib/heading-styles'
+import {
+  flexibleHeadlineSize,
+  headingFontFromBlock,
+  headingSizeFromBlock,
+  TEXT_SIZE_CLASSES,
+} from '@/lib/heading-styles'
 import {moduleStackGapClass} from '@/lib/module-stack'
 import type {ButtonValue, RichHeadline as RichHeadlineType} from '@/sanity/types'
 import type {PortableTextBlock} from '@portabletext/types'
@@ -374,18 +379,21 @@ export function CustomModuleRenderer({
       return typeof module.text === 'string' ? (
         <Tagline showRule={module.showTaglineRule !== false}>{module.text}</Tagline>
       ) : null
-    case 'moduleHeadline':
+    case 'moduleHeadline': {
+      const headline = flexibleHeadlineSize(module.headingSize)
       return (
         <RichHeadline
           value={(module as {text?: RichHeadlineType}).text}
           as="h2"
-          size={headingSizeFromBlock(module)}
+          size={headline.size}
+          sizeClassName={headline.className}
           font={headingFontFromBlock(module)}
           fullWidth={module.fullWidth}
           align={module.textAlign ?? module.align}
           collapseLineBreaksOnMobile={module.collapseLineBreaksOnMobile}
         />
       )
+    }
     case 'moduleBody': {
       const paragraphClass = bodyTextClass(module)
       const sitRight = stegaClean(module.textAlign ?? module.align) === 'right'

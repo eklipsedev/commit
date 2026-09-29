@@ -110,27 +110,40 @@ export function showTaglineRuleField(options?: {
 
 /**
  * Shared heading size for sections that use tagline + divider + heading.
- * Frontend tokens: Large 64px (`lg`), Mid 32px (`h3`), Medium 32→24 (`md`).
+ * Default tokens: Large 64px (`lg`), Mid 32px (`h3`), Medium 32px desktop / 24px mobile (`md`).
+ * Flexible headlines use Large 64px, Medium 48px (`h3`), Small 40px (`40`), Extra small 32px (`32`).
  */
 export function headingSizeField(options?: {
   group?: string
-  initialValue?: 'lg' | 'h3' | 'md'
+  initialValue?: 'lg' | 'h3' | 'md' | '40' | '32'
+  /** Flexible headlines: Large 64px, Medium 48px, Small 40px, Extra small 32px. */
+  variant?: 'default' | 'flexible'
   hidden?: (ctx: {parent?: Record<string, unknown>}) => boolean
 }) {
+  const flexible = options?.variant === 'flexible'
   return defineField({
     name: 'headingSize',
     title: 'Heading size',
     type: 'string',
     options: {
-      list: [
-        {title: 'Large — 64px', value: 'lg'},
-        {title: 'Mid — 32px', value: 'h3'},
-        {title: 'Medium — 32px (24px mobile)', value: 'md'},
-      ],
+      list: flexible
+        ? [
+            {title: 'Large — 64px', value: 'lg'},
+            {title: 'Medium — 48px', value: 'h3'},
+            {title: 'Small — 40px', value: '40'},
+            {title: 'Extra small — 32px', value: '32'},
+          ]
+        : [
+            {title: 'Large — 64px', value: 'lg'},
+            {title: 'Mid — 32px', value: 'h3'},
+            {title: 'Medium — 32px (24px mobile)', value: 'md'},
+          ],
       layout: 'radio',
     },
-    initialValue: options?.initialValue ?? 'md',
-    description: 'Large for short display lines. Mid for mid-length headlines. Medium for denser section copy.',
+    initialValue: options?.initialValue ?? (flexible ? '32' : 'md'),
+    description: flexible
+      ? 'Large 64px, medium 48px, small 40px, or extra small 32px.'
+      : 'Large for short display lines. Mid for mid-length headlines. Medium for denser section copy.',
     group: options?.group,
     hidden: options?.hidden,
   })
@@ -197,9 +210,16 @@ export function headlineAlignField(options?: {group?: string}) {
 }
 
 /** Studio preview label for headingSize values. */
-export function headingSizeLabel(size?: string | null) {
+export function headingSizeLabel(size?: string | null, variant?: 'default' | 'flexible') {
+  if (variant === 'flexible') {
+    if (size === 'lg') return 'Large — 64px'
+    if (size === 'h3') return 'Medium — 48px'
+    if (size === '40') return 'Small — 40px'
+    return 'Extra small — 32px'
+  }
   if (size === 'lg') return 'Large'
   if (size === 'h3') return 'Mid'
+  if (size === '32') return 'Small — 32px'
   return 'Medium'
 }
 

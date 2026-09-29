@@ -6,7 +6,7 @@ import {Heading} from '@/components/ui/heading'
 import {SanityImage} from '@/components/ui/sanity-image'
 import {Section} from '@/components/ui/section'
 import {Tagline} from '@/components/ui/tagline'
-import {headingFontFromBlock, headingSizeFromBlock} from '@/lib/heading-styles'
+import {flexibleHeadlineSize, headingFontFromBlock} from '@/lib/heading-styles'
 import type {PageBuilderBlock, SanityImage as SanityImageType} from '@/sanity/types'
 
 /** Collage image: alt for a11y, description for the hover label. */
@@ -153,6 +153,7 @@ function SlotImage({
  */
 export function GridMixedSection({block}: {block: GridMixedBlock}) {
   const images = resolveImages(block)
+  const headline = flexibleHeadlineSize(block.headingSize)
 
   return (
     <Section {...block}>
@@ -163,9 +164,9 @@ export function GridMixedSection({block}: {block: GridMixedBlock}) {
           ) : null}
           {block.heading ? (
             <Heading
-              size={headingSizeFromBlock(block)}
+              size={headline.size}
               font={headingFontFromBlock(block)}
-              className="text-[3rem] leading-[1.1] md:text-[3rem]"
+              className={headline.className}
               style={{color: 'var(--section-heading)'}}
               collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
             >

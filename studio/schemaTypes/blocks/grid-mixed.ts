@@ -90,7 +90,7 @@ export const gridMixedType = defineType({
     }),
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
-    {...headingSizeField({group: 'style'}), group: 'style'},
+    {...headingSizeField({variant: 'flexible', initialValue: 'h3', group: 'style'}), group: 'style'},
     {...headingFontField({group: 'style'}), group: 'style'},
     {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
     {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
@@ -109,7 +109,7 @@ export const gridMixedType = defineType({
       const count = Array.isArray(images) ? images.length : 0
       return {
         title: heading || 'Image collage',
-        subtitle: `Image collage · ${count || 0} image${count === 1 ? '' : 's'} · ${headingSizeLabel(headingSize)} · ${headingFontLabel(headingFont)}`,
+        subtitle: `Image collage · ${count || 0} image${count === 1 ? '' : 's'} · ${headingSizeLabel(headingSize, 'flexible')} · ${headingFontLabel(headingFont)}`,
         media: media || ImagesIcon,
       }
     },
