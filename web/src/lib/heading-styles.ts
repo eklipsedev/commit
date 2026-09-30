@@ -5,8 +5,8 @@
  * |--------|-------------------|-------------|----------------|-------------|
  * | hero   | 9rem (144px)      | 96%         | -3%            | h1          |
  * | xl     | 5.6875rem (91px)  | 100%        | -2%            | h1          |
- * | lg     | 4rem (64px)       | 110%        | -2%            | h2          |
- * | h3     | 2rem (32px)   | 120%        | 0%             | h3          |
+ * | lg     | 4rem (64px), 2.25rem (36px) floor | 110% | -2%       | h2          |
+ * | h3     | 2rem (32px), 1.125rem (18px) floor | 120% | 0%       | h3          |
  * | md     | 2rem (32px) desktop / 1.5rem mobile | 120%      | 0%             | h2 / h5     |
  *
  * Font family is separate: Sans (Bloyd) vs Display (LustText).
@@ -57,7 +57,8 @@ export function headingSizeFromBlock(
 
 /**
  * Flexible headlines and image collages.
- * Large 64px (`lg`), Medium 48px (`h3`), Small 40px (`40`), Extra small 32px (`32`).
+ * Desktop 64 / 48 / 40 / 32. Mobile keeps that ratio, floored at 36 / 27 / 22.5 / 18,
+ * and tracks the Large clamp in between.
  */
 export function flexibleHeadlineSize(rawSize?: string | null): {
   size: HeadingSize
@@ -66,10 +67,10 @@ export function flexibleHeadlineSize(rawSize?: string | null): {
   const cleaned = typeof rawSize === 'string' ? stegaClean(rawSize) : rawSize
   if (cleaned === 'lg') return {size: 'lg'}
   if (cleaned === 'h3') {
-    return {size: 'h3', className: 'text-[3rem] leading-[1.1] md:text-[3rem]'}
+    return {size: 'h3', className: 'text-[clamp(1.6875rem,3.75vw,3rem)] leading-[1.1]'}
   }
   if (cleaned === '40') {
-    return {size: 'h3', className: 'text-[2.5rem] leading-[1.2] md:text-[2.5rem]'}
+    return {size: 'h3', className: 'text-[clamp(1.40625rem,3.125vw,2.5rem)] leading-[1.2]'}
   }
   return {size: 'h3'}
 }
@@ -103,7 +104,7 @@ export const HEADING_SIZE_CLASSES: Record<HeadingSize, string> = {
   hero: 'text-[clamp(3.5rem,12vw,9rem)] font-normal leading-[0.96] tracking-[-0.03em] [hanging-punctuation:first_last]',
   xl: 'text-[clamp(2.75rem,7vw,5.6875rem)] font-normal leading-none tracking-[-0.02em]',
   lg: 'text-[clamp(2.25rem,5vw,4rem)] font-normal leading-[1.1] tracking-[-0.02em]',
-  h3: 'text-[2rem] font-normal leading-[1.2] tracking-normal',
+  h3: 'text-[clamp(1.125rem,2.5vw,2rem)] font-normal leading-[1.2] tracking-normal',
   md: 'text-[1.5rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]',
 }
 

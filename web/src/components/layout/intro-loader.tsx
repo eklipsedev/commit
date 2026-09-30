@@ -11,17 +11,17 @@ import {cn} from '@/lib/cn'
 
 const ALWAYS_SHOW_FOR_TESTING = INTRO_ALWAYS_SHOW_FOR_TESTING
 /** Logo fades and rises onto the yellow field. */
-const ENTER_MS = 760
+const ENTER_MS = 520
 /** Breath after the wordmark settles, before the period turns yellow. */
-const REST_MS = 180
+const REST_MS = 80
 /** Charcoal period eases to brand yellow while the mark is still large. */
-const PERIOD_MS = 620
-const PERIOD_HOLD_MS = 280
+const PERIOD_MS = 420
+const PERIOD_HOLD_MS = 80
 /** Travel into the navbar slot. */
-const MORPH_MS = 980
+const MORPH_MS = 640
 /** Yellow stays up after the logo lands, then dissolves. */
-const BACKDROP_HOLD_MS = 480
-const FADE_MS = 520
+const BACKDROP_HOLD_MS = 80
+const FADE_MS = 360
 
 const ENTER_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)'
 const PERIOD_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)'

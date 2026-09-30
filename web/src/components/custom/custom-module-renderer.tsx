@@ -240,6 +240,9 @@ function StringListView({
   if (showRules) {
     const columnCount = Math.min(Math.max(columns ?? 2, 1), 3)
     const cols = distributeColumns(labels, columnCount)
+    // Each column draws its own closing rule. Stacking those columns puts two
+    // rules on top of each other, so phones get one continuous list instead.
+    const stackOnMobile = cols.length > 1
     return (
       <div className={cn('space-y-4', className)}>
         {label && (
@@ -247,12 +250,18 @@ function StringListView({
             {label}
           </p>
         )}
+        {stackOnMobile ? (
+          <div className="md:hidden">
+            <RuledListColumn items={labels} itemClassName={itemClass} />
+          </div>
+        ) : null}
         <div
           className={cn(
             'grid gap-x-10',
+            stackOnMobile && 'hidden md:grid',
             columnCount === 1 && 'grid-cols-1',
-            columnCount === 2 && 'grid-cols-1 sm:grid-cols-2',
-            columnCount === 3 && 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3',
+            columnCount === 2 && 'md:grid-cols-2',
+            columnCount === 3 && 'md:grid-cols-3',
           )}
         >
           {cols.map((column, index) => (

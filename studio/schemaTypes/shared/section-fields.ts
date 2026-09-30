@@ -111,7 +111,8 @@ export function showTaglineRuleField(options?: {
 /**
  * Shared heading size for sections that use tagline + divider + heading.
  * Default tokens: Large 64px (`lg`), Mid 32px (`h3`), Medium 32px desktop / 24px mobile (`md`).
- * Flexible headlines use Large 64px, Medium 48px (`h3`), Small 40px (`40`), Extra small 32px (`32`).
+ * Flexible headlines use Large 64px (36px mobile), Medium 48px (27px mobile),
+ * Small 40px (22.5px mobile), Extra small 32px (18px mobile).
  */
 export function headingSizeField(options?: {
   group?: string
@@ -128,21 +129,21 @@ export function headingSizeField(options?: {
     options: {
       list: flexible
         ? [
-            {title: 'Large — 64px', value: 'lg'},
-            {title: 'Medium — 48px', value: 'h3'},
-            {title: 'Small — 40px', value: '40'},
-            {title: 'Extra small — 32px', value: '32'},
+            {title: 'Large — 64px (36px mobile)', value: 'lg'},
+            {title: 'Medium — 48px (27px mobile)', value: 'h3'},
+            {title: 'Small — 40px (22.5px mobile)', value: '40'},
+            {title: 'Extra small — 32px (18px mobile)', value: '32'},
           ]
         : [
-            {title: 'Large — 64px', value: 'lg'},
-            {title: 'Mid — 32px', value: 'h3'},
+            {title: 'Large — 64px (36px mobile)', value: 'lg'},
+            {title: 'Mid — 32px (18px mobile)', value: 'h3'},
             {title: 'Medium — 32px (24px mobile)', value: 'md'},
           ],
       layout: 'radio',
     },
     initialValue: options?.initialValue ?? (flexible ? '32' : 'md'),
     description: flexible
-      ? 'Large 64px, medium 48px, small 40px, or extra small 32px.'
+      ? 'Same steps on every screen. Phones use 36, 27, 22.5, and 18px.'
       : 'Large for short display lines. Mid for mid-length headlines. Medium for denser section copy.',
     group: options?.group,
     hidden: options?.hidden,

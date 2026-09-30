@@ -176,20 +176,40 @@ export function GridMixedSection({block}: {block: GridMixedBlock}) {
         </FadeInStack>
 
         <FadeIn>
-          <div className="flex flex-col gap-3 md:gap-4">
-            <div className="grid grid-cols-2 items-start gap-3 md:gap-4">
+          <div className="flex flex-col gap-3 sm:hidden">
+            {SLOT_ORDER.map((slot) => (
+              <SlotImage
+                key={slot}
+                image={images[slot]}
+                natural={slot !== 'leftTall' && slot !== 'centerSquare' && slot !== 'rightSquare'}
+                className={cn(
+                  'w-full',
+                  slot === 'leftTall' && 'aspect-[3/4]',
+                  (slot === 'centerSquare' || slot === 'rightSquare') && 'aspect-square',
+                  (slot === 'topLeft' || slot === 'topRight' || slot === 'bottomLeft') &&
+                    'aspect-[8/5]',
+                  slot === 'bottomWide' && 'aspect-[101/47]',
+                )}
+                sizes="100vw"
+                priority={slot === 'topLeft'}
+              />
+            ))}
+          </div>
+
+          <div className="hidden flex-col gap-4 sm:flex">
+            <div className="grid grid-cols-2 items-start gap-4">
               <SlotImage
                 image={images.topLeft}
                 natural
                 className="aspect-[8/5]"
-                sizes="(max-width: 768px) 50vw, 50vw"
+                sizes="50vw"
                 priority
               />
               <SlotImage
                 image={images.topRight}
                 natural
                 className="aspect-[8/5]"
-                sizes="(max-width: 768px) 50vw, 50vw"
+                sizes="50vw"
                 priority
               />
             </div>
@@ -199,8 +219,8 @@ export function GridMixedSection({block}: {block: GridMixedBlock}) {
               laptop slot stretched to fill leftover height, was clipping the
               top and bottom of those images.
             */}
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:items-start md:gap-4">
-              <div className="flex flex-col gap-3 md:gap-4">
+            <div className="grid grid-cols-3 items-start gap-4">
+              <div className="flex flex-col gap-4">
                 <SlotImage image={images.leftTall} className="aspect-[3/4] w-full shrink-0" />
                 <SlotImage
                   image={images.bottomLeft}
@@ -209,8 +229,8 @@ export function GridMixedSection({block}: {block: GridMixedBlock}) {
                 />
               </div>
 
-              <div className="flex flex-col gap-3 md:col-span-2 md:gap-4">
-                <div className="grid shrink-0 grid-cols-2 gap-3 md:gap-4">
+              <div className="col-span-2 flex flex-col gap-4">
+                <div className="grid shrink-0 grid-cols-2 gap-4">
                   <SlotImage image={images.centerSquare} className="aspect-square w-full" />
                   <SlotImage image={images.rightSquare} className="aspect-square w-full" />
                 </div>
@@ -218,7 +238,7 @@ export function GridMixedSection({block}: {block: GridMixedBlock}) {
                   image={images.bottomWide}
                   natural
                   className="aspect-[101/47] w-full"
-                  sizes="(max-width: 768px) 100vw, 66vw"
+                  sizes="66vw"
                 />
               </div>
             </div>
