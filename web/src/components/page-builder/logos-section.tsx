@@ -59,7 +59,7 @@ function LogoItemView({logo}: {logo: LogoDocument}) {
   const pixels = logoPixelSize(logo.image)
   const content = (
     <div
-      className="flex h-12 shrink-0 items-center grayscale md:h-14"
+      className="flex h-14 shrink-0 items-center grayscale md:h-[4.25rem]"
       style={{['--logo-scale' as string]: String(scale / 100)}}
     >
       {logo.image && (
@@ -68,9 +68,9 @@ function LogoItemView({logo}: {logo: LogoDocument}) {
           alt={alt}
           width={pixels.width}
           height={pixels.height}
-          sizes="160px"
+          sizes="192px"
           style={{width: 'auto', height: 'auto'}}
-          className="w-auto object-contain max-h-[calc(var(--logo-scale)*3rem)] max-w-[calc(var(--logo-scale)*8rem)] md:max-h-[calc(var(--logo-scale)*3.5rem)] md:max-w-[calc(var(--logo-scale)*10rem)]"
+          className="w-auto object-contain max-h-[calc(var(--logo-scale)*3.5rem)] max-w-[calc(var(--logo-scale)*9.5rem)] md:max-h-[calc(var(--logo-scale)*4.25rem)] md:max-w-[calc(var(--logo-scale)*12rem)]"
         />
       )}
     </div>
@@ -99,23 +99,35 @@ function LogoItemView({logo}: {logo: LogoDocument}) {
  * ResizeObserver then keeps one extra set off to the right so the loop never gaps.
  */
 const MARQUEE_COPIES_BEFORE_MEASURE = 4
+/** Minimum space between logos; widened as needed so a logo never shows twice. */
+const MIN_GAP_MOBILE = 40
+const MIN_GAP_DESKTOP = 80
+/** Constant drift speed, so a wider set doesn't scroll faster. */
+const MARQUEE_PX_PER_SECOND = 40
 
 function LogoMarquee({logos}: {logos: LogoDocument[]}) {
   const [container, setContainer] = useState<HTMLDivElement | null>(null)
   const [setEl, setSetEl] = useState<HTMLDivElement | null>(null)
   const [copies, setCopies] = useState(MARQUEE_COPIES_BEFORE_MEASURE)
+  const [gap, setGap] = useState(MIN_GAP_DESKTOP)
   const [shift, setShift] = useState(0)
 
   useEffect(() => {
     if (!container || !setEl) return
 
     const measure = () => {
-      const setWidth = setEl.getBoundingClientRect().width
       const view = container.getBoundingClientRect().width
-      if (setWidth <= 0 || view <= 0) return
+      const widths = Array.from(setEl.children, (child) => child.getBoundingClientRect().width)
+      const logosWidth = widths.reduce((sum, width) => sum + width, 0)
+      if (view <= 0 || logosWidth <= 0) return
+      // A logo and its next copy sit one set apart. Keeping a set wider than the
+      // view plus the widest logo means both can never be on screen together.
+      const minGap = view >= 768 ? MIN_GAP_DESKTOP : MIN_GAP_MOBILE
+      const nextGap = Math.max(minGap, (view + Math.max(...widths) - logosWidth) / widths.length)
+      const setWidth = logosWidth + nextGap * widths.length
+      setGap(nextGap)
       // One full set must remain offscreen after the shift, or the right edge goes blank.
-      const needed = Math.ceil(view / setWidth) + 1
-      setCopies(Math.max(2, needed))
+      setCopies(Math.max(2, Math.ceil(view / setWidth) + 1))
       setShift(setWidth)
     }
 
@@ -123,20 +135,33 @@ function LogoMarquee({logos}: {logos: LogoDocument[]}) {
     const observer = new ResizeObserver(measure)
     observer.observe(container)
     observer.observe(setEl)
-    return () => observer.disconnect()
+    // Logo widths are only known once each image loads.
+    setEl.addEventListener('load', measure, true)
+    return () => {
+      observer.disconnect()
+      setEl.removeEventListener('load', measure, true)
+    }
   }, [container, setEl, logos.length])
 
   return (
     <div ref={setContainer} className="relative overflow-hidden">
       <div
         className="marquee-track flex w-max"
-        style={shift > 0 ? ({['--marquee-shift' as string]: `${shift}px`} as React.CSSProperties) : undefined}
+        style={
+          {
+            ['--logo-gap' as string]: `${gap}px`,
+            ...(shift > 0 && {
+              ['--marquee-shift' as string]: `${shift}px`,
+              animationDuration: `${shift / MARQUEE_PX_PER_SECOND}s`,
+            }),
+          } as React.CSSProperties
+        }
       >
         {Array.from({length: copies}, (_, copy) => (
           <div
             key={copy}
             ref={copy === 0 ? setSetEl : undefined}
-            className="flex shrink-0 items-center gap-8 pr-8 md:gap-16 md:pr-16"
+            className="flex shrink-0 items-center gap-[var(--logo-gap)] pr-[var(--logo-gap)]"
             aria-hidden={copy > 0}
             inert={copy > 0}
           >
@@ -191,13 +216,15 @@ export function LogosSection({block}: {block: LogosBlock}) {
 
   return (
     <Section {...block} className="overflow-hidden">
-      <FadeIn>
-        <div className="relative">
-          <MarqueeEdgeFade side="left" color={fadeColor} />
-          <MarqueeEdgeFade side="right" color={fadeColor} />
-          <LogoMarquee logos={logos} />
-        </div>
-      </FadeIn>
+      <Container>
+        <FadeIn>
+          <div className="relative">
+            <MarqueeEdgeFade side="left" color={fadeColor} />
+            <MarqueeEdgeFade side="right" color={fadeColor} />
+            <LogoMarquee logos={logos} />
+          </div>
+        </FadeIn>
+      </Container>
     </Section>
   )
 }

@@ -28,7 +28,7 @@ export const logosType = defineType({
       type: 'string',
       options: {
         list: [
-          {title: 'Full width (marquee)', value: 'fullWidth'},
+          {title: 'Scrolling (marquee)', value: 'fullWidth'},
           {title: 'Limited (wrap at 6)', value: 'limited'},
         ],
         layout: 'radio',
@@ -74,7 +74,7 @@ export const logosType = defineType({
     prepare({variant, logos}) {
       return {
         title: `${logos?.length ?? 0} logos`,
-        subtitle: `Logos · ${variant === 'limited' ? 'Limited' : 'Full width'}`,
+        subtitle: `Logos · ${variant === 'limited' ? 'Limited' : 'Scrolling'}`,
         media: ImageIcon,
       }
     },
