@@ -20,7 +20,11 @@ export function CaseStudyOverview({
 }) {
   const [open, setOpen] = useState(false)
   const panelId = useId()
-  const items = (services ?? []).filter((s) => s.title)
+  // A service referenced twice in the CMS would repeat in the list and its key.
+  const items = (services ?? []).filter(
+    (s, index, all) =>
+      s.title && all.findIndex((other) => (other._id ?? other.title) === (s._id ?? s.title)) === index,
+  )
   const hasBody = Boolean(body?.length)
   if (!hasBody && !items.length) return null
 

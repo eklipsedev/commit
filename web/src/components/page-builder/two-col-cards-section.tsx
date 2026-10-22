@@ -148,7 +148,7 @@ function ProjectCardItem({
   const slug = project.slug?.current
   const href = slug ? `/work/${slug}` : '#'
   const categoryLine = project.categories?.length
-    ? project.categories.join(' / ')
+    ? [...new Set(project.categories)].join(' / ')
     : null
 
   return (

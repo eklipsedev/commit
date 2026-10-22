@@ -1,6 +1,7 @@
 'use client'
 
 import {useEffect, useRef, useState, type CSSProperties, type ReactNode} from 'react'
+import {cn} from '@/lib/cn'
 import {colorHex} from '@/lib/colors'
 import {TEXT_SIZE_CLASSES} from '@/lib/heading-styles'
 import {SanityImage} from '@/components/ui/sanity-image'
@@ -108,7 +109,8 @@ function StaggerCopy({
         duration={timing.duration}
         offset={timing.offset}
       >
-        <blockquote className={TEXT_SIZE_CLASSES.md}>
+        {/* 20px on phones keeps the longest quotes inside one screen. */}
+        <blockquote className={cn(TEXT_SIZE_CLASSES.md, 'max-md:text-[1.25rem]')}>
           “{quote}”
         </blockquote>
       </StaggerItem>
@@ -206,10 +208,11 @@ export function TestimonialCard({
         className="relative w-full shrink-0 bg-neutral-100 md:w-1/3 md:self-stretch"
       >
         {/*
-          Square spacer sets the minimum height (1:1). On md, the flex row
+          Spacer sets the minimum height: 4:3 on phones (a full-width square
+          pushed long quotes past the screen), 1:1 from md. On md, the flex row
           stretches this column when the quote is taller, so the image grows.
         */}
-        <div className="aspect-square w-full" aria-hidden />
+        <div className="aspect-[4/3] w-full md:aspect-square" aria-hidden />
         {slide.image ? (
           <div className="absolute inset-0">
             <SanityImage
@@ -217,14 +220,15 @@ export function TestimonialCard({
               alt={slide.name}
               fill
               sizes="(min-width: 768px) 33vw, 100vw"
-              className="object-cover"
+              // Keep faces in frame when the phone crop trims top and bottom.
+              className="object-cover max-md:object-[50%_25%]"
               priority={priority}
             />
           </div>
         ) : null}
       </StaggerItem>
       <div
-        className="flex flex-1 flex-col justify-between gap-10 p-8 md:p-10 lg:p-12"
+        className="flex flex-1 flex-col justify-between gap-10 p-6 md:p-10 lg:p-12"
         style={{backgroundColor: bg, color: text}}
       >
         {sectionInView ? (
