@@ -524,12 +524,13 @@ export function CustomModuleRenderer({
 
       if (stacked) {
         return (
-          // Beside an "lg" Lust Text headline in a split, Bloyd's cap height sits
-          // higher in its line box; drop the list so the first step's caps line up.
+          // Beside an "lg" Lust Text headline in a split, drop the list so the
+          // top of the first number circle (4px down, `mt-1`) meets the top of
+          // the headline's lowercase letters (x-height top: 0.386em of the headline).
           <ol
             className={cn(
               'flex flex-col gap-8 md:gap-14',
-              nested && 'md:pt-[calc(clamp(2.75rem,5vw,4rem)*0.177_-_6.2px)]',
+              nested && 'md:pt-[calc(clamp(2.75rem,5vw,4rem)*0.386_-_4px)]',
             )}
           >
             {steps.map((step, i) => (
