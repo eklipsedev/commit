@@ -3,7 +3,8 @@ import {ImagesIcon} from '../../lib/icons'
 import {imageAltField, imageFieldOptions} from '../shared/image-fields'
 import {
   brandColorField,
-  collapseLineBreaksOnMobileField,
+  keepLineBreaksOnMobileField,
+  legacyCollapseLineBreaksOnMobileField,
   headingFontField,
   headingFontLabel,
   headingSizeField,
@@ -92,7 +93,8 @@ export const gridMixedType = defineType({
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...headingSizeField({variant: 'flexible', initialValue: 'h3', group: 'style'}), group: 'style'},
     {...headingFontField({group: 'style'}), group: 'style'},
-    {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
+    {...keepLineBreaksOnMobileField({group: 'style'}), group: 'style'},
+    legacyCollapseLineBreaksOnMobileField(),
     {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('headingColor', 'Heading color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('taglineColor', 'Tagline color'), group: 'style', fieldset: 'colors'},

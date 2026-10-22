@@ -2,7 +2,8 @@ import {defineArrayMember, defineField, defineType} from 'sanity'
 import {UsersIcon} from '../../lib/icons'
 import {
   brandColorField,
-  collapseLineBreaksOnMobileField,
+  keepLineBreaksOnMobileField,
+  legacyCollapseLineBreaksOnMobileField,
   headingFontField,
   headingFontLabel,
   headingSizeField,
@@ -91,7 +92,8 @@ export const teamType = defineType({
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...headingSizeField({group: 'style'}), group: 'style'},
     {...headingFontField({group: 'style'}), group: 'style'},
-    {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
+    {...keepLineBreaksOnMobileField({group: 'style'}), group: 'style'},
+    legacyCollapseLineBreaksOnMobileField(),
     {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('headingColor', 'Heading color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('bodyColor', 'Supportive text color'), group: 'style', fieldset: 'colors'},

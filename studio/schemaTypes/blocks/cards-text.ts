@@ -2,7 +2,8 @@ import {defineArrayMember, defineField, defineType} from 'sanity'
 import {StackCompactIcon} from '../../lib/icons'
 import {
   brandColorField,
-  collapseLineBreaksOnMobileField,
+  keepLineBreaksOnMobileField,
+  legacyCollapseLineBreaksOnMobileField,
   headingFontField,
   headingFontLabel,
   headingSizeField,
@@ -125,7 +126,8 @@ export const cardsTextType = defineType({
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...headingSizeField({group: 'style'}), group: 'style'},
     {...headingFontField({group: 'style'}), group: 'style'},
-    {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
+    {...keepLineBreaksOnMobileField({group: 'style'}), group: 'style'},
+    legacyCollapseLineBreaksOnMobileField(),
     {...brandColorField('backgroundColor', 'Section background'), group: 'style', fieldset: 'colors'},
     {...brandColorField('headingColor', 'Section heading color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('bodyColor', 'Section body color'), group: 'style', fieldset: 'colors'},

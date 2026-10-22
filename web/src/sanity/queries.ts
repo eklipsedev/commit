@@ -104,7 +104,7 @@ const CTA_CONTENT_PROJECTION = `{
   headingSize,
   headingFont,
   headlineSize,
-  collapseLineBreaksOnMobile,
+  keepLineBreaksOnMobile,
   backgroundColor,
   headingColor,
   taglineColor,
@@ -473,7 +473,7 @@ export const PROJECT_BY_SLUG_QUERY = `*[_type == "project" && slug.current == $s
   },
   eyebrow,
   headline,
-  collapseLineBreaksOnMobile,
+  keepLineBreaksOnMobile,
   overviewBody[]${PORTABLE_TEXT_PROJECTION},
   overviewCollapsible,
   overviewServices[]->{
@@ -584,7 +584,7 @@ export const CONTACT_PAGE_QUERY = `*[_id == "contactPage"][0]{
 
 export const LEGAL_PAGE_BY_SLUG_QUERY = `*[_type == "legalPage" && slug.current == $slug][0]{
   heading,
-  collapseLineBreaksOnMobile,
+  keepLineBreaksOnMobile,
   slug,
   description,
   body[]${PORTABLE_TEXT_PROJECTION},

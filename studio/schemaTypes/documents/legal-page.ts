@@ -1,7 +1,7 @@
 import {defineField, defineType} from 'sanity'
 import {DocumentTextIcon} from '../../lib/icons'
 import {LegalSlugInput} from '../../components/prefixed-slug-input'
-import {collapseLineBreaksOnMobileField} from '../shared/section-fields'
+import {keepLineBreaksOnMobileField, legacyCollapseLineBreaksOnMobileField} from '../shared/section-fields'
 
 export const legalPageType = defineType({
   name: 'legalPage',
@@ -21,7 +21,8 @@ export const legalPageType = defineType({
       validation: (rule) => rule.required(),
       group: 'content',
     }),
-    collapseLineBreaksOnMobileField({group: 'content'}),
+    keepLineBreaksOnMobileField({group: 'content'}),
+    legacyCollapseLineBreaksOnMobileField(),
     defineField({
       name: 'slug',
       title: 'Slug',

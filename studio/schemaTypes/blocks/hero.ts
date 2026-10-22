@@ -2,7 +2,8 @@ import {defineField, defineType} from 'sanity'
 import {BlockContentIcon} from '../../lib/icons'
 import {
   brandColorField,
-  collapseLineBreaksOnMobileField,
+  keepLineBreaksOnMobileField,
+  legacyCollapseLineBreaksOnMobileField,
   sectionSpacingFields,
   showTaglineRuleField,
   COLORS_FIELDSET,
@@ -38,7 +39,8 @@ export const heroType = defineType({
     }),
     defineField({...sectionSpacingFields[0], group: 'style'}),
     defineField({...sectionSpacingFields[1], group: 'style'}),
-    {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
+    {...keepLineBreaksOnMobileField({group: 'style'}), group: 'style'},
+    legacyCollapseLineBreaksOnMobileField(),
     {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('headingColor', 'Heading color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('bodyColor', 'Body color'), group: 'style', fieldset: 'colors'},

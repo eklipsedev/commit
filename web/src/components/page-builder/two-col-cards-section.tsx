@@ -198,7 +198,7 @@ export function TwoColCardsSection({block}: {block: TwoColCardsBlock}) {
                   size={headingSizeFromBlock(block)}
                   font={headingFontFromBlock(block)}
                   style={{color: 'var(--section-heading)'}}
-                  collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
+                  keepLineBreaksOnMobile={block.keepLineBreaksOnMobile}
                 >
                   {block.heading}
                 </Heading>

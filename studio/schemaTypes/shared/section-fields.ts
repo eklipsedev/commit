@@ -72,19 +72,29 @@ export const sectionColorFields = [
  * When enabled, CMS Enter line breaks only apply from `md` up.
  * On mobile the copy flows as a continuous paragraph.
  */
-export function collapseLineBreaksOnMobileField(options?: {
+export function keepLineBreaksOnMobileField(options?: {
   group?: string
   hidden?: (ctx: {parent?: Record<string, unknown>}) => boolean
 }) {
   return defineField({
-    name: 'collapseLineBreaksOnMobile',
-    title: 'Collapse line breaks on mobile',
+    name: 'keepLineBreaksOnMobile',
+    title: 'Keep line breaks on mobile',
     type: 'boolean',
     initialValue: false,
     description:
-      'Keep desktop line breaks from Enter, but let the text reflow without those breaks on small screens.',
+      'Headlines ignore Enter line breaks on small screens so the text reflows. Turn on to keep the breaks on mobile too.',
     group: options?.group,
     hidden: options?.hidden,
+  })
+}
+
+/** Replaced by `keepLineBreaksOnMobile` (mobile now collapses by default). Kept hidden so older content has no unknown field. */
+export function legacyCollapseLineBreaksOnMobileField() {
+  return defineField({
+    name: 'collapseLineBreaksOnMobile',
+    title: 'Collapse line breaks on mobile (legacy)',
+    type: 'boolean',
+    hidden: true,
   })
 }
 
@@ -110,9 +120,9 @@ export function showTaglineRuleField(options?: {
 
 /**
  * Shared heading size for sections that use tagline + divider + heading.
- * Default tokens: Large 64px (`lg`), Mid 32px (`h3`), Medium 32px desktop / 24px mobile (`md`).
- * Flexible headlines use Large 64px (36px mobile), Medium 48px (27px mobile),
- * Small 40px (22.5px mobile), Extra small 32px (18px mobile).
+ * Default tokens: Large 64px (`lg`), Mid 32px (`h3`), Medium 32px desktop / 28px mobile (`md`).
+ * Flexible headlines use Large 64px (44px mobile), Medium 48px (33px mobile),
+ * Small 40px (27.5px mobile), Extra small 32px (22px mobile).
  */
 export function headingSizeField(options?: {
   group?: string
@@ -129,15 +139,15 @@ export function headingSizeField(options?: {
     options: {
       list: flexible
         ? [
-            {title: 'Large — 64px (36px mobile)', value: 'lg'},
-            {title: 'Medium — 48px (27px mobile)', value: 'h3'},
-            {title: 'Small — 40px (22.5px mobile)', value: '40'},
-            {title: 'Extra small — 32px (18px mobile)', value: '32'},
+            {title: 'Large — 64px (44px mobile)', value: 'lg'},
+            {title: 'Medium — 48px (33px mobile)', value: 'h3'},
+            {title: 'Small — 40px (27.5px mobile)', value: '40'},
+            {title: 'Extra small — 32px (22px mobile)', value: '32'},
           ]
         : [
-            {title: 'Large — 64px (36px mobile)', value: 'lg'},
-            {title: 'Mid — 32px (18px mobile)', value: 'h3'},
-            {title: 'Medium — 32px (24px mobile)', value: 'md'},
+            {title: 'Large — 64px (44px mobile)', value: 'lg'},
+            {title: 'Mid — 32px (22px mobile)', value: 'h3'},
+            {title: 'Medium — 32px (28px mobile)', value: 'md'},
           ],
       layout: 'radio',
     },

@@ -177,7 +177,7 @@ export function TeamSection({block}: {block: TeamBlock}) {
                 size={headingSizeFromBlock(block)}
                 font={headingFontFromBlock(block)}
                 style={{color: 'var(--section-heading)'}}
-                collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
+                keepLineBreaksOnMobile={block.keepLineBreaksOnMobile}
               >
                 {block.headline}
               </Heading>

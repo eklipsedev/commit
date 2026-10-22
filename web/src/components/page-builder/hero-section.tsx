@@ -30,7 +30,7 @@ export function HeroSection({block}: {block: HeroBlock}) {
           <RichHeadline
             value={block.headline}
             size="hero"
-            collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
+            keepLineBreaksOnMobile={block.keepLineBreaksOnMobile}
           />
           {block.tagline ? (
             <div className="grid gap-8 md:grid-cols-[1fr_1.2fr] md:items-start">

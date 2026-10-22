@@ -44,7 +44,7 @@ export function TwoColImageSection({block}: {block: TwoColImageBlock}) {
             size={headingSize}
             font={headingFont}
             style={{color: 'var(--section-heading)'}}
-            collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
+            keepLineBreaksOnMobile={block.keepLineBreaksOnMobile}
           >
             {block.heading}
           </Heading>

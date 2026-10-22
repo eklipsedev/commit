@@ -3,7 +3,8 @@ import {ThLargeIcon} from '../../lib/icons'
 import {ProjectCardThumbnailInput} from '../../components/project-card-thumbnail-input'
 import {
   brandColorField,
-  collapseLineBreaksOnMobileField,
+  keepLineBreaksOnMobileField,
+  legacyCollapseLineBreaksOnMobileField,
   headingFontField,
   headingFontLabel,
   headingSizeField,
@@ -144,12 +145,13 @@ export const twoColCardsType = defineType({
       group: 'style',
     },
     {
-      ...collapseLineBreaksOnMobileField({
+      ...keepLineBreaksOnMobileField({
         group: 'style',
         hidden: ({parent}) => parent?.showHeader === false,
       }),
       group: 'style',
     },
+    legacyCollapseLineBreaksOnMobileField(),
     {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('headingColor', 'Heading color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('taglineColor', 'Tagline color'), group: 'style', fieldset: 'colors'},

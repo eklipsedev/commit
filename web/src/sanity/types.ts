@@ -34,7 +34,7 @@ export type SectionStyle = {
   /** @deprecated Prefer `headingSize` */
   headlineSize?: string | null
   /** When true, Enter line breaks only apply from `md` up. */
-  collapseLineBreaksOnMobile?: boolean
+  keepLineBreaksOnMobile?: boolean
   /** When false, hide the rule under a section tagline. Default true. */
   showTaglineRule?: boolean | null
 }
@@ -211,7 +211,7 @@ export type CaseStudyProject = ProjectCard & {
   heroVideo?: MuxVideoAsset
   eyebrow?: string
   headline?: string
-  collapseLineBreaksOnMobile?: boolean
+  keepLineBreaksOnMobile?: boolean
   overviewBody?: PortableTextBlock[]
   overviewCollapsible?: boolean
   overviewServices?: {_id: string; title?: string}[]

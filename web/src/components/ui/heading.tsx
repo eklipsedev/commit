@@ -15,7 +15,8 @@ type HeadingProps = {
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'div'
   size?: LegacyHeadingSize
   font?: HeadingFont | string | null
-  collapseLineBreaksOnMobile?: boolean
+  /** Headings drop Enter line breaks below `md` unless this is set. */
+  keepLineBreaksOnMobile?: boolean
 }
 
 /** Plain-string / multi-line CMS headings using the shared Commit scale. */
@@ -26,7 +27,7 @@ export function Heading({
   as,
   size = 'md',
   font,
-  collapseLineBreaksOnMobile = false,
+  keepLineBreaksOnMobile = false,
 }: HeadingProps) {
   if (!children) return null
 
@@ -36,9 +37,14 @@ export function Heading({
   return (
     <MultilineText
       as={Tag}
-      className={cn(headingClassName(resolved, font), className)}
+      className={cn(
+        headingClassName(resolved, font),
+        // Reflowed mobile lines balance so no single word is left on the last line.
+        !keepLineBreaksOnMobile && 'max-md:text-balance',
+        className,
+      )}
       style={style}
-      collapseLineBreaksOnMobile={collapseLineBreaksOnMobile}
+      collapseLineBreaksOnMobile={!keepLineBreaksOnMobile}
     >
       {children}
     </MultilineText>

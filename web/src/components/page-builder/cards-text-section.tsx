@@ -177,7 +177,7 @@ export function CardsTextSection({block}: {block: CardsTextBlock}) {
                 size={headingSizeFromBlock(block)}
                 font={headingFontFromBlock(block)}
                 style={{color: 'var(--section-heading)'}}
-                collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
+                keepLineBreaksOnMobile={block.keepLineBreaksOnMobile}
               >
                 {block.heading}
               </Heading>

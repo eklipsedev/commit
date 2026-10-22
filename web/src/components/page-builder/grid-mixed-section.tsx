@@ -168,7 +168,7 @@ export function GridMixedSection({block}: {block: GridMixedBlock}) {
               font={headingFontFromBlock(block)}
               className={headline.className}
               style={{color: 'var(--section-heading)'}}
-              collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
+              keepLineBreaksOnMobile={block.keepLineBreaksOnMobile}
             >
               {block.heading}
             </Heading>

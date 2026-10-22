@@ -81,7 +81,7 @@ export function ListTextSection({block}: {block: ListTextBlock}) {
                 as="h2"
                 size={headingSizeFromBlock(block)}
                 font={headingFontFromBlock(block)}
-                collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
+                keepLineBreaksOnMobile={block.keepLineBreaksOnMobile}
               />
             ) : null}
           </FadeInStack>

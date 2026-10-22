@@ -9,7 +9,8 @@ import {
 } from '../../lib/icons'
 import {buttonHasContent} from './button'
 import {
-  collapseLineBreaksOnMobileField,
+  keepLineBreaksOnMobileField,
+  legacyCollapseLineBreaksOnMobileField,
   fullWidthHeadlineField,
   headlineAlignField,
   headlineAlignLabel,
@@ -60,7 +61,8 @@ export const moduleHeadlineType = defineType({
     headingSizeField({variant: 'flexible', initialValue: '32'}),
     headingFontField(),
     fullWidthHeadlineField(),
-    collapseLineBreaksOnMobileField(),
+    keepLineBreaksOnMobileField(),
+    legacyCollapseLineBreaksOnMobileField(),
   ],
   preview: {
     select: {

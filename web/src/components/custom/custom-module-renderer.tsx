@@ -74,7 +74,7 @@ type CustomModule = {
   align?: 'left' | 'right' | null
   /** Preferred field name from Studio (`textAlign`). */
   textAlign?: 'left' | 'right' | null
-  collapseLineBreaksOnMobile?: boolean
+  keepLineBreaksOnMobile?: boolean
   /** New flexible split layout */
   layout?: 1 | 2
   arrangement?: 'auto' | 'grid' | 'stack'
@@ -399,7 +399,7 @@ export function CustomModuleRenderer({
           font={headingFontFromBlock(module)}
           fullWidth={module.fullWidth}
           align={module.textAlign ?? module.align}
-          collapseLineBreaksOnMobile={module.collapseLineBreaksOnMobile}
+          keepLineBreaksOnMobile={module.keepLineBreaksOnMobile}
         />
       )
     }
@@ -467,7 +467,7 @@ export function CustomModuleRenderer({
             as="h2"
             size={headingSizeFromBlock(module)}
             font={headingFontFromBlock(module)}
-            collapseLineBreaksOnMobile={module.collapseLineBreaksOnMobile}
+            keepLineBreaksOnMobile={module.keepLineBreaksOnMobile}
           />
           <div className="space-y-6">
             {module.rightType === 'body' && module.body && (
@@ -529,7 +529,7 @@ export function CustomModuleRenderer({
           <ol
             className={cn(
               'flex flex-col gap-8 md:gap-14',
-              nested && 'md:pt-[calc(clamp(2.25rem,5vw,4rem)*0.177_-_6.2px)]',
+              nested && 'md:pt-[calc(clamp(2.75rem,5vw,4rem)*0.177_-_6.2px)]',
             )}
           >
             {steps.map((step, i) => (

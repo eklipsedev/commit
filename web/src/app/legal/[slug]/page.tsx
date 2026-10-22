@@ -52,7 +52,7 @@ export default async function LegalPage({params}: PageProps) {
 
   const page = data as {
     heading?: RichHeadlineType
-    collapseLineBreaksOnMobile?: boolean
+    keepLineBreaksOnMobile?: boolean
     description?: string
     body?: PortableTextBlock[]
     _updatedAt?: string
@@ -79,7 +79,7 @@ export default async function LegalPage({params}: PageProps) {
                 <RichHeadline
                   value={page.heading}
                   size="hero"
-                  collapseLineBreaksOnMobile={page.collapseLineBreaksOnMobile}
+                  keepLineBreaksOnMobile={page.keepLineBreaksOnMobile}
                 />
               }
               fullWidthTagline={

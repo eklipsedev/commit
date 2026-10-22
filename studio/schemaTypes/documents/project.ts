@@ -3,7 +3,7 @@ import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list
 import {ImagesIcon} from '../../lib/icons'
 import {WorkSlugInput} from '../../components/prefixed-slug-input'
 import {imageAltField, imageFieldOptions} from '../shared/image-fields'
-import {collapseLineBreaksOnMobileField} from '../shared/section-fields'
+import {keepLineBreaksOnMobileField, legacyCollapseLineBreaksOnMobileField} from '../shared/section-fields'
 
 const caseStudyImageFields = [imageAltField()]
 
@@ -228,9 +228,10 @@ export const projectType = defineType({
       group: 'caseStudy',
     }),
     {
-      ...collapseLineBreaksOnMobileField(),
+      ...keepLineBreaksOnMobileField(),
       group: 'caseStudy',
     },
+    legacyCollapseLineBreaksOnMobileField(),
     defineField({
       name: 'overviewBody',
       title: 'Overview body',

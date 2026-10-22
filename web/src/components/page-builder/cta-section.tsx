@@ -35,7 +35,7 @@ export function CtaSection({block}: {block: CtaBlock}) {
               size={size}
               font={font}
               className="min-w-0 flex-1"
-              collapseLineBreaksOnMobile={block.collapseLineBreaksOnMobile}
+              keepLineBreaksOnMobile={block.keepLineBreaksOnMobile}
             />
             {block.button?.label ? (
               <CmsButton button={block.button} className="shrink-0 self-start" />

@@ -5,9 +5,9 @@
  * |--------|-------------------|-------------|----------------|-------------|
  * | hero   | 9rem (144px)      | 96%         | -3%            | h1          |
  * | xl     | 5.6875rem (91px)  | 100%        | -2%            | h1          |
- * | lg     | 4rem (64px), 2.25rem (36px) floor | 110% | -2%       | h2          |
- * | h3     | 2rem (32px), 1.125rem (18px) floor | 120% | 0%       | h3          |
- * | md     | 2rem (32px) desktop / 1.5rem mobile | 120%      | 0%             | h2 / h5     |
+ * | lg     | 4rem (64px), 2.75rem (44px) floor | 110% | -2%       | h2          |
+ * | h3     | 2rem (32px), 1.375rem (22px) floor | 120% | 0%       | h3          |
+ * | md     | 2rem (32px) desktop / 1.75rem mobile | 120%     | 0%             | h2 / h5     |
  *
  * Font family is separate: Sans (Bloyd) vs Display (LustText).
  */
@@ -57,7 +57,7 @@ export function headingSizeFromBlock(
 
 /**
  * Flexible headlines and image collages.
- * Desktop 64 / 48 / 40 / 32. Mobile keeps that ratio, floored at 36 / 27 / 22.5 / 18,
+ * Desktop 64 / 48 / 40 / 32. Mobile keeps that ratio, floored at 44 / 33 / 27.5 / 22,
  * and tracks the Large clamp in between.
  */
 export function flexibleHeadlineSize(rawSize?: string | null): {
@@ -67,10 +67,10 @@ export function flexibleHeadlineSize(rawSize?: string | null): {
   const cleaned = typeof rawSize === 'string' ? stegaClean(rawSize) : rawSize
   if (cleaned === 'lg') return {size: 'lg'}
   if (cleaned === 'h3') {
-    return {size: 'h3', className: 'text-[clamp(1.6875rem,3.75vw,3rem)] leading-[1.1]'}
+    return {size: 'h3', className: 'text-[clamp(2.0625rem,3.75vw,3rem)] leading-[1.1]'}
   }
   if (cleaned === '40') {
-    return {size: 'h3', className: 'text-[clamp(1.40625rem,3.125vw,2.5rem)] leading-[1.2]'}
+    return {size: 'h3', className: 'text-[clamp(1.71875rem,3.125vw,2.5rem)] leading-[1.2]'}
   }
   return {size: 'h3'}
 }
@@ -102,10 +102,10 @@ export const TEXT_SIZE_CLASSES = {
 /** Size metrics only — pair with `HEADING_FONT_CLASSES` via `headingClassName`. */
 export const HEADING_SIZE_CLASSES: Record<HeadingSize, string> = {
   hero: 'text-[clamp(3.5rem,12vw,9rem)] font-normal leading-[0.96] tracking-[-0.03em] [hanging-punctuation:first_last]',
-  xl: 'text-[clamp(2.75rem,7vw,5.6875rem)] font-normal leading-none tracking-[-0.02em]',
-  lg: 'text-[clamp(2.25rem,5vw,4rem)] font-normal leading-[1.1] tracking-[-0.02em]',
-  h3: 'text-[clamp(1.125rem,2.5vw,2rem)] font-normal leading-[1.2] tracking-normal',
-  md: 'text-[1.5rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]',
+  xl: 'text-[clamp(3.25rem,7vw,5.6875rem)] font-normal leading-none tracking-[-0.02em]',
+  lg: 'text-[clamp(2.75rem,5vw,4rem)] font-normal leading-[1.1] tracking-[-0.02em]',
+  h3: 'text-[clamp(1.375rem,2.5vw,2rem)] font-normal leading-[1.2] tracking-normal',
+  md: 'text-[1.75rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]',
 }
 
 export function headingClassName(size: HeadingSize, font?: HeadingFont | string | null) {
@@ -124,5 +124,5 @@ export const HEADING_DEFAULT_TAG: Record<HeadingSize, 'h1' | 'h2' | 'h3' | 'h5'>
 export const HEADING_SIZE_OPTIONS = [
   {title: 'Large — 64px', value: 'lg'},
   {title: 'Mid — 32px', value: 'h3'},
-  {title: 'Medium — 32px (24px mobile)', value: 'md'},
+  {title: 'Medium — 32px (28px mobile)', value: 'md'},
 ] as const

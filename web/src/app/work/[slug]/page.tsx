@@ -117,7 +117,7 @@ export default async function WorkProjectPage({params}: PageProps) {
                   size="xl"
                   as="h1"
                   className="text-brand-charcoal"
-                  collapseLineBreaksOnMobile={project.collapseLineBreaksOnMobile}
+                  keepLineBreaksOnMobile={project.keepLineBreaksOnMobile}
                 >
                   {project.headline}
                 </Heading>

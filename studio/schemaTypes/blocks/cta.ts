@@ -3,7 +3,8 @@ import {BoltIcon} from '../../lib/icons'
 import {CtaBlockPreview, CtaObjectInput} from '../../components/site-default-cta-preview'
 import {
   brandColorField,
-  collapseLineBreaksOnMobileField,
+  keepLineBreaksOnMobileField,
+  legacyCollapseLineBreaksOnMobileField,
   headingFontField,
   headingFontLabel,
   headingSizeField,
@@ -68,7 +69,8 @@ export const ctaType = defineType({
     defineField({...sectionSpacingFields[1], group: 'style'}),
     {...headingSizeField({group: 'style', initialValue: 'lg'}), group: 'style'},
     {...headingFontField({group: 'style', initialValue: 'display'}), group: 'style'},
-    {...collapseLineBreaksOnMobileField({group: 'style'}), group: 'style'},
+    {...keepLineBreaksOnMobileField({group: 'style'}), group: 'style'},
+    legacyCollapseLineBreaksOnMobileField(),
     {...brandColorField('backgroundColor', 'Background color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('headingColor', 'Heading color'), group: 'style', fieldset: 'colors'},
     {...brandColorField('taglineColor', 'Tagline color'), group: 'style', fieldset: 'colors'},

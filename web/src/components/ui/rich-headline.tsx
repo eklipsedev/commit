@@ -67,7 +67,8 @@ type RichHeadlineProps = {
   fullWidth?: boolean
   /** Horizontal text alignment. Right also pins a constrained headline to the right edge. */
   align?: 'left' | 'right' | null
-  collapseLineBreaksOnMobile?: boolean
+  /** Headlines drop Enter line breaks below `md` unless this is set. */
+  keepLineBreaksOnMobile?: boolean
 }
 
 export function RichHeadline({
@@ -79,7 +80,7 @@ export function RichHeadline({
   sizeClassName,
   fullWidth = false,
   align = 'left',
-  collapseLineBreaksOnMobile = false,
+  keepLineBreaksOnMobile = false,
 }: RichHeadlineProps) {
   if (!value?.length) return null
 
@@ -102,6 +103,8 @@ export function RichHeadline({
         // Right = pin the text-width block to the right edge. Copy stays left-aligned inside.
         sitRight && !spanFull && 'ml-auto',
         'text-left',
+        // Reflowed mobile lines balance so no single word is left on the last line.
+        !keepLineBreaksOnMobile && 'max-md:text-balance',
         resolved === 'hero' && '[hanging-punctuation:first_last]',
         className,
       )}
@@ -111,7 +114,7 @@ export function RichHeadline({
         components={createComponents(
           resolved,
           resolvedFont,
-          collapseLineBreaksOnMobile,
+          !keepLineBreaksOnMobile,
           sizeClassName,
         )}
       />
