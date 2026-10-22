@@ -81,7 +81,7 @@ function CardFrame({
       )}
       {body && (
         <p
-          className="mt-5 whitespace-pre-line text-balance text-base leading-snug"
+          className="mt-5 whitespace-pre-line text-balance text-base leading-[1.25]"
           style={{color: copy}}
         >
           {body}
