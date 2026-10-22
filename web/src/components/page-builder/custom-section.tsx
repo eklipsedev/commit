@@ -28,6 +28,12 @@ export function CustomSection({block}: {block: CustomSectionBlock}) {
         {modules.map((module, index) => {
           const prev = modules[index - 1]
           const tightToPrev = prev?._type === 'moduleTagline'
+          const introToPrev = prev?._type === 'moduleHeadline' && module._type === 'moduleBody'
+          // A new tagline starts its own topic, so it keeps the full gap.
+          const afterIntro =
+            prev?._type === 'moduleBody' &&
+            modules[index - 2]?._type === 'moduleHeadline' &&
+            module._type !== 'moduleTagline'
           const afterSpacer = prev?._type === 'moduleSpacer'
           const isSpacer = module._type === 'moduleSpacer'
           const delay = isSpacer ? 0 : revealIndex++ * FADE_IN_STAGGER_MS
@@ -43,7 +49,7 @@ export function CustomSection({block}: {block: CustomSectionBlock}) {
             <div
               key={module._key ?? `${module._type}-${index}`}
               className={cn(
-                index > 0 && !afterSpacer && moduleStackGapClass({tightToPrev}),
+                index > 0 && !afterSpacer && moduleStackGapClass({tightToPrev, introToPrev, afterIntro}),
               )}
             >
               {wrapped}

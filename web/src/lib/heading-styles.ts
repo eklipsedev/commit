@@ -6,6 +6,7 @@
  * | hero   | 9rem (144px)      | 96%         | -3%            | h1          |
  * | xl     | 5.6875rem (91px)  | 100%        | -2%            | h1          |
  * | lg     | 4rem (64px), 2.75rem (44px) floor | 110% | -2%       | h2          |
+ * | 48     | 3rem (48px), 2.0625rem (33px) floor | 110% | 0%      | h2          |
  * | h3     | 2rem (32px), 1.375rem (22px) floor | 120% | 0%       | h3          |
  * | md     | 2rem (32px) desktop / 1.75rem mobile | 120%     | 0%             | h2 / h5     |
  *
@@ -14,7 +15,7 @@
 
 import {stegaClean} from 'next-sanity'
 
-export const HEADING_SIZES = ['hero', 'xl', 'lg', 'h3', 'md'] as const
+export const HEADING_SIZES = ['hero', 'xl', 'lg', '48', 'h3', 'md'] as const
 export type HeadingSize = (typeof HEADING_SIZES)[number]
 
 export const HEADING_FONTS = ['sans', 'display'] as const
@@ -28,7 +29,14 @@ export function resolveHeadingSize(size?: LegacyHeadingSize | null): HeadingSize
     typeof size === 'string' ? (stegaClean(size) as LegacyHeadingSize) : size
 
   if (cleaned === 'section') return 'md'
-  if (cleaned === 'hero' || cleaned === 'xl' || cleaned === 'lg' || cleaned === 'h3' || cleaned === 'md') {
+  if (
+    cleaned === 'hero' ||
+    cleaned === 'xl' ||
+    cleaned === 'lg' ||
+    cleaned === '48' ||
+    cleaned === 'h3' ||
+    cleaned === 'md'
+  ) {
     return cleaned
   }
   return 'md'
@@ -104,6 +112,8 @@ export const HEADING_SIZE_CLASSES: Record<HeadingSize, string> = {
   hero: 'text-[clamp(3.5rem,12vw,9rem)] font-normal leading-[0.96] tracking-[-0.03em] [hanging-punctuation:first_last]',
   xl: 'text-[clamp(3.25rem,7vw,5.6875rem)] font-normal leading-none tracking-[-0.02em]',
   lg: 'text-[clamp(2.75rem,5vw,4rem)] font-normal leading-[1.1] tracking-[-0.02em]',
+  /** Same step as the Flexible “Medium — 48px” headline. */
+  '48': 'text-[clamp(2.0625rem,3.75vw,3rem)] font-normal leading-[1.1] tracking-normal',
   h3: 'text-[clamp(1.375rem,2.5vw,2rem)] font-normal leading-[1.2] tracking-normal',
   md: 'text-[1.75rem] font-normal leading-[1.2] tracking-normal md:text-[2rem]',
 }
@@ -117,12 +127,14 @@ export const HEADING_DEFAULT_TAG: Record<HeadingSize, 'h1' | 'h2' | 'h3' | 'h5'>
   hero: 'h1',
   xl: 'h1',
   lg: 'h2',
+  '48': 'h2',
   h3: 'h3',
   md: 'h2',
 }
 
 export const HEADING_SIZE_OPTIONS = [
   {title: 'Large — 64px', value: 'lg'},
+  {title: 'Medium large — 48px', value: '48'},
   {title: 'Mid — 32px', value: 'h3'},
   {title: 'Medium — 32px (28px mobile)', value: 'md'},
 ] as const

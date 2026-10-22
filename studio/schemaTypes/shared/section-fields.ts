@@ -120,13 +120,14 @@ export function showTaglineRuleField(options?: {
 
 /**
  * Shared heading size for sections that use tagline + divider + heading.
- * Default tokens: Large 64px (`lg`), Mid 32px (`h3`), Medium 32px desktop / 28px mobile (`md`).
+ * Default tokens: Large 64px (`lg`), Medium large 48px (`48`), Mid 32px (`h3`),
+ * Medium 32px desktop / 28px mobile (`md`).
  * Flexible headlines use Large 64px (44px mobile), Medium 48px (33px mobile),
  * Small 40px (27.5px mobile), Extra small 32px (22px mobile).
  */
 export function headingSizeField(options?: {
   group?: string
-  initialValue?: 'lg' | 'h3' | 'md' | '40' | '32'
+  initialValue?: 'lg' | '48' | 'h3' | 'md' | '40' | '32'
   /** Flexible headlines: Large 64px, Medium 48px, Small 40px, Extra small 32px. */
   variant?: 'default' | 'flexible'
   hidden?: (ctx: {parent?: Record<string, unknown>}) => boolean
@@ -146,6 +147,7 @@ export function headingSizeField(options?: {
           ]
         : [
             {title: 'Large — 64px (44px mobile)', value: 'lg'},
+            {title: 'Medium large — 48px (33px mobile)', value: '48'},
             {title: 'Mid — 32px (22px mobile)', value: 'h3'},
             {title: 'Medium — 32px (28px mobile)', value: 'md'},
           ],
@@ -153,8 +155,8 @@ export function headingSizeField(options?: {
     },
     initialValue: options?.initialValue ?? (flexible ? '32' : 'md'),
     description: flexible
-      ? 'Same steps on every screen. Phones use 36, 27, 22.5, and 18px.'
-      : 'Large for short display lines. Mid for mid-length headlines. Medium for denser section copy.',
+      ? 'Same steps on every screen. Phones use 44, 33, 27.5, and 22px.'
+      : 'Large for short display lines. Medium large for prominent section titles. Mid for mid-length headlines. Medium for denser section copy.',
     group: options?.group,
     hidden: options?.hidden,
   })
@@ -229,6 +231,7 @@ export function headingSizeLabel(size?: string | null, variant?: 'default' | 'fl
     return 'Extra small — 32px'
   }
   if (size === 'lg') return 'Large'
+  if (size === '48') return 'Medium large — 48px'
   if (size === 'h3') return 'Mid'
   if (size === '32') return 'Small — 32px'
   return 'Medium'

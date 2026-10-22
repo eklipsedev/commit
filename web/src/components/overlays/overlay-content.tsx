@@ -173,6 +173,12 @@ export function OfferingOverlayBody({
         {offering.modules.map((module, index) => {
           const prev = offering.modules![index - 1]
           const tightToPrev = prev?._type === 'moduleTagline'
+          const introToPrev = prev?._type === 'moduleHeadline' && module._type === 'moduleBody'
+          // A new tagline starts its own topic, so it keeps the full gap.
+          const afterIntro =
+            prev?._type === 'moduleBody' &&
+            offering.modules![index - 2]?._type === 'moduleHeadline' &&
+            module._type !== 'moduleTagline'
           const afterSpacer = prev?._type === 'moduleSpacer'
           return (
             <div
@@ -180,7 +186,7 @@ export function OfferingOverlayBody({
               className={cn(
                 index > 0 &&
                   !afterSpacer &&
-                  moduleStackGapClass({tightToPrev}),
+                  moduleStackGapClass({tightToPrev, introToPrev, afterIntro}),
               )}
             >
               <CustomModuleRenderer module={module} />

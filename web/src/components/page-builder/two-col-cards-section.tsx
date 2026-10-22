@@ -183,31 +183,41 @@ export function TwoColCardsSection({block}: {block: TwoColCardsBlock}) {
   const projects = (block.projects ?? [])
     .map(resolveProjectCard)
     .filter((project): project is ProjectCard => Boolean(project?._id))
+  const showButton = showHeader && Boolean(block.button?.label)
+  const hasHeaderRow = showHeader && Boolean(block.tagline || block.heading || showButton)
+  // Heading and button share the row under the tagline on desktop.
+  const headerRow = block.tagline ? 'md:row-start-2' : 'md:row-start-1'
 
   return (
     <Section {...block}>
-      <Container className="space-y-10 md:space-y-14">
-        {showHeader && (
-          <FadeIn className="space-y-8">
-            {block.tagline && (
-              <Tagline showRule={block.showTaglineRule !== false}>{block.tagline}</Tagline>
-            )}
-            <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-start md:gap-12">
-              {block.heading && (
-                <Heading
-                  size={headingSizeFromBlock(block)}
-                  font={headingFontFromBlock(block)}
-                  style={{color: 'var(--section-heading)'}}
-                  keepLineBreaksOnMobile={block.keepLineBreaksOnMobile}
-                >
-                  {block.heading}
-                </Heading>
-              )}
-              {block.button && <CmsButton button={block.button} className="shrink-0" />}
-            </div>
+      {/*
+        One button, placed by grid: beside the heading from md, after the cards
+        on mobile. DOM order (heading → cards → button) matches the mobile read.
+      */}
+      <Container className="grid md:grid-cols-[1fr_auto] md:gap-x-12">
+        {showHeader && block.tagline && (
+          <FadeIn className="mb-8 md:col-span-2">
+            <Tagline showRule={block.showTaglineRule !== false}>{block.tagline}</Tagline>
           </FadeIn>
         )}
-        <div className="grid gap-8 md:grid-cols-2 md:gap-x-10 md:gap-y-12">
+        {showHeader && block.heading && (
+          <FadeIn className={cn('md:col-start-1', headerRow)}>
+            <Heading
+              size={headingSizeFromBlock(block)}
+              font={headingFontFromBlock(block)}
+              style={{color: 'var(--section-heading)'}}
+              keepLineBreaksOnMobile={block.keepLineBreaksOnMobile}
+            >
+              {block.heading}
+            </Heading>
+          </FadeIn>
+        )}
+        <div
+          className={cn(
+            'grid gap-8 md:col-span-2 md:grid-cols-2 md:gap-x-10 md:gap-y-12',
+            hasHeaderRow && 'mt-10 md:mt-14',
+          )}
+        >
           {projects.map((project, index) => (
             <FadeIn key={project._id} delay={Math.min(index, 3) * FADE_IN_STAGGER_MS}>
               <ProjectCardItem
@@ -217,6 +227,11 @@ export function TwoColCardsSection({block}: {block: TwoColCardsBlock}) {
             </FadeIn>
           ))}
         </div>
+        {showButton && (
+          <FadeIn className={cn('mt-10 md:col-start-2 md:mt-0', headerRow)}>
+            <CmsButton button={block.button} className="shrink-0" />
+          </FadeIn>
+        )}
       </Container>
     </Section>
   )
