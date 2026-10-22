@@ -46,7 +46,7 @@ export function DotButton({
     (button?.link?.linkType === 'external' && Boolean(button.link.openInNewTab))
 
   const classes = cn(
-    'group relative inline-flex items-center overflow-hidden rounded-full border',
+    'group relative inline-flex w-fit items-center overflow-hidden rounded-full border',
     'bg-transparent py-2 pl-[var(--inset)] pr-[var(--inset)]',
     'transition-[background-color,border-color,color]',
     transition,

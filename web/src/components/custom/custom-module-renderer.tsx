@@ -524,7 +524,14 @@ export function CustomModuleRenderer({
 
       if (stacked) {
         return (
-          <ol className="flex flex-col gap-8 md:gap-14">
+          // Beside an "lg" Lust Text headline in a split, Bloyd's cap height sits
+          // higher in its line box; drop the list so the first step's caps line up.
+          <ol
+            className={cn(
+              'flex flex-col gap-8 md:gap-14',
+              nested && 'md:pt-[calc(clamp(2.25rem,5vw,4rem)*0.177_-_6.2px)]',
+            )}
+          >
             {steps.map((step, i) => (
               <li key={step.text ?? i} className="flex items-start gap-6 md:gap-10">
                 <StepIndex n={i + 1} />

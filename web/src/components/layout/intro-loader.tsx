@@ -12,23 +12,23 @@ import {cn} from '@/lib/cn'
 const ALWAYS_SHOW_FOR_TESTING = INTRO_ALWAYS_SHOW_FOR_TESTING
 /** Logo fades and rises onto the yellow field. */
 const ENTER_MS = 520
-/** Breath after the wordmark settles, before the period turns yellow. */
-const REST_MS = 80
-/** Charcoal period eases to brand yellow while the mark is still large. */
-const PERIOD_MS = 420
-const PERIOD_HOLD_MS = 80
-/** Travel into the navbar slot. */
-const MORPH_MS = 640
+/** Hold on the large charcoal mark before it travels. */
+const HOLD_MS = 560
+/** Travel into the navbar slot; the period turns yellow on the way. */
+const MORPH_MS = 900
+/** Period colour change, starting with the travel so it reads as one motion. */
+const PERIOD_MS = 540
 /** Yellow stays up after the logo lands, then dissolves. */
 const BACKDROP_HOLD_MS = 80
 const FADE_MS = 360
 
 const ENTER_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)'
-const PERIOD_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)'
-const MORPH_EASE = 'cubic-bezier(0.77, 0, 0.18, 1)'
+const PERIOD_EASE = 'cubic-bezier(0.33, 1, 0.68, 1)'
+/** Gentle ease-in-out (cubic) — softer start and landing than a quart curve. */
+const MORPH_EASE = 'cubic-bezier(0.65, 0, 0.35, 1)'
 const FADE_EASE = 'cubic-bezier(0.4, 0, 0.2, 1)'
 
-type Phase = 'enter' | 'accent' | 'morph' | 'fade' | 'done'
+type Phase = 'enter' | 'morph' | 'fade' | 'done'
 
 function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -38,8 +38,8 @@ function prefersReducedMotion() {
  * First-visit session intro: yellow full-screen with COMMIT. wordmark,
  * then morphs into the navbar logo slot and fades away.
  *
- * The yellow field is up on first paint. The wordmark fades in, the period
- * turns yellow, then the mark eases into the navbar.
+ * The yellow field is up on first paint. The wordmark fades in, then eases
+ * into the navbar while its period turns yellow.
  */
 export function IntroLoader() {
   const {logoRef, setIntroActive} = useIntroLogo()
@@ -98,11 +98,8 @@ export function IntroLoader() {
       )
     })
 
-    const accentAt = ENTER_MS + REST_MS
-    const morphAt = accentAt + PERIOD_MS + PERIOD_HOLD_MS
+    const morphAt = ENTER_MS + HOLD_MS
     const fadeAt = morphAt + MORPH_MS + BACKDROP_HOLD_MS
-
-    const accentTimer = window.setTimeout(() => setPhase('accent'), accentAt)
 
     const morphTimer = window.setTimeout(() => {
       const from = wordmarkRef.current?.getBoundingClientRect()
@@ -131,7 +128,7 @@ export function IntroLoader() {
     }, fadeAt)
 
     const doneTimer = window.setTimeout(finish, fadeAt + FADE_MS)
-    timers.current.push(revealFrame, accentTimer, morphTimer, fadeTimer, doneTimer)
+    timers.current.push(revealFrame, morphTimer, fadeTimer, doneTimer)
 
     return () => {
       window.cancelAnimationFrame(revealFrame)
@@ -147,7 +144,6 @@ export function IntroLoader() {
 
   const fading = phase === 'fade'
   const traveling = phase === 'morph' || phase === 'fade'
-  const periodYellow = phase === 'accent' || traveling
   const wordmarkTransform = traveling
     ? transform
     : revealed
@@ -181,7 +177,7 @@ export function IntroLoader() {
         <CommitWordmark
           className="h-auto w-[calc(100vw-3rem)] max-w-[80rem] md:w-[calc(100vw-5rem)]"
           periodStyle={{
-            fill: periodYellow ? 'var(--brand-yellow)' : 'var(--brand-charcoal)',
+            fill: traveling ? 'var(--brand-yellow)' : 'var(--brand-charcoal)',
             transition: `fill ${PERIOD_MS}ms ${PERIOD_EASE}`,
           }}
         />

@@ -68,7 +68,7 @@ function CardFrame({
 
   return (
     <article
-      className="flex w-full flex-col rounded-none p-6 pb-5 sm:p-8 sm:pb-6 md:p-10 md:pb-8"
+      className="flex h-full w-full flex-col rounded-none px-6 pb-7 pt-8 sm:px-8 sm:pb-8 sm:pt-10 md:px-10 md:pb-10 md:pt-12"
       style={{backgroundColor: background}}
     >
       {title && (
@@ -81,7 +81,7 @@ function CardFrame({
       )}
       {body && (
         <p
-          className="mt-5 whitespace-pre-line text-balance text-base leading-relaxed"
+          className="mt-5 whitespace-pre-line text-balance text-base leading-snug"
           style={{color: copy}}
         >
           {body}

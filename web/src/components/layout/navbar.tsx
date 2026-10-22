@@ -363,17 +363,8 @@ export function Navbar({data, variant = 'light'}: NavbarProps) {
               )
             })}
             {data?.button?.label && (
-              <div
-                className={cn(
-                  'mt-3 border-t py-4',
-                  variant === 'dark' ? 'border-white' : 'border-brand-charcoal',
-                )}
-              >
-                <DotButton
-                  button={data.button}
-                  tone={variant === 'dark' ? 'dark' : 'light'}
-                  className="w-full justify-center"
-                />
+              <div className="mt-3 py-4">
+                <DotButton button={data.button} tone={variant === 'dark' ? 'dark' : 'light'} />
               </div>
             )}
           </Container>
