@@ -152,7 +152,8 @@ export default async function WorkProjectPage({params}: PageProps) {
             <CtaSection
               block={{
                 ...ctaBlock,
-                collapsePaddingTop: false,
+                // The article stack already spaces it from the project nav.
+                collapsePaddingTop: true,
                 collapsePaddingBottom: true,
               }}
             />

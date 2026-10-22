@@ -91,7 +91,8 @@ type CustomModule = {
   listColumns?: number
   /** @deprecated Prefer string list / other modules — still rendered for legacy content */
   textGrid?: TextGrid
-  itemSize?: 'sm' | 'md'
+  /** Text grids: sm | md. String lists: `lg` opts plain items up to 24px. */
+  itemSize?: 'sm' | 'md' | 'lg'
   textSize?: 'sm' | 'md' | 'lg'
   attributes?: {label?: string; values?: string[]}[]
   valueSize?: 'sm' | 'md' | 'lg'
@@ -220,6 +221,7 @@ function StringListView({
   showRules,
   showBullets = true,
   relaxedSpacing = false,
+  large = false,
   className,
 }: {
   label?: string
@@ -228,14 +230,19 @@ function StringListView({
   showRules?: boolean
   showBullets?: boolean
   relaxedSpacing?: boolean
+  /** Plain items at 24px instead of 20px. */
+  large?: boolean
   className?: string
 }) {
   const labels = resolveStringListItems(items)
   if (!labels.length) return null
-  // Ruled rows use Medium (32px desktop). Plain lists stay at 20px.
+  // Ruled rows use Medium (32px desktop). Plain lists are 20px, or 24px when large.
   const itemClass = showRules
     ? TEXT_SIZE_CLASSES.md
-    : 'font-sans text-[1.25rem] font-normal leading-snug tracking-normal'
+    : cn(
+        'font-sans font-normal leading-snug tracking-normal',
+        large ? 'text-[1.5rem]' : 'text-[1.25rem]',
+      )
 
   if (showRules) {
     const columnCount = Math.min(Math.max(columns ?? 2, 1), 3)
@@ -494,6 +501,7 @@ export function CustomModuleRenderer({
           showRules={module.showRules}
           showBullets={stegaClean(module.showBullets) !== false}
           relaxedSpacing={stegaClean(module.relaxedSpacing) === true}
+          large={stegaClean(module.itemSize) === 'lg'}
           className={placement === 'beside' ? 'min-w-0 flex-1' : undefined}
         />
       )

@@ -345,9 +345,16 @@ export const moduleStringListType = defineType({
       name: 'itemSize',
       title: 'Item text size',
       type: 'string',
-      hidden: true,
+      options: {
+        list: [
+          {title: 'Regular — 20px', value: 'md'},
+          {title: 'Large — 24px', value: 'lg'},
+        ],
+        layout: 'radio',
+      },
       initialValue: 'md',
-      description: 'List items render at 20px (1.25rem).',
+      description: 'Plain list items. Lists with horizontal rules always use 32px (24px mobile).',
+      hidden: ({parent}) => parent?.showRules === true,
     }),
     defineField({
       name: 'showBullets',

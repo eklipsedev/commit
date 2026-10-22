@@ -22,6 +22,7 @@ export function CaseStudyProjectNav({
 
   if (siblings.length < 2) return null
 
+  // Figma: 48px project names with ~20px between the label and the name's caps.
   return (
     <Container>
       <nav
@@ -30,12 +31,12 @@ export function CaseStudyProjectNav({
       >
         <Link
           href={`/work/${prev.slug}`}
-          className="group min-w-0 space-y-1 self-start text-left text-brand-charcoal md:flex-1"
+          className="group min-w-0 space-y-3.5 self-start text-left text-brand-charcoal md:flex-1"
         >
           <p className="font-mono text-xs leading-none tracking-normal md:text-sm">Previous</p>
           <p
             className={cn(
-              headingClassName('h3', 'sans'),
+              headingClassName('48', 'sans'),
               'break-words leading-none underline-offset-4 group-hover:underline',
             )}
           >
@@ -45,12 +46,12 @@ export function CaseStudyProjectNav({
 
         <Link
           href={`/work/${next.slug}`}
-          className="group min-w-0 space-y-1 self-end text-right text-brand-charcoal md:flex-1"
+          className="group min-w-0 space-y-3.5 self-end text-right text-brand-charcoal md:flex-1"
         >
           <p className="font-mono text-xs leading-none tracking-normal md:text-sm">Next</p>
           <p
             className={cn(
-              headingClassName('h3', 'sans'),
+              headingClassName('48', 'sans'),
               'break-words leading-none underline-offset-4 group-hover:underline',
             )}
           >
