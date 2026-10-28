@@ -427,6 +427,17 @@ export const NAVIGATION_QUERY = `{
   }
 }`
 
+export const INTRO_SETTINGS_QUERY = `*[_id == "introSettings"][0]{
+  enabled,
+  frequency,
+  easing,
+  backgroundColor,
+  holdMs,
+  moveMs,
+  periodMs,
+  fadeMs
+}`
+
 export const FOOTER_QUERY = `*[_id == "footer"][0]{
   logo,
   copyrightText,

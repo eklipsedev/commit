@@ -2,30 +2,17 @@
 
 import {useLayoutEffect, useRef, useState} from 'react'
 import {CommitWordmark} from '@/components/brand/commit-wordmark'
-import {
-  INTRO_ALWAYS_SHOW_FOR_TESTING,
-  INTRO_STORAGE_KEY,
-} from '@/components/layout/intro-bootstrap'
+import {INTRO_STORAGE_KEY, type IntroConfig} from '@/components/layout/intro-bootstrap'
 import {useIntroLogo} from '@/components/layout/intro-logo-context'
 import {cn} from '@/lib/cn'
 
-const ALWAYS_SHOW_FOR_TESTING = INTRO_ALWAYS_SHOW_FOR_TESTING
-/** Logo fades and rises onto the yellow field. */
+/** Logo fades and rises onto the background. */
 const ENTER_MS = 520
-/** Hold on the large charcoal mark before it travels. */
-const HOLD_MS = 560
-/** Travel into the navbar slot; the period turns yellow on the way. */
-const MORPH_MS = 900
-/** Period colour change, starting with the travel so it reads as one motion. */
-const PERIOD_MS = 540
-/** Yellow stays up after the logo lands, then dissolves. */
+/** Background stays up after the logo lands, then dissolves. */
 const BACKDROP_HOLD_MS = 80
-const FADE_MS = 360
 
 const ENTER_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)'
 const PERIOD_EASE = 'cubic-bezier(0.33, 1, 0.68, 1)'
-/** Gentle ease-in-out (cubic) — softer start and landing than a quart curve. */
-const MORPH_EASE = 'cubic-bezier(0.65, 0, 0.35, 1)'
 const FADE_EASE = 'cubic-bezier(0.4, 0, 0.2, 1)'
 
 type Phase = 'enter' | 'morph' | 'fade' | 'done'
@@ -35,13 +22,15 @@ function prefersReducedMotion() {
 }
 
 /**
- * First-visit session intro: yellow full-screen with COMMIT. wordmark,
+ * First-visit session intro: full-screen color with COMMIT. wordmark,
  * then morphs into the navbar logo slot and fades away.
  *
- * The yellow field is up on first paint. The wordmark fades in, then eases
- * into the navbar while its period turns yellow.
+ * The color field is up on first paint. The wordmark fades in, then eases
+ * into the navbar while its period turns yellow. Timing, easing, and color
+ * come from the Studio's "Intro animation" settings.
  */
-export function IntroLoader() {
+export function IntroLoader({config}: {config: IntroConfig}) {
+  const {playEveryLoad, holdMs, moveMs, periodMs, fadeMs, moveEase, background} = config
   const {logoRef, setIntroActive} = useIntroLogo()
   const [phase, setPhase] = useState<Phase>('enter')
   const [revealed, setRevealed] = useState(false)
@@ -51,7 +40,7 @@ export function IntroLoader() {
 
   useLayoutEffect(() => {
     let seen = false
-    if (!ALWAYS_SHOW_FOR_TESTING) {
+    if (!playEveryLoad) {
       try {
         seen = sessionStorage.getItem(INTRO_STORAGE_KEY) === '1'
       } catch {
@@ -71,7 +60,7 @@ export function IntroLoader() {
     setIntroActive(true)
 
     const finish = () => {
-      if (!ALWAYS_SHOW_FOR_TESTING) {
+      if (!playEveryLoad) {
         try {
           sessionStorage.setItem(INTRO_STORAGE_KEY, '1')
         } catch {
@@ -98,8 +87,8 @@ export function IntroLoader() {
       )
     })
 
-    const morphAt = ENTER_MS + HOLD_MS
-    const fadeAt = morphAt + MORPH_MS + BACKDROP_HOLD_MS
+    const morphAt = ENTER_MS + holdMs
+    const fadeAt = morphAt + moveMs + BACKDROP_HOLD_MS
 
     const morphTimer = window.setTimeout(() => {
       const from = wordmarkRef.current?.getBoundingClientRect()
@@ -127,7 +116,7 @@ export function IntroLoader() {
       setPhase('fade')
     }, fadeAt)
 
-    const doneTimer = window.setTimeout(finish, fadeAt + FADE_MS)
+    const doneTimer = window.setTimeout(finish, fadeAt + fadeMs)
     timers.current.push(revealFrame, morphTimer, fadeTimer, doneTimer)
 
     return () => {
@@ -138,7 +127,7 @@ export function IntroLoader() {
       })
       timers.current = []
     }
-  }, [logoRef, setIntroActive])
+  }, [logoRef, setIntroActive, playEveryLoad, holdMs, moveMs, fadeMs])
 
   if (phase === 'done') return null
 
@@ -153,11 +142,12 @@ export function IntroLoader() {
   return (
     <div
       className={cn(
-        'fixed inset-0 z-50 flex items-start justify-center bg-brand-pale-yellow px-6 pt-[10vh] md:px-10',
+        'fixed inset-0 z-50 flex items-start justify-center px-6 pt-[10vh] md:px-10',
         fading ? 'pointer-events-none opacity-0' : 'opacity-100',
       )}
       style={{
-        transition: `opacity ${FADE_MS}ms ${FADE_EASE}`,
+        backgroundColor: background,
+        transition: `opacity ${fadeMs}ms ${FADE_EASE}`,
       }}
       aria-hidden={fading}
     >
@@ -168,9 +158,9 @@ export function IntroLoader() {
           opacity: revealed ? 1 : 0,
           transform: wordmarkTransform,
           transitionProperty: 'opacity, transform',
-          transitionDuration: `${ENTER_MS}ms, ${traveling ? MORPH_MS : ENTER_MS}ms`,
+          transitionDuration: `${ENTER_MS}ms, ${traveling ? moveMs : ENTER_MS}ms`,
           transitionTimingFunction: traveling
-            ? `${ENTER_EASE}, ${MORPH_EASE}`
+            ? `${ENTER_EASE}, ${moveEase}`
             : `${ENTER_EASE}, ${ENTER_EASE}`,
         }}
       >
@@ -178,7 +168,7 @@ export function IntroLoader() {
           className="h-auto w-[calc(100vw-3rem)] max-w-[80rem] md:w-[calc(100vw-5rem)]"
           periodStyle={{
             fill: traveling ? 'var(--brand-yellow)' : 'var(--brand-charcoal)',
-            transition: `fill ${PERIOD_MS}ms ${PERIOD_EASE}`,
+            transition: `fill ${periodMs}ms ${PERIOD_EASE}`,
           }}
         />
       </div>

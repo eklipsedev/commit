@@ -46,6 +46,7 @@ import {defaultSeoType} from './documents/default-seo'
 import {blockPreviewsType} from './documents/block-previews'
 import {flexibleSectionTemplateType} from './documents/flexible-section-template'
 import {redirectsType} from './documents/redirects'
+import {introSettingsType} from './documents/intro-settings'
 
 import {pageBuilderType} from './page-builder'
 import {heroType} from './blocks/hero'
@@ -115,6 +116,7 @@ export const schemaTypes = [
   blockPreviewsType,
   flexibleSectionTemplateType,
   redirectsType,
+  introSettingsType,
 
   // Page builder blocks
   pageBuilderType,

@@ -81,7 +81,7 @@ html.intro-pending::before {
   position: fixed;
   inset: 0;
   z-index: 49;
-  background: var(--brand-pale-yellow);
+  background: var(--intro-background, var(--brand-pale-yellow));
   pointer-events: none;
 }
 

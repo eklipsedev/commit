@@ -5,6 +5,11 @@ import {VisualEditing} from 'next-sanity/visual-editing'
 import {DisableDraftMode} from '@/components/disable-draft-mode'
 import {Footer} from '@/components/layout/footer'
 import {IntroLoader} from '@/components/layout/intro-loader'
+import {
+  introSeenScript,
+  resolveIntroConfig,
+  type IntroSettingsDoc,
+} from '@/components/layout/intro-bootstrap'
 import {IntroLogoProvider} from '@/components/layout/intro-logo-context'
 import {FooterAppearanceProvider} from '@/components/layout/set-footer-appearance'
 import {Navbar} from '@/components/layout/navbar'
@@ -12,7 +17,7 @@ import {OverlayHost} from '@/components/overlays/overlay-host'
 import {OverlayProvider} from '@/components/overlays/overlay-provider'
 import {NavThemeProvider} from '@/context/nav-theme-context'
 import {sanityFetch, SanityLive} from '@/sanity/live'
-import {FOOTER_QUERY, NAVIGATION_QUERY} from '@/sanity/queries'
+import {FOOTER_QUERY, INTRO_SETTINGS_QUERY, NAVIGATION_QUERY} from '@/sanity/queries'
 import {resolveNavigationWithSalesPages, type SalesPageNavItem} from '@/lib/resolve-navigation'
 import type {FooterData, NavigationData} from '@/sanity/types'
 import './globals.css'
@@ -61,10 +66,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const [{data: navigationPayload}, {data: footer}] = await Promise.all([
+  const [{data: navigationPayload}, {data: footer}, {data: introSettings}] = await Promise.all([
     sanityFetch({query: NAVIGATION_QUERY}),
     sanityFetch({query: FOOTER_QUERY}),
+    sanityFetch({query: INTRO_SETTINGS_QUERY, stega: false}),
   ])
+  const intro = resolveIntroConfig(introSettings as IntroSettingsDoc | null)
 
   const payload = navigationPayload as {
     navigation?: NavigationData | null
@@ -78,14 +85,20 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${bloyd.variable} ${lustText.variable} ${geistMono.variable} intro-pending h-full antialiased`}
+      className={`${bloyd.variable} ${lustText.variable} ${geistMono.variable} ${intro.enabled ? 'intro-pending' : ''} h-full antialiased`}
+      style={{'--intro-background': intro.background} as React.CSSProperties}
     >
+      {intro.enabled && !intro.playEveryLoad ? (
+        <head>
+          <script dangerouslySetInnerHTML={{__html: introSeenScript()}} />
+        </head>
+      ) : null}
       <body className="flex min-h-full flex-col bg-brand-white font-sans text-brand-charcoal">
         <FooterAppearanceProvider>
           <NavThemeProvider initialTheme="light">
             <IntroLogoProvider>
               <OverlayProvider>
-                <IntroLoader />
+                {intro.enabled ? <IntroLoader config={intro} /> : null}
                 <Navbar data={navigation as NavigationData} variant="light" />
                 <main className="flex-1">{children}</main>
                 <Footer data={footer as FooterData} />

@@ -16,6 +16,7 @@ import {
   LinkIcon,
   MenuIcon,
   PackageIcon,
+  PlayIcon,
   SearchIcon,
   UserIcon,
 } from './lib/icons'
@@ -38,6 +39,7 @@ const HIDDEN_FROM_LIST = [
   'blockPreviews',
   'flexibleSectionTemplate',
   'redirects',
+  'introSettings',
   // Managed inside the Media / Mux tools — don't list in the desk
   'media.tag',
   'mux.videoAsset',
@@ -165,6 +167,15 @@ export const structure: StructureResolver = (S, context) =>
                     .schemaType('defaultSeo')
                     .documentId('defaultSeo')
                     .title('Default SEO'),
+                ),
+              S.listItem()
+                .title('Intro animation')
+                .icon(PlayIcon)
+                .child(
+                  S.document()
+                    .schemaType('introSettings')
+                    .documentId('introSettings')
+                    .title('Intro animation'),
                 ),
               S.listItem()
                 .title('Section previews')
