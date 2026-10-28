@@ -10,18 +10,21 @@ function MediaFrame({
   sizes,
   aspectClassName,
   priority,
+  fallbackAlt,
 }: {
   image?: SanityImageType
   sizes: string
   aspectClassName: string
   priority?: boolean
+  /** Used when the image has no alt text of its own in the CMS. */
+  fallbackAlt?: string
 }) {
   if (!image?.asset) return null
   return (
     <div className={cn('relative w-full overflow-hidden bg-neutral-100', aspectClassName)}>
       <SanityImage
         image={image}
-        alt={image.alt}
+        alt={image.alt?.trim() || fallbackAlt}
         fill
         sizes={sizes}
         priority={priority}
@@ -33,9 +36,12 @@ function MediaFrame({
 
 export function CaseStudyMediaGrid({
   rows,
+  projectTitle,
 }: {
   rows?: CaseStudyMediaRow[]
+  projectTitle?: string
 }) {
+  const fallbackAlt = projectTitle ? `${projectTitle} project work by Commit` : undefined
   if (!rows?.length) return null
 
   return (
@@ -63,6 +69,7 @@ export function CaseStudyMediaGrid({
               <div key={key} className="grid gap-5 md:grid-cols-2">
                 <FadeIn delay={delay}>
                   <MediaFrame
+                    fallbackAlt={fallbackAlt}
                     image={row.leftImage}
                     aspectClassName="aspect-[636/730]"
                     sizes="(min-width: 1320px) 650px, (min-width: 768px) calc(50vw - 2.5rem), calc(100vw - 3rem)"
@@ -71,6 +78,7 @@ export function CaseStudyMediaGrid({
                 </FadeIn>
                 <FadeIn delay={delay + FADE_IN_STAGGER_MS}>
                   <MediaFrame
+                    fallbackAlt={fallbackAlt}
                     image={row.rightImage}
                     aspectClassName="aspect-[636/730]"
                     sizes="(min-width: 1320px) 650px, (min-width: 768px) calc(50vw - 2.5rem), calc(100vw - 3rem)"
@@ -84,6 +92,7 @@ export function CaseStudyMediaGrid({
           return (
             <FadeIn key={key} delay={delay}>
               <MediaFrame
+                fallbackAlt={fallbackAlt}
                 image={row.image}
                 aspectClassName="aspect-[1296/730]"
                 sizes="(min-width: 1320px) 1320px, 100vw"

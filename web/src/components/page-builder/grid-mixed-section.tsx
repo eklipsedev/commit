@@ -116,7 +116,7 @@ function SlotImage({
     >
       <SanityImage
         image={image}
-        alt={image.alt}
+        alt={image.alt?.trim() || label || 'Sample brand and website work by Commit'}
         fill
         sizes={sizes}
         priority={priority}

@@ -1,0 +1,31 @@
+import {ImageResponse} from 'next/og'
+
+export const size = {width: 180, height: 180}
+export const contentType = 'image/png'
+
+/** Home-screen icon: the "C." mark from icon.svg, as a PNG (iOS ignores SVG icons). */
+export default function AppleIcon() {
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#303030',
+        }}
+      >
+        <svg width="132" height="97" viewBox="0 0 262 193">
+          <path
+            fill="#fbfafa"
+            d="M99.7463 146.843C71.7696 146.843 48.7836 124.138 48.7836 92.9982C48.7836 68.1143 71.7696 45.4095 99.7463 45.4095C116.898 45.4095 132.081 53.915 141.36 66.2164L178.897 42.879C162.659 16.3784 133.628 0 99.7463 0C47.7995 0 0 38.2396 0 92.7873C0 151.131 41.8246 192.323 99.7463 192.323C136.158 192.323 163.502 175.944 178.686 149.303L140.587 125.614C131.308 138.759 116.406 146.843 99.6761 146.843H99.7463Z"
+          />
+          <circle cx="225" cy="155.42" r="36.83" fill="#fee064" />
+        </svg>
+      </div>
+    ),
+    size,
+  )
+}

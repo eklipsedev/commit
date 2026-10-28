@@ -32,12 +32,13 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
     title?: string
     summary?: string
     thumbnail?: SanityImage
+    heroImage?: SanityImage
   } | null
   if (!project) return {}
 
   const pageSeo: PageSeo = {
     ...project.seo,
-    image: project.seo?.image || project.thumbnail || null,
+    image: project.seo?.image || project.thumbnail || project.heroImage || null,
   }
 
   return resolveSeoMetadata({
@@ -135,7 +136,7 @@ export default async function WorkProjectPage({params}: PageProps) {
 
           {hasMedia || hasTestimonial ? (
             <div className="flex flex-col gap-5">
-              {hasMedia ? <CaseStudyMediaGrid rows={project.mediaRows} /> : null}
+              {hasMedia ? <CaseStudyMediaGrid rows={project.mediaRows} projectTitle={project.title} /> : null}
               {hasTestimonial ? (
                 <CaseStudyTestimonial
                   testimonials={project.testimonials}

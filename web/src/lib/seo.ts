@@ -37,6 +37,9 @@ export function richTextToPlain(blocks?: PortableTextBlock[] | null) {
     })
     .filter(Boolean)
     .join(' ')
+    // Display headings like "Privacy \n\nPolicy." read as "Privacy Policy" in a title.
+    .replace(/\s+/g, ' ')
+    .replace(/\.$/, '')
     .trim()
 }
 
@@ -49,7 +52,7 @@ function ogImageUrl(image?: SanityImage | null) {
   }
 }
 
-function siteOrigin() {
+export function siteOrigin() {
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '')
   if (fromEnv) return fromEnv
   if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
@@ -61,11 +64,18 @@ function siteOrigin() {
   return 'http://localhost:3000'
 }
 
+/** Only the production deployment should be indexed; previews stay out of search. */
+export function isIndexableDeployment() {
+  const env = process.env.VERCEL_ENV
+  return !env || env === 'production'
+}
+
 function withSiteName(title: string, siteName: string) {
   if (!siteName) return title
   if (!title) return siteName
-  if (title === siteName) return title
-  if (title.endsWith(`| ${siteName}`) || title.endsWith(`— ${siteName}`)) return title
+  // Titles that already name the brand (e.g. the home page) stay as written.
+  const escaped = siteName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  if (new RegExp(`\\b${escaped}\\b`, 'i').test(title)) return title
   return `${title} | ${siteName}`
 }
 
@@ -110,7 +120,8 @@ export function resolveSeoMetadata({
     alternates: {
       canonical: canonicalPath,
     },
-    robots: pageSeo?.noIndex
+    robots:
+      pageSeo?.noIndex || !isIndexableDeployment()
       ? {
           index: false,
           follow: false,
